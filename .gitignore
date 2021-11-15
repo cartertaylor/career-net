@@ -1,0 +1,6 @@
+*.json
+.DS_Store
+node_modules
+public
+views
+client/.json
