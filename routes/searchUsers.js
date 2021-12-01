@@ -62,6 +62,7 @@ router.post('/fetch_user_data', function(req, res, next) {
             for (index = 0; index < rawData.length; index ++)
             {   
                 stateValidObject.push ( {
+                    id: rawData[index].id,
                     firstName: rawData[index].first_name,
                     lastName: rawData[index].last_name,
                     newInfo: {

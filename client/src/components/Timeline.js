@@ -5,8 +5,39 @@ import data from "./data"
 
 import {React, useState, useEffect} from "react";
 import { Chrono } from "react-chrono";
+import axios from "axios";
+import {Toast, Form, Button, Spinner, Alert} from 'react-bootstrap/';
 
 export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
+
+  const [rawStudentMilestones, setRawStudentMilestones] = useState(null);
+
+  const [studentMilestoneList, setStudentMilestoneList] = useState(null)
+
+  useEffect(() => {
+    fetchStudentMilestones()
+  }, []);
+
+  function fetchStudentMilestones()
+  {
+    console.log("Carter is working ")
+    console.log(studentProfileInfo)
+    axios
+      .post('/users/get_student_milestones', {
+        title: "Hello World!",
+        studentInfo: studentProfileInfo
+      })
+      .then((response) => {
+        console.log("billy bobby")
+
+        console.log(response.data.studentMilestones)
+
+        // Take fetched milestones, and but them in format similar to "items" in the timeline
+        createTimelineFormatWithMilestones(response.data.studentMilestones)
+
+      });
+  }
+
 
     // set up state for the height of the of the timeline
     // const[timelineHeight, setTimelineHeight] = useState("350px");  
@@ -60,7 +91,9 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
 
     // GRABS TIMELINE MILESTONES USING THE GIVEN STUDENT
     function getStudentTimelineMilestones()
-    {
+    { 
+
+
       console.log(studentProfileInfo);
       if (studentProfileInfo.firstName == "Carter")
       {
@@ -68,6 +101,47 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
       }
 
       return data
+    }
+
+    function createTimelineFormatWithMilestones(rawStudentMile)
+    {
+      
+      let finalizedMilestoneList = []
+
+      console.log(rawStudentMile)
+
+      // iterate over current grabbed
+      for ( let milestoneIndex in rawStudentMile)
+      {
+        console.log(milestoneIndex)
+        console.log(rawStudentMile[milestoneIndex])
+
+        let dateStr =new Date(rawStudentMile[milestoneIndex].date_start)
+        dateStr = dateStr.toLocaleDateString()
+
+        let newObject =
+        {
+          title: dateStr,
+          cardTitle: rawStudentMile[milestoneIndex].milestone_type,
+          cardSubtitle: rawStudentMile[milestoneIndex].milestone_name,
+        cardDetailedText: rawStudentMile[milestoneIndex].milestone_job_title,
+        otherData: {
+          cardTitle: rawStudentMile[milestoneIndex].milestone_type,
+          cardSubtitle: rawStudentMile[milestoneIndex].milestone_name,
+          cardDetailedText: rawStudentMile[milestoneIndex].milestone_name,
+          }
+        }
+        console.log(newObject)
+        finalizedMilestoneList.push(newObject)
+      }
+
+      console.log("Aragorn, Son of Arathorn")
+
+      console.log(finalizedMilestoneList)
+
+
+      setStudentMilestoneList(finalizedMilestoneList);
+
     }
 
     console.log(timelineOrientation);
@@ -113,13 +187,17 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
 
       if (givenMilestone.cardTitle == "Internship")
       {
-        image = "https://img.icons8.com/ios-filled/100/" + color + "/personal-growth.png"
+        image = "https://img.icons8.com/ios-filled/100/" + "black" + "/personal-growth.png"
       }
 
-      else if (givenMilestone.cardTitle == "Job")
+      else if (givenMilestone.cardTitle == "Full Time Job")
       {
-        image = "https://img.icons8.com/ios-filled/100/" + color + "/new-job.png"
+        image = "https://img.icons8.com/ios-filled/100/" + "black" + "/new-job.png"
        
+      }
+      else if (givenMilestone.cardTitle == "Education")
+      {
+        image = "https://img.icons8.com/ios-filled/452/motarboard.png"
       }
 
       else{
@@ -138,9 +216,12 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
 // console.log(timelineHeight)
   return (
     <div className="App">
+      {studentMilestoneList == null ? 
+                    <Spinner animation="border" variant="primary" />
+                    :
       <div style={{ width: "850px", height: {getHeightByOrientation}}}>
         
-        <Chrono items={itemList}
+        <Chrono items={studentMilestoneList}
          mode={timelineOrientation}
           titleAlignment="top"
            scrollable={{scrollbar: true}}
@@ -148,7 +229,7 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
             cardHeight="50px"
             > 
         <div className="chrono-icons"> 
-          {itemList.map(milestone =>
+          {studentMilestoneList.map(milestone =>
             {
               console.log(milestone)
               return (
@@ -163,6 +244,7 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
         </Chrono>
         
       </div>
+      }
     </div>
   );
 }

@@ -3,13 +3,13 @@ import mysql.connector
 from linkedin_api import Linkedin
 
 # Authenticate using any Linkedin account credentials
-api = Linkedin('', '!')
+api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!')
 
 # Connect to Database
 mydb = mysql.connector.connect(
   host="localhost",
-  user="",
-  password="",
+  user="root",
+  password="polpol11",
   database="mysql"
 )
 
@@ -49,6 +49,7 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
 
     # Grab education milestones
 
+    tableCols = ("student_id" , "milestone_type", "milestone_name", "milestone_job_title", "date_start", "date_end")
 
     # Iterate over education and grab education milestones
 
@@ -93,7 +94,7 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     print(studentMilestoneArray)
     
     print("Trying to store student Data")
-    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test4 
+    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test4 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
          VALUES (%s, %s, %s, %s, %s, %s)"""
 
     # sqlInsertManyMilestones2 = """INSERT INTO milestones_test2 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)

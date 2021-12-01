@@ -4,6 +4,21 @@ let arg1 = "dog"
 const spawn = require("child_process").spawn;
 
 
+const mysql = require('mysql');
+
+
+// SQL 
+let studentCols = ( ['first_name', 'last_name', 'degree', 'work_experience', 'school_year'] );
+
+// Instanstiate database
+var connection = mysql.createConnection({
+host: 'localhost',
+port: 3306,
+user : 'root',
+password:'polpol11',
+database:'mysql'
+}, 'pool');
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   console.log("YO YO YO")
@@ -33,10 +48,36 @@ router.post('/get_linkedin_data', async function(req, res, next) {
   {
     console.log("exiting guy ")
     console.log(code)
+    res.json({note:'respond with a resource: 0 means good, anything else means error', linkedinFetchStatus: code});
   })
 
- 
-  res.json('respond with a resource');
+  
+}); 
+
+
+// Route to retreive student milestones based on student profile ID
+router.post('/get_student_milestones', async function(req, res, next) {
+  console.log(req.body)
+  console.log("YO YO YO 333333")
+  
+  studentId = req.body.studentInfo.id
+
+  // QUERY to grab each milestone given the studetns id
+  sql = mysql.format( "SELECT * from milestones_test4 WHERE student_id = ?", [studentId])  
+
+  console.log(sql)
+
+  connection.query (
+      sql, function (err, result, fields)
+      {
+        
+        console.log(result)
+        res.json({status:"success", studentMilestones:result})
+      }
+    );
+
+    
+  
 }); 
 
 // grab python data in a promise

@@ -77,7 +77,7 @@ async function fetchUserData (event)  {
     let finalData = foundUsers.map ( individualUserData =>  Object.assign(
         
         // for each user, store a unique ID
-        {id: individualUserData.firstName + individualUserData.lastName + individualUserData.newInfo.degree}, individualUserData)
+        {id: individualUserData.id + individualUserData.lastName + individualUserData.newInfo.degree}, individualUserData)
 
       )
     
