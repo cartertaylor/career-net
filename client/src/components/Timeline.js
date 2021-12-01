@@ -13,7 +13,7 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
 
     const color = "0d6efd"
 
-    const items = [
+    const items1 = [
       {
         title: "June 2019",
         cardTitle: "Job",
@@ -54,12 +54,17 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
       },
    
     ];
+    
+    // define the data that we will be grabbing  to iterate over
+    let itemList = getStudentTimelineMilestones();
+
     // GRABS TIMELINE MILESTONES USING THE GIVEN STUDENT
     function getStudentTimelineMilestones()
     {
+      console.log(studentProfileInfo);
       if (studentProfileInfo.firstName == "Carter")
       {
-        return items;
+        return items1;
       }
 
       return data
@@ -106,7 +111,6 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
       // Instantiate link to icon we want to use
       let image;
 
-      
       if (givenMilestone.cardTitle == "Internship")
       {
         image = "https://img.icons8.com/ios-filled/100/" + color + "/personal-growth.png"
@@ -120,9 +124,10 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
 
       else{
         
-        image = "https://img.icons8.com/ios-filled/100/" + "0d6efd" + "/teamwork.png"
+        image = "https://img.icons8.com/ios-filled/100/" + "color" + "/teamwork.png"
       }
 
+      console.log(image)
       let imgHTML = (<img
       src={image}
       alt="twitter"/>)
@@ -135,7 +140,7 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
     <div className="App">
       <div style={{ width: "850px", height: {getHeightByOrientation}}}>
         
-        <Chrono items={getStudentTimelineMilestones()}
+        <Chrono items={itemList}
          mode={timelineOrientation}
           titleAlignment="top"
            scrollable={{scrollbar: true}}
@@ -143,7 +148,7 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
             cardHeight="50px"
             > 
         <div className="chrono-icons"> 
-          {items.map(milestone =>
+          {itemList.map(milestone =>
             {
               console.log(milestone)
               return (

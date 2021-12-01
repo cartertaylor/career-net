@@ -10,7 +10,6 @@ import {Container, Dropdown} from 'react-bootstrap';
 const data = [
   {name: 'Computer Science', 'Number of Graduates': 2000, "Received Job": 1500, "Had an Internship": 700},
   {name: 'Exercise Science', 'Number of Graduates':2500, "Received Job": 1100, "Had an Internship": 200},
-  {name: 'Electrical Engineering', 'Number of Graduates':1000, "Received Job": 600, "Had an Internship": 100},
   {name: 'Mechanical Engineering', 'Number of Graduates':1000, "Received Job": 600, "Had an Internship": 100}
   ];
 
@@ -47,7 +46,7 @@ export default function DashboardPage() {
 // console.log(timelineHeight)
   return (
     <div className="App">
-      <h1>This is the Dashboard page</h1>
+      <h1 className="mb-4">  Dashboard </h1>
 
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -61,7 +60,7 @@ export default function DashboardPage() {
         </Dropdown.Menu>
       </Dropdown>
 
-      <Container className="mt-4 d-flex justify-content-center">
+      {/* <Container className="mt-4 d-flex justify-content-center">
         <LineChart width={730} height={250} data={data2}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -73,9 +72,12 @@ export default function DashboardPage() {
           <Line type="monotone" dataKey="Received Job" stroke="#82ca9d" />
           <Line type="monotone" dataKey="amt" stroke="red" />
         </LineChart>
-      </Container>
+      </Container> */}
       
+      <h3 className = "text-center mt-4">Comparison between graduates of different majors</h3>
+
       <Container className="mt-4 d-flex justify-content-center">
+        
         <BarChart width={730} height={250} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />

@@ -15,6 +15,12 @@ password:'polpol11',
 database:'mysql'
 }, 'pool');
 
+// createMilestoneTable = 'CREATE TABLE milestones_test2 (milestone_id INT AUTO_INCREMENT PRIMARY KEY, student_id INT, FOREIGN KEY (student_id) REFERENCES students(id), milestone_type varchar(255), milestone_name varchar(255), milestone_job_title varchar(255), date_start DATE, date_end DATE)'
+// createMilestoneTable = "SELECT * from milestones_test2"
+// connection.query(createMilestoneTable, function (err, result) {
+//     if (err) throw err;
+//     console.log( result);
+//   });
 
 /* GET home page. */
 router.post('/fetch_user_data', function(req, res, next) {

@@ -16,7 +16,7 @@ import Login from './routes/home/Login';
 import SearchStudents from './routes/seachStudents/SearchStudent';
 import StudentProfile from './routes/studentProfile/StudentProfile';
 import DashboardPage from './routes/dashBoard/DashboardPage';
-
+import Settings from './routes/settings/Settings';
 import Timeline from './components/Timeline';
 
 // functional component
@@ -55,6 +55,7 @@ function App () {
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/school_dashboard">School Dashboard</Nav.Link>
                 <Nav.Link href="/search_students">Search For Students</Nav.Link>
+                <Nav.Link href="/settings">Settings</Nav.Link>
               </Nav>
             </Container>
           </Navbar>
@@ -65,6 +66,7 @@ function App () {
             <Route path = "/search_students" element = {<SearchStudents grabState = {handleGrabComponentState} /> } />
             <Route path = "/student_profile/:student" element = {<StudentProfile clickedStudentInfo = {clickedStudentInfo}/>}/>
             <Route path = "/school_dashboard" element = {<DashboardPage/>}/>
+            <Route path = "/settings" element = {<Settings/>}/>
           </Routes>
       </Router>
       
