@@ -10,8 +10,6 @@ import {Toast, Form, Button, Spinner, Alert} from 'react-bootstrap/';
 
 export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
 
-  const [rawStudentMilestones, setRawStudentMilestones] = useState(null);
-
   const [studentMilestoneList, setStudentMilestoneList] = useState(null)
 
   useEffect(() => {
@@ -103,34 +101,38 @@ export default function Timeline( {timelineOrientation, studentProfileInfo} ) {
       return data
     }
 
-    function createTimelineFormatWithMilestones(rawStudentMile)
+    function createTimelineFormatWithMilestones(rawStudentMilestones)
     {
       
       let finalizedMilestoneList = []
 
-      console.log(rawStudentMile)
+      console.log(rawStudentMilestones)
+
+      // Sort milestones by data
+      rawStudentMilestones.sort((milestone1, milestone2) => milestone1.date_start.localeCompare(milestone2.date_start))
 
       // iterate over current grabbed
-      for ( let milestoneIndex in rawStudentMile)
+      for ( let milestoneIndex in rawStudentMilestones)
       {
         console.log(milestoneIndex)
-        console.log(rawStudentMile[milestoneIndex])
+        console.log(rawStudentMilestones[milestoneIndex])
 
-        let dateStr =new Date(rawStudentMile[milestoneIndex].date_start)
+        let dateStr =new Date(rawStudentMilestones[milestoneIndex].date_start)
         dateStr = dateStr.toLocaleDateString()
 
         let newObject =
         {
           title: dateStr,
-          cardTitle: rawStudentMile[milestoneIndex].milestone_type,
-          cardSubtitle: rawStudentMile[milestoneIndex].milestone_name,
-        cardDetailedText: rawStudentMile[milestoneIndex].milestone_job_title,
+          cardTitle: rawStudentMilestones[milestoneIndex].milestone_type,
+          cardSubtitle: rawStudentMilestones[milestoneIndex].milestone_name,
+        cardDetailedText: rawStudentMilestones[milestoneIndex].milestone_job_title,
         otherData: {
-          cardTitle: rawStudentMile[milestoneIndex].milestone_type,
-          cardSubtitle: rawStudentMile[milestoneIndex].milestone_name,
-          cardDetailedText: rawStudentMile[milestoneIndex].milestone_name,
+          cardTitle: rawStudentMilestones[milestoneIndex].milestone_type,
+          cardSubtitle: rawStudentMilestones[milestoneIndex].milestone_name,
+          cardDetailedText: rawStudentMilestones[milestoneIndex].milestone_name,
           }
         }
+
         console.log(newObject)
         finalizedMilestoneList.push(newObject)
       }

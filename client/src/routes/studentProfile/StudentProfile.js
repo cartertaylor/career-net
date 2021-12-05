@@ -89,9 +89,9 @@ export default function StudentProfile ( {clickedStudentInfo} )
                 {isLoaded ?
                     <div> 
                         <Container className="">
-                            <h1 className="text-center">My name is {currentStudentProfileInfo.firstName}</h1>
-                            <h2 className="text-center">Majoring in {currentStudentProfileInfo.newInfo.degree}</h2>
-                            <h2 className="text-center">Experience Milestones</h2>
+                            <h1 className="text-center">My name is {currentStudentProfileInfo.firstName} {currentStudentProfileInfo.lastName}</h1>
+                            <h4 className="text-center">Majoring in {currentStudentProfileInfo.newInfo.degree}</h4>
+                            <h2 className="text-center mt-4">Experience Milestones</h2>
                         </Container>
                          <Container className="mt-4 d-flex justify-content-center">    
                             <Timeline timelineOrientation = {radioValue} studentProfileInfo = {currentStudentProfileInfo}/>

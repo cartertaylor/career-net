@@ -5,7 +5,7 @@
 import {React, useState, useEffect} from "react";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis , Tooltip, Bar, BarChart, Legend} from 'recharts';
 import {Container, Dropdown} from 'react-bootstrap';
-
+import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 
 const data = [
   {name: 'Computer Science', 'Number of Graduates': 2000, "Received Job": 1500, "Had an Internship": 700},
@@ -42,53 +42,35 @@ export default function DashboardPage() {
     // const[timelineHeight, setTimelineHeight] = useState("350px");
 
 
+    function handleGraphChange (chosenGraph)
+    {
+      setGraphSettings(prevState =>
+        {
+          return {...prevState, currentGraphStyle:chosenGraph}
+        })
+    }
 
 // console.log(timelineHeight)
   return (
     <div className="App">
       <h1 className="mb-4">  Dashboard </h1>
-
+      
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
           Graph Type
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick = {() => console.log("I am a bar Graph")} >Bar Graph</Dropdown.Item>
-          <Dropdown.Item onClick = {() => console.log("I am a Line Graph")} >Line Chart</Dropdown.Item>
-          <Dropdown.Item onClick = {() => console.log("I am a Pie Chart")} >Pie Chart</Dropdown.Item>
+          <Dropdown.Item onClick = {() => handleGraphChange("BAR")} >Bar Graph</Dropdown.Item>
+          <Dropdown.Item onClick = {() => handleGraphChange("LINE")} >Line Chart</Dropdown.Item>
+          <Dropdown.Item onClick = {() => handleGraphChange("PIE")} >Pie Chart</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-
-      {/* <Container className="mt-4 d-flex justify-content-center">
-        <LineChart width={730} height={250} data={data2}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="Grad Numbers" stroke="#8884d8" />
-          <Line type="monotone" dataKey="Received Job" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="amt" stroke="red" />
-        </LineChart>
-      </Container> */}
       
-      <h3 className = "text-center mt-4">Comparison between graduates of different majors</h3>
+      {/* <h3 className = "text-center mt-4">Comparison between graduates of different majors</h3> */}
 
-      <Container className="mt-4 d-flex justify-content-center">
-        
-        <BarChart width={730} height={250} data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="Number of Graduates" fill="#8884d8" /> 
-          <Bar dataKey="Received Job" fill="#82ca9d" />
-          <Bar dataKey="Had an Internship" fill="#FFC0CB" />
-        </BarChart>
-     </Container>
+
+     <DashboardGraph graphSettings = {graphSettings}></DashboardGraph>
      
     </div>
   );

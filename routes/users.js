@@ -80,6 +80,55 @@ router.post('/get_student_milestones', async function(req, res, next) {
   
 }); 
 
+
+// POST TO ADD USER INFORMATßION TO DATABASE
+router.post('/add_student', function (req, res) 
+{   
+    valuesBeingAdded = [];
+
+    // store all the values in an array
+    valuesBeingAdded.push(req.body.firstName);
+    valuesBeingAdded.push(req.body.lastName);
+    valuesBeingAdded.push(req.body.newInfo.degree);
+    valuesBeingAdded.push(req.body.newInfo.experience);
+    valuesBeingAdded.push(req.body.newInfo.schoolYear);
+
+    // create query to store into the columns with the values provided 
+    let sql = mysql.format("INSERT INTO students (??) VALUES (?)", [studentCols, valuesBeingAdded]);
+    
+
+
+    console.log("We are tryinfg to add student information now");
+    console.log(valuesBeingAdded);
+    console.log(req.body)
+    console.log(sql)
+
+    let response = {userAdded:false, message: "User could not be added"}
+
+    connection.query(sql, function (err, result) {
+        // if error received, report failure to add user
+        if (err) 
+        {
+            throw err;
+
+
+        }
+        // otherwise report success
+        else 
+        {
+            console.log("Inserted Student");
+            console.log(result);
+            response = {userAdded:true, message: "User " + req.body.firstName + " " +req.body.lastName + " was successfully added"}
+        }         
+    
+        // send back response
+        res.json(response)
+        
+      });
+    
+
+})
+
 // grab python data in a promise
 const pythonPromise  = () => {
   try{

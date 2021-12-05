@@ -8,7 +8,7 @@ import {v4 as uuid} from "uuid";
 // import Bootstrap
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
-import {Toast, Form, Button, Nav, Navbar} from 'react-bootstrap/';
+import {Toast, Form, Button, ToastContainer} from 'react-bootstrap/';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 import {BrowserRouter as Router, Route, Routes, Link} from "react-router-dom";
@@ -101,28 +101,32 @@ async function fetchUserData (event)  {
   // }
   
   // adds to the state (and the table), the user data that is entered in through the form
-  function handleAddUser  (addedUserInfo)
+  function handleAddUser(addedUserInfo)
   {
     
     console.log(addedUserInfo)
-    console.log(this.state.listStudents)
+    // console.log(this.state.listStudents)
     let userData = {id:uuid}
 
     // spread the added data into the object
     userData = {...userData, ...addedUserInfo}
 
     // Send the data to our server to be stored
-    const serverResponse = this.storeUserOnDatabase(userData);
+    const serverResponse = storeUserOnDatabase(userData);
     
     console.log(userData);
 
     // set the state with our the change
-    console.log(this.state.listStudents)
+    // console.log(this.state.listStudents)
 
     console.log(serverResponse)
 
+    setStudentInformation(prevState => 
+      {
+          return {...prevState, showUserAddedResponse:true }
+      })
+
     
-    this.setState({showUserAddedResponse:true})
 
     // Clear our the fields =
   }
@@ -137,7 +141,7 @@ async function fetchUserData (event)  {
     };
 
     // attempt to store data fof student from form
-    const response = await fetch('/add_student', requestOptions);
+    const response = await fetch('users/add_student', requestOptions);
     const serverResponse = await response.json();
 
     console.log(serverResponse)
@@ -161,11 +165,11 @@ async function fetchUserData (event)  {
   {
   
     // Remove the Toast 
-    this.setState({showUserAddedResponse:false})
-
-
-    // should respond accordingly based on the addition.
-    // return serverResponse;
+    setStudentInformation(prevState => 
+      {
+          return {...prevState, showUserAddedResponse:false }
+      })
+   
 
   }
   
@@ -179,18 +183,21 @@ async function fetchUserData (event)  {
 
 
           {/* Toast pops up on user creation */}
-          <Toast show={studentInformation.showUserAddedResponse} onClose={closeToast}>
-            <Toast.Header>
-              <img
-                src="holder.js/20x20?text=%20"
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto">Bootstrap</strong>
-              <small>11 mins ago</small>
-            </Toast.Header>
-            <Toast.Body>Woohoo, you're reading this text in a Toast!</Toast.Body>
-          </Toast>
+
+          <ToastContainer position="top-end" className="p-3">
+            <Toast show={studentInformation.showUserAddedResponse} onClose={closeToast}>
+              <Toast.Header>
+                <img
+                  src="holder.js/20x20?text=%20"
+                  className="rounded me-2"
+                  alt=""
+                />
+                <strong className="me-auto">Student Added!</strong>
+                <small>Just Now</small>
+              </Toast.Header>
+              <Toast.Body>Student Successfully added</Toast.Body>
+            </Toast>
+          </ToastContainer>
 
           {/* Search bar for Students */}
           <Container>

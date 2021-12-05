@@ -78,8 +78,12 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
             companyName = job["companyName"]
             jobTitle = job["title"]
             dateStart = getDateFromMilestone("experience", job["timePeriod"]["startDate"], 1)
-            dateEnd = getDateFromMilestone("experience", job["timePeriod"]["endDate"], 1)
+            if ("endDate" in job["timePeriod"]):
+                dateEnd = getDateFromMilestone("experience", job["timePeriod"]["endDate"], 1)
+            else:
+                dateEnd = datetime.datetime.now().date().isoformat()
 
+                
             indvidualMilestoneTuple = (studentTableId, milestoneType, companyName, jobTitle, dateStart, dateEnd)
             
             # add milestone to array 

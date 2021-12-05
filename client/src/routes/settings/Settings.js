@@ -6,7 +6,7 @@ import axios from "axios";
 // import Bootstrap
 // import './node_modules/react-bootstrap/'
 import Container from 'react-bootstrap/Container';
-import {Toast, Form, Button, Spinner, Alert} from 'react-bootstrap/';
+import { Button, Spinner, Alert, Row, Col} from 'react-bootstrap/';
 
 function Settings () {
     const baseURL = "/users/get_linkedin_data";
@@ -15,7 +15,6 @@ function Settings () {
     const [isLoading, setLoading] = useState(false);
     const [bannerContenet, setBannerContent] = useState(null);
 
-    
 
 
     function AlertDismissibleExample({linkedinStatus}) {
@@ -64,8 +63,7 @@ function Settings () {
         
         axios
           .post(baseURL, {
-            title: "Hello World!",
-            body: "This is a new post."
+            title: "Sending request for Linkedin data"
           })
           .then((response) => {
             setPost(response.data);
@@ -74,7 +72,6 @@ function Settings () {
             // Stop loading
             setLoading(false)
             
-
             // set banner
             setBannerContent(<AlertDismissibleExample linkedinStatus = {response.data.linkedinFetchStatus}/>);
 
@@ -84,17 +81,33 @@ function Settings () {
     //   if (!post) return null;
     return (
     <div>
-        <h1>Hi this is the Settings</h1>
-       
-      <Button className="mb-3" onClick={fetchLinkedinStudentData}>Fetch Linkedin Data</Button>
-      <div>
-            {isLoading == true ? 
-                    <Spinner animation="border" variant="primary" />
-                    // else
-                    : <div>{bannerContenet}</div>}
 
-      </div>
-    
+        <Container className="mt-4 ">
+        
+
+            <Row >
+                <h1 className = "text-center mb-3">Hi this is the Settings</h1>
+            </Row>
+
+            <Row className="justify-content-md-center">
+                    <Col xs lg="2">
+                        <Button className="mb-3" onClick={fetchLinkedinStudentData}>Fetch Linkedin Data</Button>
+                    </Col>
+                   
+            </Row>
+
+            <div>
+                <Row className="justify-content-md-center">
+                    {isLoading == true ? 
+                            <Spinner animation="border" variant="primary" />
+                            // else
+                            : <div>{bannerContenet}</div>}
+                </Row>
+            </div>
+            
+          
+
+      </Container>
     </div>
     );
 
