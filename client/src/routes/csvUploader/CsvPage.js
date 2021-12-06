@@ -35,6 +35,10 @@ export default function CsvPage() {
         });
     };
 
+    // TODO: 
+    // Create a function that sends data to back end
+
+
     return (
         <div className="App">
             <Container className="center">
@@ -56,15 +60,17 @@ export default function CsvPage() {
                     )}
                 </div>
             </Container>
+
             <button>Import</button>
             {console.log(parsedCsvData)}
 
-
-            {parsedCsvData[0] != null ? (
-                <TableMaker givenJsonData={parsedCsvData} />
-            ) : (
-                <p></p>
-            )}
+            <Container className ="d-flex justify-content-center">
+                {parsedCsvData[0] != null ? (
+                    <TableMaker givenJsonData={parsedCsvData} />
+                ) : (
+                    <p></p>
+                )}
+            </Container>
         </div>
     );
 }
