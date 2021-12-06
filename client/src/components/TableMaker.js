@@ -26,24 +26,26 @@ export default function TableMaker({givenJsonData})
     }
 
     return (
-        <Table striped bordered hover className="mt-4">
-            {/* Create headers dynamically */}
-            <thead>
-                <tr>
-                    {Object.keys(givenJsonData[0]).map(value =>
-                        {
-                            console.log(value)
-                            return <th>{value}</th>
-                        })}
-                </tr>
-            </thead>
+        <div style ={{overflow:"scroll", height:"300px", minWidth:"800px"}}>
+            <Table striped bordered hover className="mt-4" >
+                {/* Create headers dynamically */}
+                <thead>
+                    <tr>
+                        {Object.keys(givenJsonData[0]).map(value =>
+                            {
+                                console.log(value)
+                                return <th>{value}</th>
+                            })}
+                    </tr>
+                </thead>
 
-            <tbody>
+                <tbody >
 
-                {getTableRows(givenJsonData)}
+                    {getTableRows(givenJsonData)}
 
-            </tbody>
-            
-        </Table>
+                </tbody>
+                
+            </Table>
+        </div>
     );
 }

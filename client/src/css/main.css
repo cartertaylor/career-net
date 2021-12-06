@@ -3,17 +3,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
-    padding: 20px;
+    margin-top: 50px;
+    padding: 10px;
     cursor: pointer;
     height: 150px;
-    width: 400px;
+    width: 60%;
     border: 2px dashed cyan;
     outline: none;
-  }
-  .dropzoneReject {
+}
+
+.dropzoneReject {
     border: 2px dashed red;
-  }
-  .dropzoneAccept {
+}
+
+.dropzoneAccept {
     border: 2px dashed green;
-  }  
+}
