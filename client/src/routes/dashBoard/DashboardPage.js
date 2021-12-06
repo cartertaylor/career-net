@@ -56,6 +56,7 @@ export default function DashboardPage() {
       <h1 className="mb-4">  Dashboard </h1>
       
       <Dropdown>
+        
         <Dropdown.Toggle variant="success" id="dropdown-basic">
           Graph Type
         </Dropdown.Toggle>
@@ -65,6 +66,7 @@ export default function DashboardPage() {
           <Dropdown.Item onClick = {() => handleGraphChange("LINE")} >Line Chart</Dropdown.Item>
           <Dropdown.Item onClick = {() => handleGraphChange("PIE")} >Pie Chart</Dropdown.Item>
         </Dropdown.Menu>
+
       </Dropdown>
       
       {/* <h3 className = "text-center mt-4">Comparison between graduates of different majors</h3> */}

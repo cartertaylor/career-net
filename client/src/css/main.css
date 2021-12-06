@@ -1,0 +1,19 @@
+.dropzone {
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    padding: 20px;
+    cursor: pointer;
+    height: 150px;
+    width: 400px;
+    border: 2px dashed cyan;
+    outline: none;
+  }
+  .dropzoneReject {
+    border: 2px dashed red;
+  }
+  .dropzoneAccept {
+    border: 2px dashed green;
+  }  

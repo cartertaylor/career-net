@@ -7,10 +7,10 @@ api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!')
 
 # Connect to Database
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="polpol11",
-  database="mysql"
+    host="localhost",
+    user="root",
+    password="polpol11",
+    database="mysql"
 )
 
 
@@ -82,8 +82,8 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
                 dateEnd = getDateFromMilestone("experience", job["timePeriod"]["endDate"], 1)
             else:
                 dateEnd = datetime.datetime.now().date().isoformat()
+            
 
-                
             indvidualMilestoneTuple = (studentTableId, milestoneType, companyName, jobTitle, dateStart, dateEnd)
             
             # add milestone to array 
@@ -99,7 +99,7 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     
     print("Trying to store student Data")
     sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test4 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
-         VALUES (%s, %s, %s, %s, %s, %s)"""
+        VALUES (%s, %s, %s, %s, %s, %s)"""
 
     # sqlInsertManyMilestones2 = """INSERT INTO milestones_test2 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
     #      SELECT * FROM (SELECT  %s, %s, %s, %s, %s, %s) AS tmp 
