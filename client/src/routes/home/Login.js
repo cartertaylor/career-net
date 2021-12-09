@@ -28,7 +28,7 @@ function Login () {
                     <Form.Control type="password" placeholder="Password" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
+                    <Form.Check type="checkbox" label="Remember me" />
                     </Form.Group>
                     <Button variant="primary" type="submit" href="/search_students">
                         Log in

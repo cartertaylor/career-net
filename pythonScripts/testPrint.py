@@ -47,9 +47,11 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     # Student ID that coresponds to the table that holds student
     studentTableId = currentStudent[0]
 
+    currentDate = datetime.date.today()
+
     # Grab education milestones
 
-    tableCols = ("student_id" , "milestone_type", "milestone_name", "milestone_job_title", "date_start", "date_end")
+    tableCols = ("student_id" , "milestone_type", "milestone_name", "milestone_job_title", "date_start", "date_end", "milestone_description")
 
     # Iterate over education and grab education milestones
 
@@ -59,13 +61,17 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
 
         for school in profileJson["education"]:
 
-            
             schoolName = school["schoolName"]
             degree = school["fieldOfStudy"]
             dateStart = getDateFromMilestone ("education", school["timePeriod"]["startDate"], 8)
             dateEnd = getDateFromMilestone ("education", school["timePeriod"]["endDate"], 5)
 
-            indvidualMilestoneTuple = (studentTableId, milestoneType, schoolName, degree, dateStart, dateEnd)
+            # check for an added description 
+            milestoneDescription = ""
+            if ("description" in school):
+                milestoneDescription = school["description"]
+
+            indvidualMilestoneTuple = (studentTableId, milestoneType, schoolName, degree, milestoneDescription, dateStart, dateEnd , currentDate)
 
             # add milestone to array 
             studentMilestoneArray.append(indvidualMilestoneTuple)
@@ -82,9 +88,14 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
                 dateEnd = getDateFromMilestone("experience", job["timePeriod"]["endDate"], 1)
             else:
                 dateEnd = datetime.datetime.now().date().isoformat()
+
+            # check for an added description 
+            milestoneDescription = ""
+            if ("description" in job):
+                milestoneDescription = job["description"]
             
 
-            indvidualMilestoneTuple = (studentTableId, milestoneType, companyName, jobTitle, dateStart, dateEnd)
+            indvidualMilestoneTuple = (studentTableId, milestoneType, companyName, jobTitle, milestoneDescription, dateStart, dateEnd, currentDate)
             
             # add milestone to array 
             studentMilestoneArray.append(indvidualMilestoneTuple)
@@ -98,15 +109,16 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     print(studentMilestoneArray)
     
     print("Trying to store student Data")
-    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test4 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
-        VALUES (%s, %s, %s, %s, %s, %s)"""
+    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test5 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, date_start, date_end, last_updated)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
     # sqlInsertManyMilestones2 = """INSERT INTO milestones_test2 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
     #      SELECT * FROM (SELECT  %s, %s, %s, %s, %s, %s) AS tmp 
     #      WHERE NOT EXISTS(SELECT student_id) WHERE student_id =3"""
 
     mycursor.executemany(sqlInsertManyMilestones, studentMilestoneArray)
-
+    print("Nintendo switch is the best console")
+    
     mydb.commit()
 
 

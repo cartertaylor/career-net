@@ -15,7 +15,8 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
     function fetchStudentMilestones() {
         console.log("Carter is working ");
         console.log(studentProfileInfo);
-        axios.post("/users/get_student_milestones", {
+        axios
+            .post("/users/get_student_milestones", {
                 title: "Hello World!",
                 studentInfo: studentProfileInfo,
             })
@@ -36,6 +37,7 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
 
     const color = "0d6efd";
 
+    // Referenfce to see how data is formatted in timeline card
     const items1 = [
         {
             title: "June 2019",
@@ -82,21 +84,22 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
                 rawStudentMilestones[milestoneIndex].date_start
             );
             dateStr = dateStr.toLocaleDateString();
-
+            
+            let titleJobCompany = rawStudentMilestones[milestoneIndex].milestone_job_title + " at " +rawStudentMilestones[milestoneIndex].milestone_name
             let newObject = {
                 title: dateStr,
                 cardTitle: rawStudentMilestones[milestoneIndex].milestone_type,
                 cardSubtitle:
-                    rawStudentMilestones[milestoneIndex].milestone_name,
+                    titleJobCompany,
                 cardDetailedText:
-                    rawStudentMilestones[milestoneIndex].milestone_job_title,
+                    rawStudentMilestones[milestoneIndex].milestone_description,
                 otherData: {
                     cardTitle:
                         rawStudentMilestones[milestoneIndex].milestone_type,
                     cardSubtitle:
-                        rawStudentMilestones[milestoneIndex].milestone_name,
+                        titleJobCompany,
                     cardDetailedText:
-                        rawStudentMilestones[milestoneIndex].milestone_name,
+                        rawStudentMilestones[milestoneIndex].milestone_description,
                 },
             };
 
