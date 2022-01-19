@@ -4,8 +4,13 @@ import Papa from "papaparse";
 import "../../css/main.css";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import TableMaker from "../../components/TableMaker";
+import axios from "axios";
 
 export default function CsvPage() {
+
+    // State containing CSV data
+    const [parsedCsvData, setParsedCsvData] = useState([null]);
+
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles.length) {
             console.log(acceptedFiles);
@@ -13,7 +18,6 @@ export default function CsvPage() {
         }
     }, []);
 
-    const [parsedCsvData, setParsedCsvData] = useState([null]);
 
     const {
         getRootProps,
@@ -26,7 +30,7 @@ export default function CsvPage() {
         accept: "text/csv",
     });
 
-    
+    const routeURL = "/csvUpload";
 
     const parseFile = (file) => {
         Papa.parse(file, {
@@ -36,6 +40,28 @@ export default function CsvPage() {
             },
         });
     };
+
+    const uploadCsvToDatabase = () => {
+        // 
+        axios
+            .post(routeURL, {
+                data:parsedCsvData,
+            })
+            .then((response) => {
+
+                console.log(response);
+
+                // // Stop loading
+                // setLoading(false);
+
+                // // set banner
+                // setBannerContent(
+                //     <AlertDismissibleExample
+                //         linkedinStatus={response.data.linkedinFetchStatus}
+                //     />
+                // );
+            });
+    }
 
     // TODO: 
     // Create a function that sends data to back end
@@ -78,7 +104,7 @@ export default function CsvPage() {
                         <Button variant="danger" onClick = {() => setParsedCsvData([null])}>Delete</Button>
                     </Col>
                     <Col>
-                        <Button>Upload</Button>
+                        <Button onClick = {() => uploadCsvToDatabase()}>Upload</Button>
                     </Col>
                 </Row>
                 
