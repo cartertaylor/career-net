@@ -169,15 +169,12 @@ async function fetchUserData (event)  {
       {
           return {...prevState, showUserAddedResponse:false }
       })
-   
 
   }
   
-  let testString = "Hey I am the conrtl z part "
   // {this.fetchUserData}
 
     return (
-   
         <div className="App">
           
 
