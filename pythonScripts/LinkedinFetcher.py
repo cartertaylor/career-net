@@ -2,6 +2,13 @@ import sys, json, datetime
 import mysql.connector
 from linkedin_api import Linkedin
 
+print(sys.argv[1])
+# print(json.dumps(sys.argv[1], indent=4, separators=(". ", " = ")))
+sqlFilters = json.loads(sys.argv[1])
+print (json.dumps(sqlFilters))
+print (json.dumps(sqlFilters["title"]))
+print("Dragborn")
+#print(sys.argv[1]["title"])
 # Authenticate using any Linkedin account credentials
 api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!')
 

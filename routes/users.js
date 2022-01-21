@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let arg1 = "dog"
+let arg1 = "dog123"
 const spawn = require("child_process").spawn;
 
 
@@ -34,7 +34,7 @@ router.post('/get_linkedin_data', async function(req, res, next) {
   // const dataFromPython = await pythonPromise();
   // console.log(dataFromPython)
 
-  const python = spawn('python3', ["./pythonScripts/testPrint.py", arg1]);
+  const python = spawn('python3', ["./pythonScripts/LinkedinFetcher.py", JSON.stringify(req.body)]);
   python.stdout.on("data", (data) => {
     console.log("Bro whats up")
     console.log(data.toString())

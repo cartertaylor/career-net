@@ -7,7 +7,7 @@ router.post('/', function(req, res, next) {
     console.log(req.body)
     
 
-    // Send response depending on upload success
+    // Send response depending on CSV upload success
 
 });
 
