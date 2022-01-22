@@ -3,14 +3,12 @@ import {Dropdown, FormControl, Form, Check} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ children, style, className, customOption,"aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, customOption,"aria-labelledby": labeledBy }, ref) => {
         const [value, setValue] = useState("");
 
         // Create JSX Object for each array element
-        let jsxOptions = customOption.map(individualOption=> <Form.Check className="m-4" label={individualOption} />)
+        let jsxOptions = customOption.map(individualOption=> <Form.Check className="m-3" label={individualOption} />)
 
-        console.log(jsxOptions)
-        console.log(React.Children.toArray(jsxOptions))
         return (
             <div
                 ref={ref}
@@ -29,7 +27,7 @@ const SearchFilterMenu = React.forwardRef(
                     {React.Children.toArray(jsxOptions).filter(
                         (child) =>
                             !value ||
-                            child.props.children.toLowerCase().startsWith(value)
+                            child.props.label.toLowerCase().startsWith(value)
                     )}
                 </ul>
             </div>
