@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 
 import StudentList  from '../../components/StudentList';
 import StudentForm from '../../components/StudentForm';
+import StudentSearchBar from './SearchBarComponents/StudentSearcher';
 import {v4 as uuid} from "uuid";
 
 
@@ -96,10 +97,6 @@ async function fetchUserData (event)  {
     
   }
 
-  // componentDidMount() {
-  //   this.fetchUserData  (this.state.listStudents)
-  // }
-  
   // adds to the state (and the table), the user data that is entered in through the form
   function handleAddUser(addedUserInfo)
   {
@@ -126,9 +123,6 @@ async function fetchUserData (event)  {
           return {...prevState, showUserAddedResponse:true }
       })
 
-    
-
-    // Clear our the fields =
   }
 
   async function storeUserOnDatabase  (studentData)
@@ -160,7 +154,6 @@ async function fetchUserData (event)  {
   }
 
 
-
   function closeToast ()
   {
   
@@ -171,8 +164,6 @@ async function fetchUserData (event)  {
       })
 
   }
-  
-  // {this.fetchUserData}
 
     return (
         <div className="App">
@@ -197,8 +188,9 @@ async function fetchUserData (event)  {
           </ToastContainer>
 
           {/* Search bar for Students */}
-          <Container>
-            <Form onSubmit = {fetchUserData}>
+          <Container> 
+            {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
+            <Form onSubmit = {fetchUserData}> 
 
               <Form.Group className="mb-3" controlId="studentSearch">
                 <Form.Label>Search Student</Form.Label>
@@ -211,6 +203,8 @@ async function fetchUserData (event)  {
               <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
 
             </Form>
+
+            <StudentSearchBar></StudentSearchBar>
 
           </Container>
           
