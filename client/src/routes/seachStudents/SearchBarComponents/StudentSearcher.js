@@ -24,14 +24,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     </a>
 ));
 
-// Receives array, and returns JSX element for each element in array
-function generateFilterElement()
-{
-    return 1;
-}
-
-
-    let filterList = ["red", "yellow", "green", "black"]
+    let filterList = ["Computer Science", "Mechanical Engineering", "Exercise Science", "Electrical Engineering"]
 
     return (
         <div>
@@ -40,9 +33,9 @@ function generateFilterElement()
                     as={CustomToggle}
                     id="dropdown-custom-components"
                 >
-                    Custom toggle
+                    Major Filter
                 </Dropdown.Toggle>
-
+        
                 <Dropdown.Menu as={SearchFilterMenu} customOption = {filterList}>
                     
                 </Dropdown.Menu>

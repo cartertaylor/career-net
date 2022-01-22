@@ -198,6 +198,7 @@ async function fetchUserData (event)  {
                 <Form.Text className="text-muted">
                   Search a User, and hit Fetch, to grab the students information
                 </Form.Text>
+                
               </Form.Group>
 
               <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
