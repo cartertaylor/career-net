@@ -190,22 +190,22 @@ async function fetchUserData (event)  {
           {/* Search bar for Students */}
           <Container> 
             {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
-            <Form onSubmit = {fetchUserData}> 
+            <Form onSubmit = {fetchUserData} className=""> 
 
               <Form.Group className="mb-3" controlId="studentSearch">
                 <Form.Label>Search Student</Form.Label>
-                <Form.Control type="text" placeholder="Enter Student Name" />
+                
+                <Form.Control className type="text" placeholder="Enter Student Name" />
+                
                 <Form.Text className="text-muted">
                   Search a User, and hit Fetch, to grab the students information
                 </Form.Text>
                 
               </Form.Group>
-
-              <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
-
+              <StudentSearchBar/>
+              {/* <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button> */}
+             
             </Form>
-
-            <StudentSearchBar></StudentSearchBar>
 
           </Container>
           

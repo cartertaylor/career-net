@@ -3,7 +3,7 @@ import {FormControl, Form} from 'react-bootstrap/';
 
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
-const SearchFilterMenu = React.forwardRef(
+const DateFilterMenu = React.forwardRef(
     ({ style, className, customOption,"aria-labelledby": labeledBy }, ref) => {
         
         // State of search bar
@@ -57,5 +57,5 @@ const SearchFilterMenu = React.forwardRef(
     }
 );
 
-export default SearchFilterMenu;
+export default DateFilterMenu;
 

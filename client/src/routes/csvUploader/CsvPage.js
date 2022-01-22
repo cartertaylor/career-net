@@ -42,7 +42,7 @@ export default function CsvPage() {
     };
 
     const uploadCsvToDatabase = () => {
-        // 
+        // send grabbed CSV data to backend
         axios
             .post(routeURL, {
                 data:parsedCsvData,
@@ -51,22 +51,9 @@ export default function CsvPage() {
 
                 console.log(response);
 
-                // // Stop loading
-                // setLoading(false);
-
-                // // set banner
-                // setBannerContent(
-                //     <AlertDismissibleExample
-                //         linkedinStatus={response.data.linkedinFetchStatus}
-                //     />
-                // );
+                // TODO: Create front end reaction based on response from server (success / failure)
             });
     }
-
-    // TODO: 
-    // Create a function that sends data to back end
-    // add file browser for CSV
-
 
     return (
         <div className="App">

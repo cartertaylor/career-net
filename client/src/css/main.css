@@ -19,3 +19,16 @@
 .dropzoneAccept {
     border: 2px dashed green;
 }
+
+.dropDownButton {
+    border-top: 0em;
+    border: 2px dashed green;
+    margin-left: 40%;
+    margin-right: 40%;
+}
+
+.textCustom{
+    color:blue;
+    text-decoration: none;
+    
+}
