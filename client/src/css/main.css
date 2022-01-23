@@ -28,7 +28,14 @@
 }
 
 .textCustom{
-    color:blue;
+    color:red;
     text-decoration: none;
     
+}
+
+.dropdown-menu-search{
+
+    height: 50vh;
+    overflow-y: scroll;
+
 }

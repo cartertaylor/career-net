@@ -1,11 +1,10 @@
 import React, {useState} from "react";
 import {FormControl, Form} from 'react-bootstrap/';
 
-
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
     ({ style, className, customOption,"aria-labelledby": labeledBy }, ref) => {
-        
+
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
 
@@ -38,6 +37,7 @@ const SearchFilterMenu = React.forwardRef(
                 className={className}
                 aria-labelledby={labeledBy}
             >
+                
                 <h5 className="m-2 mb-3">Major Filters</h5>
                 <FormControl
                     autoFocus

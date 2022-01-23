@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import {Button, Dropdown, Container, Row, Col} from 'react-bootstrap/';
 
 // Other CSS
-import "../../../css/main.css";
+import mainStyles from "../../../css/main.css";
 
 // Components
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
@@ -29,7 +29,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     </Button>
 ));
 
-    let filterList = ["Computer Science", "Mechanical Engineering", "Exercise Science", "Electrical Engineering"]
+    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
 
     return (
         <div>
@@ -46,7 +46,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
                                     Major Filter
                                 </Dropdown.Toggle>
                         
-                                <Dropdown.Menu as={SearchFilterMenu} customOption = {filterList}>
+                                <Dropdown.Menu as={SearchFilterMenu} className = "dropdown-menu-search" customOption = {filterList} style = {mainStyles}>
                                     
                                 </Dropdown.Menu>
                         

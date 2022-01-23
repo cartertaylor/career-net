@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import {FormControl, Form, Container} from 'react-bootstrap/';
+import {Form, Container} from 'react-bootstrap/';
 
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const DateFilterMenu = React.forwardRef(
     ({ style, className, customOption, "aria-labelledby": labeledBy }, ref) => {
         
+        console.log(style)
         // State of each date box
         const [dateValues, setDateValues] = useState({startDate:undefined, endDate: undefined})
 
