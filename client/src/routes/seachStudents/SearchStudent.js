@@ -22,13 +22,20 @@ function SearchStudent ( {grabState} ) {
         listStudents: [{id: uuid, firstName:"Carter", lastName:"Taylor", newInfo: null},{id: uuid, firstName:"bob", lastName:"Vance", newInfo: null}],
         isLoading: true,
         showUserAddedResponse:false,
-        dateRanges: {startDate:undefined, endDate:undefined}
+        dateRanges: {startDate:undefined, endDate:undefined},
+        filteredMajors: null
     });
-
+  
+  // Grabs the selected year ranges from the filter menu 
   function handleDateRangeChange(ranges)
   {
-    console.log(ranges)
     setStudentInformation(prevState => {return {...prevState, dateRanges:ranges}})
+  }
+
+  // Grabs the selected majors to filter and returns them in an array of strings 
+  function handleMajorFilterChange(arrayOfFilteredMajor)
+  {
+    setStudentInformation(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
   }
 
   function handleRetreiveButton () 
@@ -36,6 +43,10 @@ function SearchStudent ( {grabState} ) {
     console.log("yo what is up, my main man");
 
   }
+
+// TODO: Move Search portion of component to StudenetSearch.js 
+
+// TODO: have search run "on change" instead of "on submit"
 
 // FETCH USER DATA BASED ON THE LETTERS FROM THE SEARCH BAR
 async function fetchUserData (event)  {
@@ -87,7 +98,6 @@ async function fetchUserData (event)  {
         })
     console.log(studentInformation.listStudents)
 
-    
   }
 
   // adds to the state (and the table), the user data that is entered in through the form
@@ -193,9 +203,9 @@ async function fetchUserData (event)  {
                 </Form.Text>
                 
               </Form.Group>
-              <StudentSearchBar grabDateRanges = {handleDateRangeChange}/>
+              <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
               <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
-             
+
             </Form>
 
           </Container>
@@ -208,14 +218,14 @@ async function fetchUserData (event)  {
             // else
             : <StudentList studentList = {studentInformation.listStudents} key={uuid} grabStudenProfileData = {grabUserProfileData} />}
           </div>
-           
+
            {/*Add Student Form */}
           <StudentForm addUserData = {handleAddUser} key = {uuid}/>
           
 
         </div>
 
-     
+
     );
   
 }

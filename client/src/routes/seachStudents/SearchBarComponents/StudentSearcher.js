@@ -10,7 +10,7 @@ import mainStyles from "../../../css/main.css";
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
 
-function StudentSearchBar({ grabState, grabDateRanges }) {
+function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
 
 
 // The forwardRef is important!!
@@ -47,7 +47,12 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
                                     Major Filter
                                 </Dropdown.Toggle>
                         
-                                <Dropdown.Menu as={SearchFilterMenu} className = "dropdown-menu-search" customOption = {filterList} style = {mainStyles}>
+                                <Dropdown.Menu 
+                                    as={SearchFilterMenu}
+                                    className = "dropdown-menu-search"
+                                    customOption = {filterList}
+                                    style = {mainStyles}
+                                    handleSearchFilterChange = {handleSearchFilterChange}>
                                     
                                 </Dropdown.Menu>
                         

@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {FormControl, Form} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ style, className, customOption,"aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, customOption, handleSearchFilterChange,"aria-labelledby": labeledBy }, ref) => {
 
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
@@ -11,6 +11,18 @@ const SearchFilterMenu = React.forwardRef(
         // State to measure check status of each array filter element passed in
         const [checkStatus, setCheck] = useState({})
 
+        useEffect(()=>
+        {
+            let finalState = removeUncheckedValues()
+            console.log(finalState)
+
+            let listPropertyNames = Object.keys(finalState);
+            console.log(listPropertyNames)
+
+            handleSearchFilterChange(listPropertyNames)
+
+        },[checkStatus])
+        
         // Create JSX Object for each array element
         let jsxOptions = customOption.map (
             
@@ -29,7 +41,26 @@ const SearchFilterMenu = React.forwardRef(
                             })
                         }} />
                     )
-        
+
+        // Removes Unchecked values from object before sending state out to main compoent
+        function removeUncheckedValues ()
+        {
+            let newObj = JSON.parse(JSON.stringify(checkStatus));
+            let finalObject = {}
+
+            for (let key in newObj)
+            {
+                // Filter out unchecked "filters options"
+                if (newObj[key] == true)
+                {
+                    finalObject[key] = true
+                }
+            }
+            
+            return finalObject
+        }
+
+
         return (
             <div
                 ref={ref}
