@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 
 import StudentList  from '../../components/StudentList';
 import StudentForm from '../../components/StudentForm';
+import StudentSearchBar from './SearchBarComponents/StudentSearcher';
 import {v4 as uuid} from "uuid";
 
 
@@ -11,10 +12,6 @@ import Container from 'react-bootstrap/Container';
 import {Toast, Form, Button, ToastContainer} from 'react-bootstrap/';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter as Router, Route, Routes, Link} from "react-router-dom";
-
-// Different route imports
-// import StudentProfile from './screens/student-profile/index'
 
 
 function SearchStudent ( {grabState} ) {
@@ -25,23 +22,31 @@ function SearchStudent ( {grabState} ) {
         listStudents: [{id: uuid, firstName:"Carter", lastName:"Taylor", newInfo: null},{id: uuid, firstName:"bob", lastName:"Vance", newInfo: null}],
         isLoading: true,
         showUserAddedResponse:false,
+        dateRanges: {startDate:undefined, endDate:undefined},
+        filteredMajors: null
     });
-
-    // state = {
-    //     data: null,
-    //     apiData: null,
-    //     listStudents: [{id: uuid, firstName:"Carter", lastName:"Taylor", newInfo: null},{id: uuid, firstName:"bob", lastName:"Vance", newInfo: null}],
-    //     isLoading: true,
-    //     showUserAddedResponse:false,
-    //   };
-
   
+  // Grabs the selected year ranges from the filter menu 
+  function handleDateRangeChange(ranges)
+  {
+    setStudentInformation(prevState => {return {...prevState, dateRanges:ranges}})
+  }
+
+  // Grabs the selected majors to filter and returns them in an array of strings 
+  function handleMajorFilterChange(arrayOfFilteredMajor)
+  {
+    setStudentInformation(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+  }
 
   function handleRetreiveButton () 
   {
     console.log("yo what is up, my main man");
 
   }
+
+// TODO: Move Search portion of component to StudenetSearch.js 
+
+// TODO: have search run "on change" instead of "on submit"
 
 // FETCH USER DATA BASED ON THE LETTERS FROM THE SEARCH BAR
 async function fetchUserData (event)  {
@@ -93,13 +98,8 @@ async function fetchUserData (event)  {
         })
     console.log(studentInformation.listStudents)
 
-    
   }
 
-  // componentDidMount() {
-  //   this.fetchUserData  (this.state.listStudents)
-  // }
-  
   // adds to the state (and the table), the user data that is entered in through the form
   function handleAddUser(addedUserInfo)
   {
@@ -126,9 +126,6 @@ async function fetchUserData (event)  {
           return {...prevState, showUserAddedResponse:true }
       })
 
-    
-
-    // Clear our the fields =
   }
 
   async function storeUserOnDatabase  (studentData)
@@ -160,7 +157,6 @@ async function fetchUserData (event)  {
   }
 
 
-
   function closeToast ()
   {
   
@@ -169,19 +165,12 @@ async function fetchUserData (event)  {
       {
           return {...prevState, showUserAddedResponse:false }
       })
-   
 
   }
-  
-  let testString = "Hey I am the conrtl z part "
-  // {this.fetchUserData}
 
     return (
-   
         <div className="App">
-          
-
-
+        
           {/* Toast pops up on user creation */}
 
           <ToastContainer position="top-end" className="p-3">
@@ -200,17 +189,21 @@ async function fetchUserData (event)  {
           </ToastContainer>
 
           {/* Search bar for Students */}
-          <Container>
-            <Form onSubmit = {fetchUserData}>
+          <Container> 
+            {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
+            <Form onSubmit = {fetchUserData} className=""> 
 
               <Form.Group className="mb-3" controlId="studentSearch">
                 <Form.Label>Search Student</Form.Label>
-                <Form.Control type="text" placeholder="Enter Student Name" />
+                
+                <Form.Control className type="text" placeholder="Enter Student Name" />
+                
                 <Form.Text className="text-muted">
                   Search a User, and hit Fetch, to grab the students information
                 </Form.Text>
+                
               </Form.Group>
-
+              <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
               <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
 
             </Form>
@@ -225,14 +218,14 @@ async function fetchUserData (event)  {
             // else
             : <StudentList studentList = {studentInformation.listStudents} key={uuid} grabStudenProfileData = {grabUserProfileData} />}
           </div>
-           
+
            {/*Add Student Form */}
           <StudentForm addUserData = {handleAddUser} key = {uuid}/>
           
 
         </div>
 
-     
+
     );
   
 }

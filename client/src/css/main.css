@@ -19,3 +19,23 @@
 .dropzoneAccept {
     border: 2px dashed green;
 }
+
+.dropDownButton {
+    border-top: 0em;
+    border: 2px dashed green;
+    margin-left: 40%;
+    margin-right: 40%;
+}
+
+.textCustom{
+    color:red;
+    text-decoration: none;
+    
+}
+
+.dropdown-menu-search{
+
+    height: 50vh;
+    overflow-y: scroll;
+
+}
