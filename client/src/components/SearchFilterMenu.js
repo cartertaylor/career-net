@@ -38,6 +38,7 @@ const SearchFilterMenu = React.forwardRef(
                 className={className}
                 aria-labelledby={labeledBy}
             >
+                <h5 className="m-2 mb-3">Major Filters</h5>
                 <FormControl
                     autoFocus
                     className="mx-3 my-2 w-auto"

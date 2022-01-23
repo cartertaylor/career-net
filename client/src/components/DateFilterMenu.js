@@ -1,36 +1,52 @@
 import React, {useState} from "react";
-import {FormControl, Form} from 'react-bootstrap/';
+import {FormControl, Form, Container} from 'react-bootstrap/';
 
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const DateFilterMenu = React.forwardRef(
     ({ style, className, customOption,"aria-labelledby": labeledBy }, ref) => {
         
-        // State of search bar
-        const [searchValue, setSearchValue] = useState("");
+        // State of each date box
+        const [dateValues, setDateValues] = useState({startDate:undefined, endDate: undefined})
 
-        // State to measure check status of each array filter element passed in
-        const [checkStatus, setCheck] = useState({})
+        // Get Year Selections for the starting range
+        let startOptions = getYearsArray("start")
+        startOptions = startOptions.map (yearOption=> <option value = {yearOption}>{yearOption}</option> )
 
-        // Create JSX Object for each array element
-        let jsxOptions = customOption.map (
-            
-            individualOption => 
+        // Get Year Selections for the ending range
+        let endOptions = getYearsArray("end")
+        endOptions = endOptions.map (yearOption=> <option value = {yearOption}>{yearOption}</option> )
 
-                <Form.Check 
-                    type = "checkbox" 
-                    checked={checkStatus[individualOption] || false} 
-                    className="m-3"
-                    label={individualOption}
-                    onChange={() => {
-                        setCheck(prevState => 
-                            {   
-                                // Check / uncheck given element in menu (and set the state of that element to said check)
-                                return {...prevState, [individualOption]: !checkStatus[individualOption] }
-                            })
-                        }} />
-                    )
-        
+        // Retreives the array of years for the range (start vs end, EX: 2010 - 2014)
+        function getYearsArray(rangeBox)
+        {
+            let startYear = 2010
+
+            if (rangeBox == "start")
+            {// Should either be 2010 or start year
+                startYear = 2010 
+            }
+            else
+            {
+                startYear = dateValues.startDate
+            }
+
+            let currentYear = new Date().getFullYear()
+            let years = [];
+
+            while ( startYear <= currentYear )
+            {
+                years.push(startYear)
+                startYear ++
+            }
+
+            console.log(years)
+            console.log(dateValues.startDate)
+            console.log(startYear)
+
+            return years
+        }
+
         return (
             <div
                 ref={ref}
@@ -38,20 +54,33 @@ const DateFilterMenu = React.forwardRef(
                 className={className}
                 aria-labelledby={labeledBy}
             >
-                <FormControl
-                    autoFocus
-                    className="mx-3 my-2 w-auto"
-                    placeholder="Type to filter..."
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    value={searchValue}
-                />
-                <ul className="list-unstyled">
-                    {React.Children.toArray(jsxOptions).filter(
-                        (child) =>
-                            !searchValue ||
-                            child.props.label.toLowerCase().startsWith(searchValue)
-                    )}
-                </ul>
+                <h5 className="m-2 mb-3">Date Filters</h5>
+                <Container className= "d-flex">
+                    <Form.Select aria-label="Default select example"
+                        
+                        onChange={ (e)=> {
+                            let currentValue = e.target.value
+                            setDateValues(prevYear =>{ return {...prevYear, startDate:currentValue}})
+                        }}
+                        value={dateValues.startDate}
+                    >
+                        
+                    <option>Choose Year</option>
+                        {startOptions}
+
+                    </Form.Select>
+                    <p className="text-center m-2"> - </p>
+                    <Form.Select aria-label="Default select example"
+                        onChange={ (e)=> {
+                            let currentValue = e.target.value
+                            setDateValues(prevYearSelect =>{ return {...prevYearSelect, endDate:currentValue}})
+                        }}
+                    >
+                        <option>Choose Year</option>
+                        {endOptions}
+
+                    </Form.Select>
+                </Container>
             </div>
         );
     }

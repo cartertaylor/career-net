@@ -1,7 +1,7 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 // Bootstrap
-import {Button, Dropdown, Container} from 'react-bootstrap/';
+import {Button, Dropdown, Container, Row, Col} from 'react-bootstrap/';
 
 // Other CSS
 import "../../../css/main.css";
@@ -33,36 +33,45 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 
     return (
         <div>
-                <Dropdown >
-                    <Dropdown.Toggle
-                        as={CustomToggle}
-                        id="dropdown-custom-components"
-                        className = "textCustom"
+                <Container className=  "mb-3">
+                    <Row>
+                        <Col>
+                            <Dropdown >
+                                <Dropdown.Toggle
+                                    as={CustomToggle}
+                                    id="dropdown-custom-components"
+                                    className = "textCustom"
+                                    
+                                >
+                                    Major Filter
+                                </Dropdown.Toggle>
                         
-                    >
-                        Major Filter
-                    </Dropdown.Toggle>
-            
-                    <Dropdown.Menu as={SearchFilterMenu} customOption = {filterList}>
+                                <Dropdown.Menu as={SearchFilterMenu} customOption = {filterList}>
+                                    
+                                </Dropdown.Menu>
                         
-                    </Dropdown.Menu>
+                            </Dropdown>
+                        </Col>
+                        <Col>
+                            <Dropdown >
+                                <Dropdown.Toggle
+                                    as={CustomToggle}
+                                    id="dropdown-custom-components"
+                                    className = "textCustom"
+                                    
+                                >
+                                    Date Range
+                                </Dropdown.Toggle>
+                        
+                                <Dropdown.Menu as={DateFilterMenu} customOption = {filterList}>
 
-                </Dropdown>
-                <Dropdown >
-                    <Dropdown.Toggle
-                        as={CustomToggle}
-                        id="dropdown-custom-components"
-                        className = "textCustom"
-                        
-                    >
-                        Date Range
-                    </Dropdown.Toggle>
-            
-                    <Dropdown.Menu as={DateFilterMenu} customOption = {filterList}>
-                        
-                    </Dropdown.Menu>
+                                </Dropdown.Menu>
 
-                </Dropdown>
+                            </Dropdown>
+                        </Col>
+                        
+                    </Row>
+                </Container>
 
         </div>
     );
