@@ -1,14 +1,21 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Form, Container} from 'react-bootstrap/';
 
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const DateFilterMenu = React.forwardRef(
-    ({ style, className, customOption, "aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, grabDateRanges, "aria-labelledby": labeledBy }, ref) => {
         
-        console.log(style)
         // State of each date box
         const [dateValues, setDateValues] = useState({startDate:undefined, endDate: undefined})
+
+        // Only send back state data if we have both values
+        useEffect(() => {
+            //do operation on state change
+            grabDateRanges(dateValues)
+            console.log("STATE WAS CHANGED")
+
+        },[dateValues.startDate, dateValues.endDate]) //Change is dependent if state is updated
 
         // Get Year Selections for the starting range
         let startOptions = getYearsArray("start")
@@ -40,6 +47,7 @@ const DateFilterMenu = React.forwardRef(
             }
 
             // FIXME: Multiple rerenders being logged here because of state manipulation (somewhere along the line). Need to fix at some point
+            // STATE is updating when we need it to, but because VARs at top arent controlled, there are multiple logs
             console.log(years)
             console.log(dateValues.startDate)
             console.log(startYear)
@@ -60,6 +68,7 @@ const DateFilterMenu = React.forwardRef(
                     <Form.Select aria-label="Start Range"
                         
                         onChange={ (e)=> {
+                            console.log("First state change")
                             let currentValue = e.target.value
                             setDateValues(prevYear =>{ return {...prevYear, startDate:currentValue}})
                         }}
@@ -75,6 +84,7 @@ const DateFilterMenu = React.forwardRef(
 
                     <Form.Select aria-label="End Range"
                         onChange={ (e)=> {
+                            console.log( e.target.value)
                             let currentValue = e.target.value
                                 setDateValues(prevYearSelect =>{ return {...prevYearSelect, endDate:currentValue}})
                         }}

@@ -12,10 +12,6 @@ import Container from 'react-bootstrap/Container';
 import {Toast, Form, Button, ToastContainer} from 'react-bootstrap/';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-import {BrowserRouter as Router, Route, Routes, Link} from "react-router-dom";
-
-// Different route imports
-// import StudentProfile from './screens/student-profile/index'
 
 
 function SearchStudent ( {grabState} ) {
@@ -26,17 +22,14 @@ function SearchStudent ( {grabState} ) {
         listStudents: [{id: uuid, firstName:"Carter", lastName:"Taylor", newInfo: null},{id: uuid, firstName:"bob", lastName:"Vance", newInfo: null}],
         isLoading: true,
         showUserAddedResponse:false,
+        dateRanges: {startDate:undefined, endDate:undefined}
     });
 
-    // state = {
-    //     data: null,
-    //     apiData: null,
-    //     listStudents: [{id: uuid, firstName:"Carter", lastName:"Taylor", newInfo: null},{id: uuid, firstName:"bob", lastName:"Vance", newInfo: null}],
-    //     isLoading: true,
-    //     showUserAddedResponse:false,
-    //   };
-
-  
+  function handleDateRangeChange(ranges)
+  {
+    console.log(ranges)
+    setStudentInformation(prevState => {return {...prevState, dateRanges:ranges}})
+  }
 
   function handleRetreiveButton () 
   {
@@ -167,9 +160,7 @@ async function fetchUserData (event)  {
 
     return (
         <div className="App">
-          
-
-
+        
           {/* Toast pops up on user creation */}
 
           <ToastContainer position="top-end" className="p-3">
@@ -202,8 +193,8 @@ async function fetchUserData (event)  {
                 </Form.Text>
                 
               </Form.Group>
-              <StudentSearchBar/>
-              {/* <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button> */}
+              <StudentSearchBar grabDateRanges = {handleDateRangeChange}/>
+              <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
              
             </Form>
 

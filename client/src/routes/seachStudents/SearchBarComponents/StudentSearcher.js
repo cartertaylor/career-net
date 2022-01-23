@@ -10,7 +10,8 @@ import mainStyles from "../../../css/main.css";
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
 
-function StudentSearchBar({ grabState }) {
+function StudentSearchBar({ grabState, grabDateRanges }) {
+
 
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
@@ -63,7 +64,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
                                     Date Range
                                 </Dropdown.Toggle>
                         
-                                <Dropdown.Menu as={DateFilterMenu} customOption = {filterList}>
+                                <Dropdown.Menu as={DateFilterMenu} customOption = {filterList} grabDateRanges={grabDateRanges}>
 
                                 </Dropdown.Menu>
 
