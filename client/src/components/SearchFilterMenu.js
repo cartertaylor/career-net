@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {FormControl, Form} from 'react-bootstrap/';
 
+
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
     ({ style, className, customOption, handleSearchFilterChange,"aria-labelledby": labeledBy }, ref) => {
@@ -64,7 +65,6 @@ const SearchFilterMenu = React.forwardRef(
         return (
             <div
                 ref={ref}
-                style={style}
                 className={className}
                 aria-labelledby={labeledBy}
             >
