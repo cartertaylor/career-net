@@ -6,12 +6,18 @@ import axios from "axios";
 import Container from "react-bootstrap/Container";
 import { Button, Spinner, Alert, Row, Col } from "react-bootstrap/";
 
+import StudentSearchBar from "../seachStudents/SearchBarComponents/StudentSearcher";
+
 function Settings() {
     const baseURL = "/users/get_linkedin_data";
 
     const [linkedinReturn, setPost] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const [bannerContenet, setBannerContent] = useState(null);
+
+    const [filteredMajors, setFilteredMajor] = useState(null)
+    const [dateRanges, setDateRanges] = useState({startDate:undefined, endDate:undefined})
+
 
     function AlertDismissibleExample({ linkedinStatus }) {
         const [show, setShow] = useState(true);
@@ -79,10 +85,24 @@ function Settings() {
             });
     }
 
+    // Grabs the selected year ranges from the filter menu 
+  function handleDateRangeChange(ranges)
+  {
+    setDateRanges(prevState => {return {...prevState, dateRanges:ranges}})
+  }
+
+  // Grabs the selected majors to filter and returns them in an array of strings 
+  function handleMajorFilterChange(arrayOfFilteredMajor)
+  {
+    setFilteredMajor(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+  }
+
     //   if (!post) return null;
     return (
-        <div>
+        <div className = "App">
             <Container className="mt-4 ">
+            <StudentSearchBar key = "searchFilter" grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
+
                 <Row>
                     <h1 className="text-center mb-3">
                         Hi this is the Settings

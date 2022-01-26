@@ -38,6 +38,8 @@ function SearchStudent ( {grabState} ) {
     setStudentInformation(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
   }
 
+  console.log(studentInformation.filteredMajors)
+
   function handleRetreiveButton () 
   {
     console.log("yo what is up, my main man");
@@ -157,7 +159,7 @@ async function fetchUserData (event)  {
   }
 
 
-  function closeToast ()
+  function closeToast()
   {
   
     // Remove the Toast 
@@ -167,10 +169,13 @@ async function fetchUserData (event)  {
       })
 
   }
+    
 
     return (
         <div className="App">
-        
+          
+          
+
           {/* Toast pops up on user creation */}
 
           <ToastContainer position="top-end" className="p-3">
@@ -188,22 +193,26 @@ async function fetchUserData (event)  {
             </Toast>
           </ToastContainer>
 
+          
           {/* Search bar for Students */}
           <Container> 
+          
+          
+
             {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
             <Form onSubmit = {fetchUserData} className=""> 
 
               <Form.Group className="mb-3" controlId="studentSearch">
+
                 <Form.Label>Search Student</Form.Label>
-                
+                <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
                 <Form.Control className type="text" placeholder="Enter Student Name" />
-                
+
                 <Form.Text className="text-muted">
                   Search a User, and hit Fetch, to grab the students information
                 </Form.Text>
                 
               </Form.Group>
-              <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
               <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
 
             </Form>

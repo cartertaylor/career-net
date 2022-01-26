@@ -4,7 +4,7 @@ import {Form, Container} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const DateFilterMenu = React.forwardRef(
-    ({ style, className, grabDateRanges, "aria-labelledby": labeledBy }, ref) => {
+    ({ className, grabDateRanges, "aria-labelledby": labeledBy }, ref) => {
         
         // State of each date box
         const [dateValues, setDateValues] = useState({startDate:undefined, endDate: undefined})
@@ -58,7 +58,6 @@ const DateFilterMenu = React.forwardRef(
         return (
             <div
                 ref={ref}
-                style={style}
                 className={className}
                 aria-labelledby={labeledBy}
             >
@@ -66,7 +65,6 @@ const DateFilterMenu = React.forwardRef(
                 <Container className= "d-flex">
 
                     <Form.Select aria-label="Start Range"
-                        
                         onChange={ (e)=> {
                             console.log("First state change")
                             let currentValue = e.target.value

@@ -5,14 +5,20 @@ import {Button, Dropdown, Container, Row, Col} from 'react-bootstrap/';
 
 // Other CSS
 import mainStyles from "../../../css/main.css";
-
+import "../../../css/main.css";
 // Components
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
 
 function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
 
+    const popperConfig = {
+        strategy:"static"
+        
+    };
 
+
+    
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -34,11 +40,13 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 
     return (
         <div>
+            
                 <Container className=  "mb-3">
                     <Row>
                         <Col>
                             <Dropdown >
                                 <Dropdown.Toggle
+                                    
                                     as={CustomToggle}
                                     id="dropdown-custom-components"
                                     className = "textCustom"
@@ -48,10 +56,10 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
                                 </Dropdown.Toggle>
                         
                                 <Dropdown.Menu 
+                                    
                                     as={SearchFilterMenu}
-                                    className = "dropdown-menu-search"
+                                    // className = "dropdown-menu-search"
                                     customOption = {filterList}
-                                    style = {mainStyles}
                                     handleSearchFilterChange = {handleSearchFilterChange}>
                                     
                                 </Dropdown.Menu>
@@ -61,6 +69,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
                         <Col>
                             <Dropdown >
                                 <Dropdown.Toggle
+                                
                                     as={CustomToggle}
                                     id="dropdown-custom-components"
                                     className = "textCustom"
@@ -68,8 +77,12 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
                                 >
                                     Date Range
                                 </Dropdown.Toggle>
-                        
-                                <Dropdown.Menu as={DateFilterMenu} customOption = {filterList} grabDateRanges={grabDateRanges}>
+                                
+                                <Dropdown.Menu as={DateFilterMenu}
+
+                                    customOption = {filterList}
+                                    id="dropdown-custom-components" 
+                                    grabDateRanges={grabDateRanges}>
 
                                 </Dropdown.Menu>
 
