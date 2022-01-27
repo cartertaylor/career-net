@@ -4,9 +4,11 @@ import axios from "axios";
 // import Bootstrap
 // import './node_modules/react-bootstrap/'
 import Container from "react-bootstrap/Container";
-import { Button, Spinner, Alert, Row, Col } from "react-bootstrap/";
+import { Button, Spinner, Alert, Row, Col, Card, ListGroup} from "react-bootstrap/";
 
 import StudentSearchBar from "../seachStudents/SearchBarComponents/StudentSearcher";
+import FilterSelectors from "./components/FilterSelectors";
+
 
 function Settings() {
     const baseURL = "/users/get_linkedin_data";
@@ -101,36 +103,44 @@ function Settings() {
     return (
         <div className = "App">
             <Container className="mt-4 ">
-            <StudentSearchBar key = "searchFilter" grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
 
-                <Row>
                     <h1 className="text-center mb-3">
-                        Hi this is the Settings
+                        Linkedin Fetching
                     </h1>
-                </Row>
+                    <h6 className= "mb-4"> You can you use the filters on the right to filter which student data you would like to retreive for Linkedin </h6>
 
-                <Row className="justify-content-md-center">
-                    <Col xs lg="2">
-                        <Button
-                            className="mb-3"
-                            onClick={fetchLinkedinStudentData}
-                        >
-                            Fetch Linkedin Data
-                        </Button>
-                    </Col>
-                </Row>
+                
+                       
+                 
 
                 <div>
-                    <Row className="justify-content-md-center">
+                    
                         {isLoading == true ? (
                             <Spinner animation="border" variant="primary" />
                         ) : (
                             // else
                             <div>{bannerContenet}</div>
                         )}
-                    </Row>
+                    
                 </div>
             </Container>
+            <Container>
+                <Row>
+                    <Col>
+                    
+                        <FilterSelectors></FilterSelectors>
+                    
+                    </Col>
+                    <Col> <Button
+                            className="mb-3"
+                            onClick={fetchLinkedinStudentData}
+                        >
+                            Fetch Linkedin Data
+                        </Button></Col>
+                
+                </Row>
+            </Container>
+            
         </div>
     );
 }
