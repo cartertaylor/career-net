@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Form, Container} from 'react-bootstrap/';
+import {Form, Container, Button} from 'react-bootstrap/';
 
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
@@ -55,6 +55,12 @@ const DateFilterMenu = React.forwardRef(
             return years
         }
 
+        // Clears slected filter options for that given menu  
+        function clearAllSelectors()
+        {
+            setDateValues(prevState=> {return {...prevState, startDate:"Choose Year", endDate:"Choose Year"}})
+        }
+
         return (
             <div
                 ref={ref}
@@ -81,6 +87,7 @@ const DateFilterMenu = React.forwardRef(
                     <p className="text-center m-2"> - </p>
 
                     <Form.Select aria-label="End Range"
+                        title="yo"
                         onChange={ (e)=> {
                             console.log( e.target.value)
                             let currentValue = e.target.value
@@ -93,6 +100,8 @@ const DateFilterMenu = React.forwardRef(
                     </Form.Select>
 
                 </Container>
+                <hr className = "mt-4"/>
+                <Button className = "" onClick={clearAllSelectors}>Clear </Button>
             </div>
         );
     }

@@ -2,43 +2,35 @@ import {React, useState} from "react";
 
 
 
-import {Button, Offcanvas, Dropdown } from "react-bootstrap"
+import {Button, Offcanvas, Dropdown, ListGroup } from "react-bootstrap"
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
 
-export default function SideMenu({currentMenu})
+export default function SideMenu({...props})
 {
+
+    // props received from parent component
+    let currentMenu = props.currentMenu
+    let handleSearchFilterChange = props.handleSearchFilterChange
+    let grabDateRanges = props.handleDateRangeChange
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    console.log(currentMenu)
-
     // This list will depend on the users available users
     let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
-
-    function handleSearchFilterChange()
-    {
-        console.log("Update State of the currently selected Majors")
-    }
-
-    function grabDateRanges()
-    {
-        console.log("Update the current state of the grad date ranges")
-    }
 
     function chooseMenu(currentMenu)
     {
         let menuJSX = null
-        console.log("hey")
         console.log(currentMenu)
 
-        if (currentMenu == "major")
+        if (currentMenu == "Major")
         {
-            menuJSX = (<SearchFilterMenu customOption = {filterList} handleSearchFilterChange= {handleSearchFilterChange}/>)
+            menuJSX = (<SearchFilterMenu customOption = {filterList} handleSearchFilterChange = {handleSearchFilterChange}/>)
         }
         else if (currentMenu == "Graduation Year")
         {
@@ -49,17 +41,23 @@ export default function SideMenu({currentMenu})
         return menuJSX
     }
 
+
+
     return (
         <div>
-            <Button variant="primary" onClick={handleShow}>
-                Launch
-            </Button>
+            <ListGroup.Item action variant="primary" onClick={handleShow}>
+                {(currentMenu)}
+            </ListGroup.Item>
 
             <Offcanvas show={show} onHide={handleClose} placement="end">
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Filter and Sort</Offcanvas.Title>
                 </Offcanvas.Header>
-                <Offcanvas.Body>{chooseMenu(currentMenu)}</Offcanvas.Body>
+                <Offcanvas.Body>
+                    {chooseMenu(currentMenu)}
+                    
+                </Offcanvas.Body>
+                
             </Offcanvas>
         </div>
     );

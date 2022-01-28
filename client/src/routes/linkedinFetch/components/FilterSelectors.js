@@ -14,29 +14,41 @@ export default function FilterSelectors()
 {
     const [showSideMenu, setShowSideMenu] = useState(false)
     const [clickedFilter, setClickedFilter] =useState(undefined)
+    const [selectedFilters, setSelectedFilters] = useState({
+        dateRanges: {startDate:undefined, endDate:undefined},
+        filteredMajors: null
+        
+    })
 
-    function handleSideMenuClose()
+
+    // Grabs the selected majors to filter and returns them in an array of strings 
+    function handleSearchFilterChange(arrayOfFilteredMajor)
     {
-        // set menue to close 
+        setSelectedFilters(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
     }
 
-    // Will update based on which menu button is clicked
-    function handleMenuClick(e)
-    {   console.log(e.target.value)
-        console.log("menu button click")
+    console.log(selectedFilters.dateRanges)
+
+    // Grabs the selected year ranges from the filter menu 
+    function handleDateRangeChange(ranges)
+    {
+        setSelectedFilters((prevState => { return {...prevState, dateRanges:ranges}}))
     }
+
 
     
     return(
     <Card style={{ width: '18rem', }} className= "">
         <Card.Header><h3>Linkedin Filter</h3></Card.Header>
         <ListGroup variant="flush">
-            <ListGroup.Item ><Button variant="primary" onClick = {(e) => handleMenuClick(e)}>Major -></Button></ListGroup.Item>
-            <ListGroup.Item>Upload Date range</ListGroup.Item>
-            <ListGroup.Item>Graduation Year</ListGroup.Item>
+
+            <SideMenu currentMenu = "Major" handleSearchFilterChange = {handleSearchFilterChange} />
+            <SideMenu currentMenu = "Upload Date Range"/>
+            <SideMenu currentMenu = "Graduation Year" handleDateRangeChange = {handleDateRangeChange}/>  
+
         </ListGroup >
-        <SideMenu currentMenu = "major"/>
-        <SideMenu currentMenu = "Graduation Year"/>
+        
+        {/* <SideMenu currentMenu = "Graduation Year"/> */}
         
         
     </Card>
