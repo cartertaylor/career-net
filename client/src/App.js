@@ -16,9 +16,10 @@ import Login from "./routes/home/Login";
 import SearchStudents from "./routes/seachStudents/SearchStudent";
 import StudentProfile from "./routes/studentProfile/StudentProfile";
 import DashboardPage from "./routes/dashBoard/DashboardPage";
-import Settings from "./routes/settings/Settings";
+import Settings from "./routes/linkedinFetch/LinkedinPage";
 import Timeline from "./components/Timeline";
 import CsvPage from "./routes/csvUploader/CsvPage";
+import UploadPage from "./routes/uploadPage/UploadPage";
 
 // functional component
 function App() {
@@ -38,8 +39,9 @@ function App() {
           <Nav className="me-auto">
             <Nav.Link href="/school_dashboard">School Dashboard</Nav.Link>
             <Nav.Link href="/search_students">Search For Students</Nav.Link>
-            <Nav.Link href="/settings">Settings</Nav.Link>
+            <Nav.Link href="/settings">Linkedin Fetch</Nav.Link>
             <Nav.Link href="/csvUpload">Upload CSV</Nav.Link>
+            <Nav.Link href="/uploadPage">Upload</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -58,6 +60,8 @@ function App() {
         <Route path="/school_dashboard" element={<DashboardPage />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/csvUpload" element={<CsvPage />} />
+
+        <Route path="/uploadPage" element={<UploadPage />} />
       </Routes>
     </Router>
   );

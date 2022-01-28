@@ -31,6 +31,7 @@ function SearchStudent ( {grabState} ) {
   {
     setStudentInformation(prevState => {return {...prevState, dateRanges:ranges}})
   }
+  console.log(studentInformation.dateRanges)
 
   // Grabs the selected majors to filter and returns them in an array of strings 
   function handleMajorFilterChange(arrayOfFilteredMajor)
@@ -40,11 +41,7 @@ function SearchStudent ( {grabState} ) {
 
   console.log(studentInformation.filteredMajors)
 
-  function handleRetreiveButton () 
-  {
-    console.log("yo what is up, my main man");
 
-  }
 
 // TODO: Move Search portion of component to StudenetSearch.js 
 

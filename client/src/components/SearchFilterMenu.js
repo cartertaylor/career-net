@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {FormControl, Form} from 'react-bootstrap/';
+import {FormControl, Form, Button} from 'react-bootstrap/';
 
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
@@ -61,6 +61,12 @@ const SearchFilterMenu = React.forwardRef(
             return finalObject
         }
 
+        // Clears slected filter options for that given menu  
+        function clearAllSelectors()
+        {
+            setCheck({})
+        }
+
 
         return (
             <div
@@ -84,6 +90,8 @@ const SearchFilterMenu = React.forwardRef(
                             child.props.label.toLowerCase().startsWith(searchValue)
                     )}
                 </ul>
+                <hr className = "mt-4"/>
+                <Button className = "" onClick={clearAllSelectors}>Clear </Button>
             </div>
         );
     }
