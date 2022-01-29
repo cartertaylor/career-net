@@ -36,7 +36,7 @@ const DateFilterMenu = React.forwardRef(
                 startYear = dateValues.startDate
             }
 
-            let currentYear = new Date().getFullYear()
+            let currentYear = new Date().getFullYear() + 4
             let years = [];
 
             // Create array of years that should be included in selector
@@ -101,7 +101,7 @@ const DateFilterMenu = React.forwardRef(
 
                 </Container>
                 <hr className = "mt-4"/>
-                <Button className = "" onClick={clearAllSelectors}>Clear </Button>
+                <Button className = "" variant="danger" onClick={clearAllSelectors}>Clear </Button>
             </div>
         );
     }

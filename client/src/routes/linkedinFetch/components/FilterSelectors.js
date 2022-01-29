@@ -20,6 +20,7 @@ export default function FilterSelectors()
         
     })
 
+    // Grab necessary majors available to user from cookies 
 
     // Grabs the selected majors to filter and returns them in an array of strings 
     function handleSearchFilterChange(arrayOfFilteredMajor)
@@ -43,7 +44,7 @@ export default function FilterSelectors()
         <ListGroup variant="flush">
 
             <SideMenu currentMenu = "Major" handleSearchFilterChange = {handleSearchFilterChange} />
-            <SideMenu currentMenu = "Upload Date Range"/>
+            <SideMenu currentMenu = "Upload Date Range" handleDateRangeChange = {handleDateRangeChange}/>
             <SideMenu currentMenu = "Graduation Year" handleDateRangeChange = {handleDateRangeChange}/>  
 
         </ListGroup >
