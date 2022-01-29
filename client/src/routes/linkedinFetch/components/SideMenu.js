@@ -35,7 +35,10 @@ export default function SideMenu({...props})
         else if (currentMenu == "Graduation Year")
         {
             menuJSX = (<DateFilterMenu grabDateRanges= {grabDateRanges}/>)
-
+        }
+        else if (currentMenu == "Upload Date Range")
+        {
+            menuJSX = (<DateFilterMenu grabDateRanges= {grabDateRanges}/>)
         }
 
         return menuJSX
@@ -45,13 +48,13 @@ export default function SideMenu({...props})
 
     return (
         <div>
-            <ListGroup.Item action variant="primary" onClick={handleShow}>
+            <ListGroup.Item action variant="" onClick={handleShow}>
                 {(currentMenu)}
             </ListGroup.Item>
 
             <Offcanvas show={show} onHide={handleClose} placement="end">
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Filter and Sort</Offcanvas.Title>
+                    <Offcanvas.Title>{currentMenu}</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     {chooseMenu(currentMenu)}

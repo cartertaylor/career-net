@@ -57,7 +57,15 @@ export default function CsvPage() {
 
     return (
         <div className="App">
-            <Container className="d-flex justify-content-center" >
+            <Container className="mt-4 ">
+                <h1 className="text-center mb-3">CSV Upload</h1>
+                <h6 className="mb-4">
+                    {" "}
+                    Upload a CSV file with from from either with either raw new student data, Handshake, or Student Surveys  
+                </h6>
+            </Container>
+            
+            <Container className="d-flex justify-content-center">
                 <div
                     {...getRootProps({
                         className: `dropzone
@@ -69,16 +77,14 @@ export default function CsvPage() {
                     {isDragActive ? (
                         <h5>Drop the files here ...</h5>
                     ) : (
-                        <h5>
-                            Drag CSV file here
-                        </h5>
+                        <h5>Drag CSV file here</h5>
                     )}
                 </div>
             </Container>
 
             {console.log(parsedCsvData)}
 
-            <Container className ="mt-2">
+            <Container className="mt-2">
                 {parsedCsvData[0] != null ? (
                     <TableMaker givenJsonData={parsedCsvData} />
                 ) : (
@@ -88,14 +94,19 @@ export default function CsvPage() {
             <Container className="mb-4 mt-3">
                 <Row>
                     <Col>
-                        <Button variant="danger" onClick = {() => setParsedCsvData([null])}>Delete</Button>
+                        <Button
+                            variant="danger"
+                            onClick={() => setParsedCsvData([null])}
+                        >
+                            Delete
+                        </Button>
                     </Col>
                     <Col>
-                        <Button onClick = {() => uploadCsvToDatabase()}>Upload</Button>
+                        <Button onClick={() => uploadCsvToDatabase()}>
+                            Upload
+                        </Button>
                     </Col>
                 </Row>
-                
-            
             </Container>
         </div>
     );

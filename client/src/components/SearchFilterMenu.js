@@ -91,7 +91,7 @@ const SearchFilterMenu = React.forwardRef(
                     )}
                 </ul>
                 <hr className = "mt-4"/>
-                <Button className = "" onClick={clearAllSelectors}>Clear </Button>
+                <Button className = "" variant="danger" onClick={clearAllSelectors}>Clear </Button>
             </div>
         );
     }

@@ -26,7 +26,7 @@ export default function TableMaker({givenJsonData})
     }
 
     return (
-        <div style ={{overflow:"scroll", height:"300px", minWidth:"800px"}}>
+        <div style ={{overflow:"scroll", height:"300px", minWidth:"700px"}}>
             <Table striped bordered hover className="mt-4" >
                 {/* Create headers dynamically */}
                 <thead>

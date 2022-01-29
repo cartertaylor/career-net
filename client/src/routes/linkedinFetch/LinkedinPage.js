@@ -88,30 +88,27 @@ function Settings() {
     }
 
     // Grabs the selected year ranges from the filter menu 
-  function handleDateRangeChange(ranges)
-  {
-    setDateRanges(prevState => {return {...prevState, dateRanges:ranges}})
-  }
+    function handleDateRangeChange(ranges)
+    {
+        setDateRanges(prevState => {return {...prevState, dateRanges:ranges}})
+    }
 
-  // Grabs the selected majors to filter and returns them in an array of strings 
-  function handleMajorFilterChange(arrayOfFilteredMajor)
-  {
-    setFilteredMajor(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
-  }
+    // Grabs the selected majors to filter and returns them in an array of strings 
+    function handleMajorFilterChange(arrayOfFilteredMajor)
+    {
+        setFilteredMajor(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+    }
 
-    //   if (!post) return null;
     return (
         <div className = "App">
-            <Container className="mt-4 ">
+            <Container className="mt-4">
 
                     <h1 className="text-center mb-3">
                         Linkedin Fetching
                     </h1>
-                    <h6 className= "mb-4"> You can you use the filters on the right to filter which student data you would like to retreive for Linkedin </h6>
-
-                
-                       
-                 
+                    <h6 className= "mb-4"> You can you use the filters on the left to filter which student data you would
+                        like to retreive for Linkedin. The button on the right will fetch the linkedin data. Please allow a few minutes for this process to complete.
+                    </h6>
 
                 <div>
                     
@@ -124,7 +121,7 @@ function Settings() {
                     
                 </div>
             </Container>
-            <Container>
+            <Container className="">
                 <Row>
                     <Col>
                     
@@ -134,6 +131,7 @@ function Settings() {
                     <Col> <Button
                             className="mb-3"
                             onClick={fetchLinkedinStudentData}
+                            size="lg"
                         >
                             Fetch Linkedin Data
                         </Button></Col>
