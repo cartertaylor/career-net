@@ -16,6 +16,7 @@ export default function SideMenu({...props})
     let currentMenu = props.currentMenu
     let handleSearchFilterChange = props.handleSearchFilterChange
     let grabDateRanges = props.handleDateRangeChange
+    let handleLastTimeUpdatedRange = props.handleLastTimeUpdatedRange
 
     const [show, setShow] = useState(false);
 
@@ -40,7 +41,7 @@ export default function SideMenu({...props})
         }
         else if (currentMenu == "Student Last Updated")
         {
-            menuJSX = (<CalendarFilterMenu/>)
+            menuJSX = (<CalendarFilterMenu handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}/>)
         }
 
         return menuJSX

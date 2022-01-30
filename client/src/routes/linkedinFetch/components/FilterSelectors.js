@@ -16,7 +16,9 @@ export default function FilterSelectors()
     const [clickedFilter, setClickedFilter] =useState(undefined)
     const [selectedFilters, setSelectedFilters] = useState({
         dateRanges: {startDate:undefined, endDate:undefined},
-        filteredMajors: null
+        filteredMajors: null,
+        lastTimeUpdatedRange:{startDate:undefined, endDate:undefined}
+
         
     })
 
@@ -36,7 +38,12 @@ export default function FilterSelectors()
         setSelectedFilters((prevState => { return {...prevState, dateRanges:ranges}}))
     }
 
+    function handleLastTimeUpdatedRange(ranges)
+    {
+        setSelectedFilters((prevState => { return {...prevState, lastTimeUpdatedRange:ranges}}))
+    }
 
+    console.log(selectedFilters.lastTimeUpdatedRange)
     
     return(
     <Card style={{ width: '18rem', }} className= "">
@@ -44,7 +51,7 @@ export default function FilterSelectors()
         <ListGroup variant="flush">
 
             <SideMenu currentMenu = "Major" handleSearchFilterChange = {handleSearchFilterChange} />
-            <SideMenu currentMenu = "Student Last Updated" handleDateRangeChange = {handleDateRangeChange}/>
+            <SideMenu currentMenu = "Student Last Updated" handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}/>
             <SideMenu currentMenu = "Graduation Year" handleDateRangeChange = {handleDateRangeChange}/>  
 
         </ListGroup >
