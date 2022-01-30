@@ -8,7 +8,7 @@ import CsvPage from '../csvUploader/CsvPage';
 
 function UploadPage () {
     return (
-        <div className="ms-1">
+        <div className="">
             <Tab.Container
             
                 id="list-group-tabs-example"
@@ -17,8 +17,6 @@ function UploadPage () {
             >
                 <Row >
                     
-                
-
                     <Col md={3} className="App" >
                         <h1>Data Section</h1>
                         <p>
@@ -28,9 +26,9 @@ function UploadPage () {
                         </p>
                     
                         <ListGroup
+                        
                             className="align-items-center"
-                            horizontal={""}
-                            style={{ textAlign: "center" }}                        >
+                            horizontal={""}                       >
                             <ListGroup.Item
                                 action
                                 href="#link1"
@@ -54,6 +52,7 @@ function UploadPage () {
                     <Col md={1}>
                         
                     </Col>
+                    
                     <Col md={8} >
                         <Tab.Content>
                             <Tab.Pane eventKey="#link1">

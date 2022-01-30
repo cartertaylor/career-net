@@ -44,7 +44,7 @@ export default function FilterSelectors()
         <ListGroup variant="flush">
 
             <SideMenu currentMenu = "Major" handleSearchFilterChange = {handleSearchFilterChange} />
-            <SideMenu currentMenu = "Upload Date Range" handleDateRangeChange = {handleDateRangeChange}/>
+            <SideMenu currentMenu = "Student Last Updated" handleDateRangeChange = {handleDateRangeChange}/>
             <SideMenu currentMenu = "Graduation Year" handleDateRangeChange = {handleDateRangeChange}/>  
 
         </ListGroup >
