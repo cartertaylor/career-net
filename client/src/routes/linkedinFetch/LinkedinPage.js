@@ -9,6 +9,7 @@ import { Button, Spinner, Alert, Row, Col, Card, ListGroup} from "react-bootstra
 import StudentSearchBar from "../seachStudents/SearchBarComponents/StudentSearcher";
 import FilterSelectors from "./components/FilterSelectors";
 
+import CalendarFilterMenu from "../../components/CalendarFilterMenu";
 
 function Settings() {
     const baseURL = "/users/get_linkedin_data";
@@ -101,13 +102,16 @@ function Settings() {
 
     return (
         <div className = "App">
+            {/* <DateFilterMenu/> */}
             <Container className="mt-4">
 
-                    <h1 className="text-center mb-3">
+                    <h2 className="text-center mb-3">
                         Linkedin Fetching
-                    </h1>
-                    <h6 className= "mb-4"> You can you use the filters on the left to filter which student data you would
-                        like to retreive for Linkedin. The button on the right will fetch the linkedin data. Please allow a few minutes for this process to complete.
+                    </h2>
+                    <h6 className= "mb-4">
+                        You can you use the filters on the left to filter which student data you would
+                        like to retreive for Linkedin. The button on the right will fetch the linkedin data.
+                        Please allow a few minutes for this process to complete.
                     </h6>
 
                 <div>

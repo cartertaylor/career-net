@@ -58,7 +58,7 @@ export default function CsvPage() {
     return (
         <div className="App">
             <Container className="mt-4 ">
-                <h1 className="text-center mb-3">CSV Upload</h1>
+                <h2 className="text-center mb-3">CSV Upload</h2>
                 <h6 className="mb-4">
                     {" "}
                     Upload a CSV file with from from either with either raw new student data, Handshake, or Student Surveys  

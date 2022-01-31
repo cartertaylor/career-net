@@ -6,6 +6,8 @@ import {Button, Offcanvas, Dropdown, ListGroup } from "react-bootstrap"
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
+import CalendarFilterMenu from "../../../components/CalendarFilterMenu";
+
 
 export default function SideMenu({...props})
 {
@@ -14,6 +16,7 @@ export default function SideMenu({...props})
     let currentMenu = props.currentMenu
     let handleSearchFilterChange = props.handleSearchFilterChange
     let grabDateRanges = props.handleDateRangeChange
+    let handleLastTimeUpdatedRange = props.handleLastTimeUpdatedRange
 
     const [show, setShow] = useState(false);
 
@@ -36,9 +39,9 @@ export default function SideMenu({...props})
         {
             menuJSX = (<DateFilterMenu grabDateRanges= {grabDateRanges}/>)
         }
-        else if (currentMenu == "Upload Date Range")
+        else if (currentMenu == "Student Last Updated")
         {
-            menuJSX = (<DateFilterMenu grabDateRanges= {grabDateRanges}/>)
+            menuJSX = (<CalendarFilterMenu handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}/>)
         }
 
         return menuJSX

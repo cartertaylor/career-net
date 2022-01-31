@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Tab, Row, Col, ListGroup, Container} from "react-bootstrap" 
+import {Tab, Row, Col, ListGroup, Container, Nav, Tabs} from "react-bootstrap" 
 
 import LinkedinPage from "../linkedinFetch/LinkedinPage"
 import CsvPage from '../csvUploader/CsvPage';
@@ -8,67 +8,22 @@ import CsvPage from '../csvUploader/CsvPage';
 
 function UploadPage () {
     return (
-        <div className="ms-1">
-            <Tab.Container
-            
-                id="list-group-tabs-example"
-                defaultActiveKey="#link1"
-                
+        <div className="">
+            <h1 className = "mb-4">Data Upload Section</h1>
+            <Tabs
+                defaultActiveKey="home"
+                transition={true}
+                id="data-tab"
+                className="mb-3"
+                variant="tabs"
             >
-                <Row >
-                    
-                
-
-                    <Col md={3} className="App" >
-                        <h1>Data Section</h1>
-                        <p>
-                            Toggle between uploading new student data with a CSV, or
-                            grabbing new data from Linkedin using the existing data
-                            already uploaded
-                        </p>
-                    
-                        <ListGroup
-                            className="align-items-center"
-                            horizontal={""}
-                            style={{ textAlign: "center" }}                        >
-                            <ListGroup.Item
-                                action
-                                href="#link1"
-                                style={{ width: "20em" }}
-                                variant=""
-                            >
-                                CSV Upload
-                            </ListGroup.Item>
-                            <ListGroup.Item
-                                action
-                                href="#link2"
-                                style={{ width: "20em" }}
-                                variant=""
-                            >
-                                Linkedin Data Fetch
-                            </ListGroup.Item>
-                        </ListGroup>
-                        <hr className="" style = {{width:"100%"}}/>
-                    </Col>
-
-                    <Col md={1}>
-                        
-                    </Col>
-                    <Col md={8} >
-                        <Tab.Content>
-                            <Tab.Pane eventKey="#link1">
-                                <CsvPage/>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="#link2">
-                                <LinkedinPage></LinkedinPage>
-                            </Tab.Pane>
-                        </Tab.Content>
-                    </Col>
-                    
-                </Row>
-                    
-                
-            </Tab.Container>
+                <Tab eventKey="home" title="CSV Upload">
+                    <CsvPage />
+                </Tab>
+                <Tab eventKey="Linkedin" title="Fetch Student Linkedin Data">
+                    <LinkedinPage />
+                </Tab>
+            </Tabs>
         </div>
     );
 }
