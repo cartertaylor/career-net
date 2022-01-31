@@ -105,9 +105,9 @@ function Settings() {
             {/* <DateFilterMenu/> */}
             <Container className="mt-4">
 
-                    <h1 className="text-center mb-3">
+                    <h2 className="text-center mb-3">
                         Linkedin Fetching
-                    </h1>
+                    </h2>
                     <h6 className= "mb-4">
                         You can you use the filters on the left to filter which student data you would
                         like to retreive for Linkedin. The button on the right will fetch the linkedin data.
