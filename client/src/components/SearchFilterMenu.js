@@ -4,7 +4,7 @@ import {FormControl, Form, Button} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ style, className, customOption, handleSearchFilterChange, clearButton=true, "aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, customOption, handleSearchFilterChange, clearButton=true, searchTitle = false, "aria-labelledby": labeledBy }, ref) => {
 
         console.log("What is button" + clearButton)
 
@@ -78,8 +78,11 @@ const SearchFilterMenu = React.forwardRef(
                 className={className}
                 aria-labelledby={labeledBy}
             >
+
+                {searchTitle ?
+                    <p className="m-2 mb-3">{searchTitle}</p>
+                : null}
                 
-                <h5 className="m-2 mb-3">Major Filters</h5>
                 <FormControl
                     autoFocus
                     className="mx-3 my-2 w-auto"

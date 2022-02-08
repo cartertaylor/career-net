@@ -14,6 +14,8 @@ function AddUserMenu() {
         
     }
 
+    // TODO: If ADMIN is selected, create popup dialoge warning on submit
+
     return (
         <div style ={{overflow:"scroll", height:"500px"}}>
             <h5>User Information</h5>
@@ -73,7 +75,7 @@ function AddUserMenu() {
 
                 
                 
-                <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange} clearButton={false}/>
+                <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange} clearButton={false} searchTitle="Choose Major Access"/>
                 <hr/>
                 <Button variant="primary" size="lg" type="submit">
                     Add User

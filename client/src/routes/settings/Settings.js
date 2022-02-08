@@ -34,7 +34,7 @@ function Settings() {
         {
             showMenu = (
                 <Card>
-                    <Card.Header><h3>Add User</h3> </Card.Header>
+                    <Card.Header className="text-center"><h3>Add User</h3> </Card.Header>
                     <Card.Body>
                         <AddUserMenu className="dropdown-menu-search"/>
                     </Card.Body>
@@ -44,7 +44,14 @@ function Settings() {
 
         else if (currentMenu == "Edit User")
         {
-            showMenu = <Card.Header><h3>Edit User</h3></Card.Header>
+            showMenu = (
+                <Card>
+                    <Card.Header className="text-center"><h3>Edit User</h3> </Card.Header>
+                    <Card.Body>
+                        <EditUserMenu className="dropdown-menu-search"/>
+                    </Card.Body>
+                </Card>
+            );
         }
 
         return showMenu
