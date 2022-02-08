@@ -17,6 +17,8 @@ export default function SideMenu({...props})
     let handleSearchFilterChange = props.handleSearchFilterChange
     let grabDateRanges = props.handleDateRangeChange
     let handleLastTimeUpdatedRange = props.handleLastTimeUpdatedRange
+    let parentState = props.parentState
+    let filterMenu =props.filterMenu
 
     const [show, setShow] = useState(false);
 
@@ -33,7 +35,7 @@ export default function SideMenu({...props})
 
         if (currentMenu == "Major")
         {
-            menuJSX = (<SearchFilterMenu customOption = {filterList} handleSearchFilterChange = {handleSearchFilterChange}/>)
+            menuJSX = (filterMenu)
         }
         else if (currentMenu == "Graduation Year")
         {

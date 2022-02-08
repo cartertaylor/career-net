@@ -19,22 +19,22 @@ function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
 
 
     
-// The forwardRef is important!!
-// Dropdown needs access to the DOM node in order to position the Menu
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-    <Button 
-        href=""
-        ref={ref}
-        onClick={(e) => {
-            e.preventDefault();
-            onClick(e);
-        }}
-        variant="outline-primary"
-    >
-        {children}
-        &#x25bc;
-    </Button>
-));
+    // The forwardRef is important!!
+    // Dropdown needs access to the DOM node in order to position the Menu
+    const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+        <Button 
+            href=""
+            ref={ref}
+            onClick={(e) => {
+                e.preventDefault();
+                onClick(e);
+            }}
+            variant="outline-primary"
+        >
+            {children}
+            &#x25bc;
+        </Button>
+    ));
 
     let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
 

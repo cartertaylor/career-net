@@ -4,7 +4,9 @@ import {FormControl, Form, Button} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ style, className, customOption, handleSearchFilterChange,"aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, customOption, handleSearchFilterChange, clearButton=true, searchTitle = false, "aria-labelledby": labeledBy }, ref) => {
+
+        console.log("What is button" + clearButton)
 
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
@@ -12,6 +14,7 @@ const SearchFilterMenu = React.forwardRef(
         // State to measure check status of each array filter element passed in
         const [checkStatus, setCheck] = useState({})
 
+        // Only send state back if state value is changed
         useEffect(()=>
         {
             let finalState = removeUncheckedValues()
@@ -23,6 +26,7 @@ const SearchFilterMenu = React.forwardRef(
             handleSearchFilterChange(listPropertyNames)
 
         },[checkStatus])
+        
         
         // Create JSX Object for each array element
         let jsxOptions = customOption.map (
@@ -74,8 +78,11 @@ const SearchFilterMenu = React.forwardRef(
                 className={className}
                 aria-labelledby={labeledBy}
             >
+
+                {searchTitle ?
+                    <p className="m-2 mb-3">{searchTitle}</p>
+                : null}
                 
-                <h5 className="m-2 mb-3">Major Filters</h5>
                 <FormControl
                     autoFocus
                     className="mx-3 my-2 w-auto"
@@ -90,8 +97,16 @@ const SearchFilterMenu = React.forwardRef(
                             child.props.label.toLowerCase().startsWith(searchValue)
                     )}
                 </ul>
-                <hr className = "mt-4"/>
-                <Button className = "" variant="danger" onClick={clearAllSelectors}>Clear </Button>
+                
+                {/* Conditionally render clear button depending on prop selected */}
+                {clearButton ? 
+                    <div>
+                        <hr className = "mt-4"/>
+                        <Button className = "ms-2" variant="danger" onClick={clearAllSelectors}>Clear </Button>
+                    </div>
+                : 
+                    null}
+
             </div>
         );
     }
