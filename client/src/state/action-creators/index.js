@@ -37,3 +37,13 @@ export const removeUser = (userData) => {
         });
     }
 }
+
+export const addLinkedinFilter = (userData) => {
+    
+    return (dispatch) => {
+        dispatch({
+            type: "filterChanged",
+            payload: userData
+        });
+    }
+}

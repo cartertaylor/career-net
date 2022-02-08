@@ -4,7 +4,9 @@ import {FormControl, Form, Button} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ style, className, customOption, handleSearchFilterChange, parentState, "aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, customOption, handleSearchFilterChange, clearButton=true, "aria-labelledby": labeledBy }, ref) => {
+
+        console.log("What is button" + clearButton)
 
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
@@ -92,8 +94,16 @@ const SearchFilterMenu = React.forwardRef(
                             child.props.label.toLowerCase().startsWith(searchValue)
                     )}
                 </ul>
-                <hr className = "mt-4"/>
-                <Button className = "" variant="danger" onClick={clearAllSelectors}>Clear </Button>
+                
+                {/* Conditionally render clear button depending on prop selected */}
+                {clearButton ? 
+                    <div>
+                        <hr className = "mt-4"/>
+                        <Button className = "ms-2" variant="danger" onClick={clearAllSelectors}>Clear </Button>
+                    </div>
+                : 
+                    null}
+
             </div>
         );
     }

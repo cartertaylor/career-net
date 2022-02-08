@@ -11,22 +11,38 @@ import FilterSelectors from "./components/FilterSelectors";
 
 import CalendarFilterMenu from "../../components/CalendarFilterMenu";
 
+// Redux Store acccess
+import {useSelector, useDispatch} from "react-redux" // Allows access to store
+import {bindActionCreators} from "redux"
+import {actionCreators} from "../../state/index"
+
+
 function Settings() {
     const baseURL = "/users/get_linkedin_data";
 
+    // Accessing store data.
+    const state = useSelector((state) => state);
+    const stateAccount = useSelector((state) => state.bank);
+
+    const dispatch = useDispatch();
+
+    const { depositMoney, withdrawMoney, addUser, addLinkedinFilter } =
+        bindActionCreators(actionCreators, dispatch);
+
+    console.log(depositMoney);
+
+    console.log(state);
+    console.log(stateAccount);
+    console.log(state.linkedinFilters.selectedFilters)
+
     const [linkedinReturn, setPost] = useState(null);
-    
+
     const [isLoading, setLoading] = useState(false);
     const [bannerContenet, setBannerContent] = useState(null);
 
-    const [selectedFilters, setSelectedFilters] = useState({
-        dateRanges: {startDate:undefined, endDate:undefined},
-        filteredMajors: null,
-        lastTimeUpdatedRange:{startDate:undefined, endDate:undefined}
+    const [selectedFilters, setSelectedFilters] = useState(state.linkedinFilters.selectedFilters);
 
-        
-    })
-
+    console.log(selectedFilters)
 
     function AlertDismissibleExample({ linkedinStatus }) {
         const [show, setShow] = useState(true);
@@ -94,77 +110,81 @@ function Settings() {
             });
     }
 
+    // Grabs the selected majors to filter and returns them in an array of strings
+    function handleMajorFilterChange(arrayOfFilteredMajor) {
+        console.log(arrayOfFilteredMajor == false)
 
-    // Grabs the selected majors to filter and returns them in an array of strings 
-    function handleMajorFilterChange(arrayOfFilteredMajor)
-    {
-        setSelectedFilters(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+        if (arrayOfFilteredMajor != false)
+        {
+            setSelectedFilters((prevState) => {
+                return { ...prevState, filteredMajors: arrayOfFilteredMajor };
+            });
+            addLinkedinFilter(selectedFilters);
+            console.log(state.linkedinFilters);
+        }
     }
 
     // Grabs the selected year ranges from the filter menu ()
-    function handleDateRangeChange(ranges)
-    {
-        setSelectedFilters((prevState => { return {...prevState, dateRanges:ranges}}))
+    function handleDateRangeChange(ranges) {
+        setSelectedFilters((prevState) => {
+            return { ...prevState, dateRanges: ranges };
+        });
     }
 
     // Handle change to filter for when the student profile was last changed
-    function handleLastTimeUpdatedRange(ranges)
-    {
-        setSelectedFilters((prevState => { return {...prevState, lastTimeUpdatedRange:ranges}}))
+    function handleLastTimeUpdatedRange(ranges) {
+        setSelectedFilters((prevState) => {
+            return { ...prevState, lastTimeUpdatedRange: ranges };
+        });
     }
 
-    console.log(selectedFilters)
+    console.log(selectedFilters);
 
     return (
-        <div className = "App">
+        <div className="App">
             {/* <DateFilterMenu/> */}
             <Container className="mt-4">
-
-                    <h2 className="text-center mb-3">
-                        Linkedin Fetching
-                    </h2>
-                    <h6 className= "mb-4">
-                        You can you use the filters on the left to filter which student data you would
-                        like to retreive for Linkedin. The button on the right will fetch the linkedin data.
-                        Please allow a few minutes for this process to complete.
-                    </h6>
+                <h2 className="text-center mb-3">Linkedin Fetching</h2>
+                <h6 className="mb-4">
+                    You can you use the filters on the left to filter which
+                    student data you would like to retreive for Linkedin. The
+                    button on the right will fetch the linkedin data. Please
+                    allow a few minutes for this process to complete.
+                </h6>
 
                 <div>
-                    
-                        {isLoading == true ? (
-                            <Spinner animation="border" variant="primary" />
-                        ) : (
-                            // else
-                            <div>{bannerContenet}</div>
-                        )}
-                    
+                    {isLoading == true ? (
+                        <Spinner animation="border" variant="primary" />
+                    ) : (
+                        // else
+                        <div>{bannerContenet}</div>
+                    )}
                 </div>
             </Container>
             <Container className="">
                 <Row>
                     <Col>
-                    
                         <FilterSelectors
-                            handleMajorFilterChange = {handleMajorFilterChange}
-                            handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}
-                            handleDateRangeChange = {handleDateRangeChange}
-                            parentState = {selectedFilters}
-                        >
-
-                        </FilterSelectors>
-                    
+                            handleMajorFilterChange={handleMajorFilterChange}
+                            handleLastTimeUpdatedRange={
+                                handleLastTimeUpdatedRange
+                            }
+                            handleDateRangeChange={handleDateRangeChange}
+                            parentState={selectedFilters}
+                        ></FilterSelectors>
                     </Col>
-                    <Col> <Button
+                    <Col>
+                        {" "}
+                        <Button
                             className="mb-3"
                             onClick={fetchLinkedinStudentData}
                             size="lg"
                         >
                             Fetch Linkedin Data
-                        </Button></Col>
-                
+                        </Button>
+                    </Col>
                 </Row>
             </Container>
-            
         </div>
     );
 }
