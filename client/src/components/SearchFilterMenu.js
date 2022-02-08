@@ -4,7 +4,7 @@ import {FormControl, Form, Button} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ style, className, customOption, handleSearchFilterChange,"aria-labelledby": labeledBy }, ref) => {
+    ({ style, className, customOption, handleSearchFilterChange, parentState, "aria-labelledby": labeledBy }, ref) => {
 
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
@@ -12,6 +12,7 @@ const SearchFilterMenu = React.forwardRef(
         // State to measure check status of each array filter element passed in
         const [checkStatus, setCheck] = useState({})
 
+        // Only send state back if state value is changed
         useEffect(()=>
         {
             let finalState = removeUncheckedValues()
@@ -23,6 +24,7 @@ const SearchFilterMenu = React.forwardRef(
             handleSearchFilterChange(listPropertyNames)
 
         },[checkStatus])
+        
         
         // Create JSX Object for each array element
         let jsxOptions = customOption.map (

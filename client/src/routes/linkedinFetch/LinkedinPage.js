@@ -15,11 +15,17 @@ function Settings() {
     const baseURL = "/users/get_linkedin_data";
 
     const [linkedinReturn, setPost] = useState(null);
+    
     const [isLoading, setLoading] = useState(false);
     const [bannerContenet, setBannerContent] = useState(null);
 
-    const [filteredMajors, setFilteredMajor] = useState(null)
-    const [dateRanges, setDateRanges] = useState({startDate:undefined, endDate:undefined})
+    const [selectedFilters, setSelectedFilters] = useState({
+        dateRanges: {startDate:undefined, endDate:undefined},
+        filteredMajors: null,
+        lastTimeUpdatedRange:{startDate:undefined, endDate:undefined}
+
+        
+    })
 
 
     function AlertDismissibleExample({ linkedinStatus }) {
@@ -88,17 +94,26 @@ function Settings() {
             });
     }
 
-    // Grabs the selected year ranges from the filter menu 
-    function handleDateRangeChange(ranges)
-    {
-        setDateRanges(prevState => {return {...prevState, dateRanges:ranges}})
-    }
 
     // Grabs the selected majors to filter and returns them in an array of strings 
     function handleMajorFilterChange(arrayOfFilteredMajor)
     {
-        setFilteredMajor(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+        setSelectedFilters(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
     }
+
+    // Grabs the selected year ranges from the filter menu ()
+    function handleDateRangeChange(ranges)
+    {
+        setSelectedFilters((prevState => { return {...prevState, dateRanges:ranges}}))
+    }
+
+    // Handle change to filter for when the student profile was last changed
+    function handleLastTimeUpdatedRange(ranges)
+    {
+        setSelectedFilters((prevState => { return {...prevState, lastTimeUpdatedRange:ranges}}))
+    }
+
+    console.log(selectedFilters)
 
     return (
         <div className = "App">
@@ -129,7 +144,14 @@ function Settings() {
                 <Row>
                     <Col>
                     
-                        <FilterSelectors></FilterSelectors>
+                        <FilterSelectors
+                            handleMajorFilterChange = {handleMajorFilterChange}
+                            handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}
+                            handleDateRangeChange = {handleDateRangeChange}
+                            parentState = {selectedFilters}
+                        >
+
+                        </FilterSelectors>
                     
                     </Col>
                     <Col> <Button
