@@ -1,6 +1,8 @@
 import {Form, Button, Row, Col} from "react-bootstrap"
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
+import SearchExampleStandard from "../../../components/SearchBarAuto";
+
 
 function EditUserMenu() {
 
@@ -23,9 +25,13 @@ function EditUserMenu() {
         <div style ={{overflow:"scroll", height:"500px"}}>
         <h5>Select User</h5>
         <Form>
-            <Row> 
+            <Row className = "m-2"> 
                 {/* Change this to be a normal search selector ref: https://semantic-ui.com/modules/search.html*/}
-                <SearchFilterMenu customOption = {exampleEmails} handleSearchFilterChange={handleMajorFilterChange} clearButton={false}/>
+                {/* <SearchFilterMenu customOption = {exampleEmails} handleSearchFilterChange={handleMajorFilterChange} clearButton={false}/> */}
+                
+                {/* <Col></Col> */}
+                <SearchExampleStandard as = {Col} />
+                {/* <Col></Col> */}
             </Row>
 
             {/* TODO: make permissions a conditional based on if a USER has been selected*/}

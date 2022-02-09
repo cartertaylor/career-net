@@ -4,6 +4,7 @@ import {useState} from "react"
 // Import other Components
 import AddUserMenu from "./components/AddUserMenu";
 import EditUserMenu from "./components/EditUserMenu";
+import SearchExampleStandard from "../../components/SearchBarAuto";
 
 
 function Settings() {
@@ -59,7 +60,6 @@ function Settings() {
 
     return (
         <div>
-            
 
             <Container>
                 <h1 className="text-center">Admin Settings</h1>

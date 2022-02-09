@@ -137,7 +137,7 @@ async function fetchUserData (event)  {
     };
 
     // attempt to store data fof student from form
-    const response = await fetch('users/add_student', requestOptions);
+    const response = await fetch('students/add_student', requestOptions);
     const serverResponse = await response.json();
 
     console.log(serverResponse)
