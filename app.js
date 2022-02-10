@@ -7,6 +7,7 @@ const mysql = require('mysql');
 
 // Routes
 var indexRouter = require('./routes/index');
+var studentsRouter = require('./routes/students');
 var usersRouter = require('./routes/users');
 var searchUserRouter = require('./routes/searchUsers');
 var csvUpload = require('./routes/csvUpload');
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/students', studentsRouter);
 app.use('/users', usersRouter);
 app.use('/search_user', searchUserRouter)
 app.use('/csvUpload', csvUpload)

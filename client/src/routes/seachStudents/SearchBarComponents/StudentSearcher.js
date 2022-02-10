@@ -12,11 +12,6 @@ import DateFilterMenu from "../../../components/DateFilterMenu";
 
 function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
 
-    const popperConfig = {
-        strategy:"static"
-        
-    };
-
 
     
     // The forwardRef is important!!

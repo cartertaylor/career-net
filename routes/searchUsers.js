@@ -137,72 +137,12 @@ router.get("/student_profile/:student", (request, response, next) => {
         stringedName,
     ]);
 
-    //    connection.query (
-    //      sql, function (err, result, fields)
-    //      {
-    //          if (err) throw err;
-
-    //          console.log(result);
-
-    //          // if we have a valid result (matching username in database)
-    //          if (result.length > 0)
-    //          {
-
-    //            // do another query
-
-    //            // store base user information
-    //            currentUserName = result[0].userName;
-    //            currentName = result[0].firstName + " " + result[0].lastName;
-
-    //             // create sql query line
-    //            sql = mysql.format ("SELECT bio, twitterUser, facebookUser, snapchatUser, avatarName FROM ?? WHERE userName = ?", [profileTable, stringedName]);
-
-    //            // grab the existing bio information for user
-    //            connection.query (
-    //                sql, function (err, result)
-    //                {
-    //                    if (err) throw err;
-
-    //                  console.log(result[0]);
-
-    //                  let userBio = result[0].bio;
-
-    //                  // store twitter username info
-    //                  let twitterHandle = result[0].twitterUser;
-
-    //                  // store facebook username info
-    //                  let facebookHandle = result[0].facebookUser;
-
-    //                  // store snapchat username info
-    //                  let snapchatHandle = result[0].snapchatUser;
-
-    //                  // store profile picture file name
-    //                  let profileFile = result[0].avatarName;
-
-    //                  response.render('userpage', {userName: currentUserName,
-    //                    name: currentName,
-    //                    bio: userBio,
-    //                    twitterUsername: twitterHandle,
-    //                    facebookUsername: facebookHandle,
-    //                    profileFileName: profileFile,
-    //                    snapchatUsername: snapchatHandle});
-    //                });
-
-    //          }
-
-    //          // otherwise, we could not find anything
-    //          else
-    //          {
-    //            response.render('error');
-    //          }
-
-    //      });
+    
 });
 
 module.exports = router;
 
 function convertStudentFormat(rawData) {
-    console.log("MAN WHAT THE HEcL");
     console.log(rawData);
 
     let index = 0;

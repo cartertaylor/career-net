@@ -8,7 +8,6 @@ export const depositMoney = (amount) => {
 }
 
 export const withdrawMoney = (amount) => {
-    console.log(amount, "Lol")
     return (dispatch) => {
         dispatch({
             type: "withdraw",
@@ -16,7 +15,6 @@ export const withdrawMoney = (amount) => {
         });
     }
 }
-
 
 export const addUser = (userData) => {
 
@@ -44,6 +42,16 @@ export const addLinkedinFilter = (userData) => {
         dispatch({
             type: "filterChanged",
             payload: userData
+        });
+    }
+}
+
+export const addClickedStudent = (studentData) => {
+    
+    return (dispatch) => {
+        dispatch({
+            type: "clickedStudentProfile",
+            payload: studentData
         });
     }
 }

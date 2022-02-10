@@ -8,15 +8,23 @@ import Container from "react-bootstrap/Container";
 // import the timeline component
 import Timeline from "../../components/Timeline";
 
+// Redux for global storage
+import {useSelector} from "react-redux" // Allows access to store
+
+
 import {
     ButtonGroup,
     ToggleButton,
-    Button,
-    Nav,
-    Navbar,
 } from "react-bootstrap/";
 
-export default function StudentProfile({ clickedStudentInfo }) {
+export default function StudentProfile() {
+
+    // Accessing store data.
+    const studentInfo = useSelector((state) => state.studentInfo);
+
+    // GRAB specific store data
+    let clickedStudentInfo = studentInfo.studentInfo
+
     const LOCAL_STORAGE_KEY = "todoApp.todos";
 
     // Set the state with the Prop from the other component

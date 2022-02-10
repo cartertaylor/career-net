@@ -4,11 +4,13 @@ import { combineReducers } from "redux";
 import accountReducer from "./accountReducer"
 import userReducer from "./userReducer"
 import linkedinReducer from "./linkedinReducer"
+import studentReducer from "./studentReducer"
 
 const reducers = combineReducers({
     bank: accountReducer,
     users: userReducer,
-    linkedinFilters:linkedinReducer
+    linkedinFilters:linkedinReducer,
+    studentInfo:studentReducer
 
 })
 

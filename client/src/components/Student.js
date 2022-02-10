@@ -1,7 +1,32 @@
 import React, { useEffect } from "react";
 import {} from "react-bootstrap/";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
+
+// Redux for global storage
+import {useSelector, useDispatch} from "react-redux" // Allows access to store
+import {bindActionCreators} from "redux"
+import {actionCreators} from "../state/index"
+
+
+
 export default function Student({ studentInfo, grabStudenProfileData }) {
+
+
+    const dispatch = useDispatch();
+
+    /// Find functions / actions we can use to store data
+    const { addClickedStudent } = bindActionCreators(
+        actionCreators,
+        dispatch
+    );
+
+    // IF a student is clicked, store that student info in the store 
+    function handleStudentClick (studentInfo)
+    {
+        console.log(studentInfo)
+        addClickedStudent(studentInfo)
+    }
+
     // returns objects
     function handleData(userData) {
         if (userData) {
@@ -18,11 +43,6 @@ export default function Student({ studentInfo, grabStudenProfileData }) {
 
     console.log(studentInfo.newInfo);
 
-    // use Effect to make sure we only render this component once
-    // useEffect(() =>    {
-    //     fetchUserData(studentInfo.name)
-    // }, []);
-
     return (
         // Generate column for
         <tr>
@@ -31,7 +51,7 @@ export default function Student({ studentInfo, grabStudenProfileData }) {
             <td>
                 <Link
                     to={`/student_profile/${studentInfo.firstName}`}
-                    onClick={() => grabStudenProfileData(studentInfo)}
+                    onClick={() => handleStudentClick(studentInfo)}
                 >
                     {" "}
                     Click me{" "}

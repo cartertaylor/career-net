@@ -50,7 +50,8 @@ function exampleReducer(state, action) {
 
 
 // Component displays autocomplete search bar that reacts based on the given "source"
-function SearchExampleStandard() {
+function SearchExampleStandard({handleUserClick}) {
+
 
     const [state, dispatch] = useReducer(exampleReducer, initialState);
     const { loading, results, value } = state;
@@ -128,6 +129,8 @@ function SearchExampleStandard() {
                                     type: "UPDATE_SELECTION",
                                     selection: data.result.title,
                                 })
+
+                                handleUserClick(data.result)
                         }
                     }
                     onSearchChange={handleSearchChange}
