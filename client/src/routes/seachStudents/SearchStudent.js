@@ -25,23 +25,61 @@ function SearchStudent ( {grabState} ) {
         dateRanges: {startDate:undefined, endDate:undefined},
         filteredMajors: null
     });
+
+    const [filterOptions, setFilterOptions] = useState(
+      {
+        dateRanges: {startDate:undefined, endDate:undefined},
+        filteredMajors: null,
+        searchedLetters: null
+      }
+    )
   
+  // -- HANDLE STATE FUNCTIONS
+
   // Grabs the selected year ranges from the filter menu 
   function handleDateRangeChange(ranges)
   {
-    setStudentInformation(prevState => {return {...prevState, dateRanges:ranges}})
+    setFilterOptions(prevState => {return {...prevState, dateRanges:ranges}})
   }
-  console.log(studentInformation.dateRanges)
 
   // Grabs the selected majors to filter and returns them in an array of strings 
   function handleMajorFilterChange(arrayOfFilteredMajor)
   {
-    setStudentInformation(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+    console.log(arrayOfFilteredMajor)
+    setFilterOptions(prevState => {return {...prevState, filteredMajors:arrayOfFilteredMajor}})
+  }
+  
+  function handleSearchBarChange(searchLetters)
+  {
+    console.log(searchLetters)
+    setFilterOptions(prevState => {return {...prevState, searchedLetters:searchLetters}})
   }
 
-  console.log(studentInformation.filteredMajors)
+  // adds to the state (and the table), the user data that is entered in through the form
+  function handleAddUser(addedUserInfo)
+  {
+    
+    // console.log(this.state.listStudents)
+    let userData = {id:uuid}
+
+    // spread the added data into the object
+    userData = {...userData, ...addedUserInfo}
+
+    // Send the data to our server to be stored
+    const serverResponse = storeUserOnDatabase(userData);
+
+    console.log(serverResponse)
+
+    setStudentInformation(prevState => 
+      {
+          return {...prevState, showUserAddedResponse:true }
+      })
+
+  }
 
 
+
+// -- HELPER FUNCTIONS 
 
 // TODO: Move Search portion of component to StudenetSearch.js 
 
@@ -57,8 +95,8 @@ async function fetchUserData (event)  {
     // Store Student searched by user
     let searchedLetters = {searchLetters: event.target.elements[0].value}
 
-    // console.log(studentInfo.newInfo)
-
+    console.log(filterOptions)
+    
     // Copy existing state
     let copyState = studentInformation;
     
@@ -66,11 +104,11 @@ async function fetchUserData (event)  {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(searchedLetters)
+        body: JSON.stringify(filterOptions)
     };
 
     // attempt to fetch for user info
-    const response = await fetch('/search_user/fetch_user_data', requestOptions);
+    const response = await fetch('/students/search', requestOptions);
     const data = await response.json();
     console.log(data)
 
@@ -99,33 +137,6 @@ async function fetchUserData (event)  {
 
   }
 
-  // adds to the state (and the table), the user data that is entered in through the form
-  function handleAddUser(addedUserInfo)
-  {
-    
-    console.log(addedUserInfo)
-    // console.log(this.state.listStudents)
-    let userData = {id:uuid}
-
-    // spread the added data into the object
-    userData = {...userData, ...addedUserInfo}
-
-    // Send the data to our server to be stored
-    const serverResponse = storeUserOnDatabase(userData);
-    
-    console.log(userData);
-
-    // set the state with our the change
-    // console.log(this.state.listStudents)
-
-    console.log(serverResponse)
-
-    setStudentInformation(prevState => 
-      {
-          return {...prevState, showUserAddedResponse:true }
-      })
-
-  }
 
   async function storeUserOnDatabase  (studentData)
   {
@@ -193,8 +204,7 @@ async function fetchUserData (event)  {
           
           {/* Search bar for Students */}
           <Container> 
-          
-          
+
 
             {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
             <Form onSubmit = {fetchUserData} className=""> 
@@ -203,7 +213,7 @@ async function fetchUserData (event)  {
 
                 <Form.Label>Search Student</Form.Label>
                 <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
-                <Form.Control className type="text" placeholder="Enter Student Name" />
+                <Form.Control className type="text" placeholder="Enter Student Name" onChange={(e) => handleSearchBarChange(e.target.value)}/>
 
                 <Form.Text className="text-muted">
                   Search a User, and hit Fetch, to grab the students information

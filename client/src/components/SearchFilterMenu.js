@@ -6,8 +6,6 @@ import {FormControl, Form, Button} from 'react-bootstrap/';
 const SearchFilterMenu = React.forwardRef(
     ({ style, className, customOption, handleSearchFilterChange, clearButton=true, searchTitle = false, "aria-labelledby": labeledBy }, ref) => {
 
-        console.log("What is button" + clearButton)
-
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
 

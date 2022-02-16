@@ -31,7 +31,7 @@ function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
         </Button>
     ));
 
-    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
+    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics", "Exercise Science"]
 
     return (
         <div>
