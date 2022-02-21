@@ -129,6 +129,126 @@ router.post('/add_student', function (req, res)
 
 })
 
+/* POST Student Data*/
+router.post("/search", function (req, res, next) {
+
+  console.log("Howdy");
+  console.log(req.body);
+
+  // Grab Filter Data TODO: Add date / year to be filtered
+  let searchLetters = req.body.searchedLetters;
+  let filteredMajors = req.body.filteredMajors;
+  let startYearRange = req.body.dateRanges.startDate;
+  let endYearRange = req.body.dateRanges.endDate;
+
+  // Grab the end range year dynamically 
+  const date = new Date();
+  let fourYearsFromNow = date.getFullYear() + 4;
+
+  // If we receive an empty array, it should be assumed as NULL
+  if (filteredMajors < 1)
+  {
+      filteredMajors = null
+  }
+
+  // Make sure that filtered majors has values in it
+  let joinedMajorFilters = null
+  if (filteredMajors != null)
+  {
+      joinedMajorFilters = filteredMajors.join(",")
+  }
+
+  // only query and send back data if we have actual information
+  if (searchLetters != "") {
+      // store the letters that were searched into variable to be checked against data base
+      searchLetters = searchLetters + "%";
+
+      // SQL query to receive optional filter parameters
+      sql = mysql.format("SELECT * FROM students WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND school_year >= IF( ? IS NOT NULL,?, 2010 ) AND school_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
+          searchLetters, joinedMajorFilters, filteredMajors, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsFromNow
+      ]);
+
+      console.log(sql)
+
+      connection.query(sql, function (err, result, fields) {
+          if (err) throw err;
+
+          console.log(result);
+
+          let convertedData = convertStudentFormat(result); /// FIX TO BE ASYN FUNCTION
+
+          let index = 0;
+
+          rawData = result;
+
+          stateValidObject = [];
+
+          console.log("------SPACES------");
+          // iterate over list of results
+          for (index = 0; index < rawData.length; index++) {
+              stateValidObject.push({
+                  id: rawData[index].id,
+                  firstName: rawData[index].first_name,
+                  lastName: rawData[index].last_name,
+                  newInfo: {
+                      degree: rawData[index].degree,
+                      workExperience: rawData[index].work_experience,
+                      schoolYear: rawData[index].school_year,
+                  },
+              });
+          }
+          console.log("CHECK THIS OUT !!! ! ! ! ");
+          console.log(stateValidObject);
+
+          // send response back
+          res.json({
+              status: "success",
+              received: req.body,
+              foundUsers: stateValidObject,
+          });
+      });
+  }
+
+  // No user found
+  else {
+      response.json({
+          status: "success",
+          received: request.body,
+          foundUsers: false,
+      });
+  }
+
+  console.log(req.body);
+
+});
+
+
+// -- HELPER FUNCTIONS
+
+function convertStudentFormat(rawData) {
+  console.log(rawData);
+
+  let index = 0;
+
+  stateValidObject = [];
+
+  console.log("------SPACES------");
+  // iterate over list of results
+  for (index = 0; index < rawData.length; index++) {
+      stateValidObject.push({
+          firstName: rawData[index].first_name,
+          lastName: rawData[index].last_name,
+          newInfo: {
+              degree: rawData[index].degree,
+              workExperience: rawData[index].work_experience,
+              schoolYear: rawData[index].school_year,
+          },
+      });
+  }
+
+  console.log(stateValidObject);
+}
+
 // grab python data in a promise
 const pythonPromise  = () => {
   try{
