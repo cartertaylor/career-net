@@ -14,20 +14,52 @@ var connection = mysql.createConnection(
     "pool"
 );
 
-/* GET home page. */
-router.post('/', function(req, res, next) {
-    console.log("Receiving CSV upload")
-    console.log(req.body)
-
-    
-    
-
-    // Send response depending on CSV upload success
-
-});
-
 module.exports = router;
 
+
+
+router.post("/", function (req, res) 
+{
+    console.log("login attempt")
+
+    let email = req.body.loginCredentials.userName
+    let password = req.body.loginCredentials.password // TODO: encrypt password
+
+    console.log(email)
+    console.log(password)
+
+    if (email != "" && email != null)
+    {
+        sql = mysql.format("SELECT * FROM users1 WHERE email= ? ", [
+            email,
+        ]);
+
+        // Most basic implementation of authorization
+        connection.query(sql, function (err, result)
+        {
+            console.log(result)
+
+            if (result[0].password == password)
+            {
+                console.log("valid password")
+                // send response back
+                res.json({
+                    status: "success",
+                    foundUser: email,
+                });
+            }
+            else{
+                console.log("not valid")
+            }
+
+        })
+
+    }
+
+    else{
+        res.json({status:"Failed"})
+    }
+})
 
 router.post("/names", function (req, res)
 {

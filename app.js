@@ -5,12 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mysql = require('mysql');
 
-// Routes
+// Routes (import js file)
 var indexRouter = require('./routes/index');
 var studentsRouter = require('./routes/students');
 var usersRouter = require('./routes/users');
 var searchUserRouter = require('./routes/searchUsers');
 var csvUpload = require('./routes/csvUpload');
+var userLogin = require('./routes/login');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/students', studentsRouter);
 app.use('/users', usersRouter);
 app.use('/search_user', searchUserRouter)
 app.use('/csvUpload', csvUpload)
+app.use('/login', userLogin)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
