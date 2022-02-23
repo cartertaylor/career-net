@@ -19,8 +19,30 @@ function Login () {
 
     let [credentials, setLoginCredentials] = useState({userName:null, password:null})
 
-    function handleLoginSubmit()
+    let [userAuthorized, setUserAuthorized] = useState(false)
+
+    console.log("User Logged in: " + userAuthorized)
+
+    function checkAuthenticated ()
     {
+        axios.get("/login/isUserAuthorized", 
+        {
+            headers:{
+                "x-access-token":localStorage.getItem("token")
+            },
+
+        }).then(
+            (response) =>
+            {
+                console.log(response)
+            }
+        )
+    }
+
+    function handleLoginSubmit(e)
+    {
+        e.preventDefault();
+
         axios
             .post(baseURL, {
                 loginCredentials: credentials,
@@ -29,15 +51,12 @@ function Login () {
                 // setPost(response.data);
                 console.log(response);
 
-                // // Stop loading
-                // setLoading(false);
-
-                // // set banner
-                // setBannerContent(
-                //     <AlertDismissibleExample
-                //         linkedinStatus={response.data.linkedinFetchStatus}
-                //     />
-                // );
+                if (response.data.auth)
+                {
+                    setUserAuthorized(true);
+                    localStorage.setItem("token", response.data.token)
+                }
+                
             });
     }
 
@@ -85,7 +104,11 @@ function Login () {
                     </Button>
             </Form>
 
+
+            <Button onClick={checkAuthenticated}>Check Auth</Button>
         </Container>
+
+        
         
     );
 
