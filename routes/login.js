@@ -27,7 +27,6 @@ const verifyToken = (req, res, next) =>
 
     const token = req.headers["x-access-token"]
 
-
     if (!token)
     {
         res.send("No Token provied, please send in request")
@@ -98,7 +97,7 @@ router.post("/", function (req, res)
                 
                 const id = result[0].user_id
 
-                const token = generateAccesstoken(id)
+                const token = generateAccesstoken(id) 
 
                 // TODO: Implement refresh token at some point 
                 const refreshToken = jwt.sign({id}, "changeSecret")

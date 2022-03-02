@@ -9,7 +9,7 @@ import {v4 as uuid} from "uuid";
 // import Bootstrap
 // import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
-import {Toast, Form, Button, ToastContainer} from 'react-bootstrap/';
+import {Toast, Form, Button, ToastContainer, Stack} from 'react-bootstrap/';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -212,14 +212,15 @@ async function fetchUserData (event)  {
               <Form.Group className="mb-3" controlId="studentSearch">
 
                 <Form.Label>Search Student</Form.Label>
-                <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
                 <Form.Control className type="text" placeholder="Enter Student Name" onChange={(e) => handleSearchBarChange(e.target.value)}/>
 
                 <Form.Text className="text-muted">
                   Search a User, and hit Fetch, to grab the students information
                 </Form.Text>
-                
+                <StudentSearchBar grabDateRanges = {handleDateRangeChange} handleSearchFilterChange = {handleMajorFilterChange}/>
+
               </Form.Group>
+              
               <Button className="mt-4" variant="primary" type = "submit"> Fetch Student Data</Button>
 
             </Form>
