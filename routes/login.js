@@ -3,6 +3,9 @@ var router = express.Router();
 const mysql = require('mysql');
 const jwt = require("jsonwebtoken")
 
+// Middleware
+const authenticate = require("../middleware/authenticate") 
+
 // Instanstiate database
 var connection = mysql.createConnection(
     {
@@ -18,52 +21,24 @@ var connection = mysql.createConnection(
 module.exports = router;
 
 
-
-// Middleware function to determine if user token is authenticated or not
-const verifyToken = (req, res, next) =>
-{
-
-    console.log("middleware function")
-
-    const token = req.headers["x-access-token"]
-
-    if (!token)
-    {
-        res.send("No Token provied, please send in request")
-    }
-    else
-    {
-        jwt.verify(token, "changeSecret", (err, decoded) =>
-        {
-            if (err)
-            {   console.log(err)
-                res.json({auth:false, message:"Failed to authenticate token"})
-            }
-            else{
-                req.user_id = decoded.id;
-                next()
-            }
-        })
-    }
-
-    
-}
-
 // refresh token
 function generateAccesstoken(userId)
 {
     return (jwt.sign({userId}, "changeSecret", 
         {
-            expiresIn: '10m', // expires in 5 minutes
+            expiresIn: '10m', // expires in 10 minutes
         })
     )
 }
 
-router.get('/isUserAuthorized', verifyToken,(req, res) =>
+router.get('/isUserAuthorized', authenticate.verifyToken,(req, res) =>
 {   
+    console.log("But do we have the user name in our request? Yes")
+    console.log(req.userId)
+
     res.json(
         {
-            staus:"You are authenticated"
+            status:"You are authenticated"
         }
     )
 }) 
@@ -80,7 +55,7 @@ router.post("/", function (req, res)
 
     if (email != "" && email != null)
     {
-        sql = mysql.format("SELECT * FROM users1 WHERE email= ? ", [
+        sql = mysql.format("SELECT * FROM users2 WHERE email= ? ", [
             email,
         ]);
 
