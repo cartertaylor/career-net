@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import {
     LineChart,
     Line,
@@ -105,7 +105,7 @@ export default function DashboardGraph({ graphSettings }) {
                         <Legend />
                         <Bar dataKey="Number of Graduates" fill="#8884d8" />
                         <Bar dataKey="Received Job" fill="#82ca9d" />
-                        <Bar dataKey="Had an Internship" fill="#FFC0CB" />
+                        <Bar dataKey="Had an Internship" fill="#ff4a6a" />
                     </BarChart>
                 </Container>
             );

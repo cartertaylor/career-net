@@ -9,7 +9,7 @@ import { Toast, Form, Button, Nav, Navbar } from "react-bootstrap/";
 //import Jumbotron from 'react-bootstrap/Jumbotron';
 
 // Import Router
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 // Import different Routes
 import Login from "./routes/home/Login";
@@ -26,6 +26,10 @@ import Settings from "./routes/settings/Settings"
 // functional component
 function App() {
   const [clickedStudentInfo, setClickedStudentInfo] = useState();
+
+  const token = localStorage.getItem("token")
+  console.log("This is the app.js")
+  console.log(localStorage.getItem("token"))
 
   // Creat Handle function to grab information from other props
   function handleGrabComponentState(otheComponentState) {
@@ -66,7 +70,13 @@ function App() {
         <Route path="/csvUpload" element={<CsvPage />} />
 
         <Route path="/uploadPage" element={<UploadPage />} />
-        <Route path="/settings" element={<Settings />} />
+
+        {token &&(
+          <Route path="/settings" element={<Settings />} />)
+        } 
+        
+        <Route path="*" element={<Navigate  to={token ? "/settings" : "/"} />}/>
+
       </Routes>
     </Router>
   );

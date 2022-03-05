@@ -12,11 +12,6 @@ import DateFilterMenu from "../../../components/DateFilterMenu";
 
 function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
 
-    const popperConfig = {
-        strategy:"static"
-        
-    };
-
 
     
     // The forwardRef is important!!
@@ -30,18 +25,19 @@ function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
                 onClick(e);
             }}
             variant="outline-primary"
+            // style={{width:"1%"}}
         >
             {children}
             &#x25bc;
         </Button>
     ));
 
-    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
+    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics", "Exercise Science"]
 
     return (
-        <div>
+        
             
-                <Container className=  "mb-3">
+                
                     <Row>
                         <Col>
                             <Dropdown >
@@ -88,11 +84,13 @@ function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
 
                             </Dropdown>
                         </Col>
+
+                        
                         
                     </Row>
-                </Container>
+                
 
-        </div>
+        
     );
 }
 

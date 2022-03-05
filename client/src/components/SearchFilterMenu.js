@@ -4,15 +4,15 @@ import {FormControl, Form, Button} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const SearchFilterMenu = React.forwardRef(
-    ({ style, className, customOption, handleSearchFilterChange, clearButton=true, searchTitle = false, "aria-labelledby": labeledBy }, ref) => {
-
-        console.log("What is button" + clearButton)
+    ({ style, className, customOption, handleSearchFilterChange, clearButton=true, searchTitle = false, initialFilters = null, "aria-labelledby": labeledBy }, ref) => {
 
         // State of search bar
         const [searchValue, setSearchValue] = useState("");
 
         // State to measure check status of each array filter element passed in
         const [checkStatus, setCheck] = useState({})
+
+        console.log(checkStatus)
 
         // Only send state back if state value is changed
         useEffect(()=>
@@ -26,6 +26,23 @@ const SearchFilterMenu = React.forwardRef(
             handleSearchFilterChange(listPropertyNames)
 
         },[checkStatus])
+
+        useEffect(()=>
+        {   
+            // Only update the initial filters if the inital filter isnt null
+            if (initialFilters != null)
+            {    console.log("Change in user filters")
+
+                let startCheckState = {}
+
+                initialFilters.forEach(element => startCheckState[element] = true) 
+
+                console.log(startCheckState)
+
+                setCheck(startCheckState)
+            }
+
+        },[initialFilters])
         
         
         // Create JSX Object for each array element
@@ -49,7 +66,8 @@ const SearchFilterMenu = React.forwardRef(
 
         // Removes Unchecked values from object before sending state out to main compoent
         function removeUncheckedValues ()
-        {
+        {   
+
             let newObj = JSON.parse(JSON.stringify(checkStatus));
             let finalObject = {}
 

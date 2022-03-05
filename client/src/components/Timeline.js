@@ -16,7 +16,7 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
         console.log("Carter is working ");
         console.log(studentProfileInfo);
         axios
-            .post("/users/get_student_milestones", {
+            .post("/students/get_student_milestones", {
                 title: "Hello World!",
                 studentInfo: studentProfileInfo,
             })
@@ -174,7 +174,6 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
         return imgHTML;
     }
 
-    // console.log(timelineHeight)
     return (
         <div className="App">
             {studentMilestoneList == null ? (
