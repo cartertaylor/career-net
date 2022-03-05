@@ -63,10 +63,15 @@ function Settings() {
 
             <Container>
                 <h1 className="text-center">Admin Settings</h1>
-                <hr className="mb-4"/>
+                <hr className="mb-2"/>
                 
                 <Row>
-                    <Col>
+
+                    <Col md={12} sm={3} >
+                        {/* Empty offset Col */}
+                    </Col>
+
+                    <Col className="mt-4">
                         <Card style={{ width: '18rem', textAlign:"center" }} className= "">
                             <Card.Header><h3>Settings</h3></Card.Header>
                             <ListGroup variant="flush">
@@ -91,7 +96,9 @@ function Settings() {
                         </Card>
                     </Col>
                     
-                    <Col className="mb-3">
+                        
+                    
+                    <Col sm className="mb-3 mt-4">
                         
                         {showCurrentMenu()}
                         

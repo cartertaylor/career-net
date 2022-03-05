@@ -86,7 +86,7 @@ router.post("/search/permissions", function (req, res)
             res.json({
                 status: "success",
                 received: req.body,
-                foundUsers: stateValidObject,
+                userPermissions: stateValidObject,
             });
         });
     }

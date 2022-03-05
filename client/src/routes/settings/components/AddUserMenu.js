@@ -1,6 +1,6 @@
 import {Form, Button, Row, Col} from "react-bootstrap"
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
@@ -18,11 +18,7 @@ function AddUserMenu() {
         uploadNewData:false,
     })
 
-    // Use Effect runs afer state changes
-    useEffect(()=>
-    {
-        console.log("user searched")
-    }, newUserData)
+    
 
     // Grabs the selected majors to filter and returns them in an array of strings
     function handleMajorFilterChange(arrayOfFilteredMajor) {
@@ -77,7 +73,7 @@ function AddUserMenu() {
 
     // Yo whats up
     return (
-        <div style ={{overflow:"scroll", height:"500px"}}>
+        <div style ={{overflow:"auto", height:"500px"}}>
             <h5>User Information</h5>
             <Form>
                 <Row>

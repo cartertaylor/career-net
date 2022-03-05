@@ -60,7 +60,7 @@ function EditUserMenu() {
         .then((response) => {
             // setPost(response.data);
             console.log(
-                
+                response.data
             );
 
             setPermissions( (prevState => 

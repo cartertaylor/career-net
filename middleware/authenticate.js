@@ -39,6 +39,10 @@ const verifyToken = (req, res, next) =>
 const authAdmin = (req, res, next) =>
 {
     // Authenticate that said user is an admin 
+
+    // Authenticate token first (verify token)
+
+    // Check if user has admin permissions 
     next()
 }
 

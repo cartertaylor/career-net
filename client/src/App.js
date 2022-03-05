@@ -39,7 +39,7 @@ function App() {
   return (
     <Router>
       {/* Nav Bar */}
-      <Navbar bg="dark" variant="dark" className="mb-4">
+      <Navbar bg="primary" variant="dark" className="mb-4">
         <Container>
           <Navbar.Brand href="/">CareerNet</Navbar.Brand>
           <Nav className="me-auto">
