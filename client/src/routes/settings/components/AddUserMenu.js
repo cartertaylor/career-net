@@ -1,6 +1,6 @@
 import {Form, Button, Row, Col} from "react-bootstrap"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
@@ -17,6 +17,12 @@ function AddUserMenu() {
         majorAccess:null,
         uploadNewData:false,
     })
+
+    // Use Effect runs afer state changes
+    useEffect(()=>
+    {
+        console.log("user searched")
+    }, newUserData)
 
     // Grabs the selected majors to filter and returns them in an array of strings
     function handleMajorFilterChange(arrayOfFilteredMajor) {

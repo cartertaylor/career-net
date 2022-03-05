@@ -28,45 +28,56 @@ router.post('/', function(req, res, next) {
 
 module.exports = router;
 
-router.post("/names", function (req, res)
+router.post("/search/permissions", function (req, res)
 {
     console.log(req.body)
-    console.log("user fetch received")
 
-    let searchLetters = req.body.data
+    // Grab initial info for searched user
+    let searchLetters = req.body.searchedUser.firstName
+    let email = req.body.searchedUser.email
+    let lastSearchLetters = req.body.searchedUser.lastName
     
     if (searchLetters != "")
     {
-        // store the letters that were searched into variable to be checked against data base
-        searchLetters = searchLetters + "%";
-
         // SELECT *(all) FROM (table) where
-        sql = mysql.format("SELECT * FROM students WHERE first_name LIKE ? ", [
-            searchLetters,
+        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
+            searchLetters, lastSearchLetters, email
         ]);
         console.log(sql);
 
         connection.query(sql, function (err, result, fields) {
             if (err) throw err;
 
+            console.log("THIS IS THE RESULTS")
             console.log(result);
-
-            let index = 0;
 
             rawData = result;
             
-            stateValidObject = [];
-            let keyCounter = 0
+            stateValidObject = {
+                firstName:searchLetters,
+                lastName:lastSearchLetters,
+                email:email,
+                userType: 2, // Can only change permissions of non Admins
+                canUploadNewData:false, 
+                majorAccess:[]
+            };
 
             // Grab each value
             result.forEach(function (arrayItem) {
-                var x = arrayItem;
-                console.log(x);
-
-                let name = arrayItem.first_name + " " + arrayItem.last_name 
-                let email = arrayItem.degree
-
-                stateValidObject.push({title: name, description: email, key:++keyCounter} )
+                console.log("This is an iteration of each")
+                console.log(arrayItem.permission_name)
+                
+                // Check if permission allows for data upload 
+                if (arrayItem.permission_name == "Upload New Data")
+                {
+                    stateValidObject.canUploadNewData = true;
+                }
+                else
+                {   
+                    // Otherwise, just add it the major permission as per normal
+                    stateValidObject.majorAccess.push(arrayItem.permission_name)
+                }
+                
             });
 
             console.log(stateValidObject);
@@ -81,6 +92,65 @@ router.post("/names", function (req, res)
     }
 })
 
+router.post("/search", function (req, res)
+{
+    console.log(req.body)
+
+    let searchLetters = req.body.data
+    
+
+    if (searchLetters != "")
+    {
+        // store the letters that were searched into variable to be checked against data base
+        searchLetters = searchLetters + "%";
+
+        sql = mysql.format("SELECT * FROM users2 WHERE first_name LIKE ? or last_name LIKE ?", [
+            searchLetters, searchLetters
+        ]);
+        console.log(sql);
+
+        let dog = connection.query(sql, function (err, result, fields) {
+            if (err)
+            {
+                res.json({
+                    status: "Failure",
+                    received: req.body,
+                    message: "Failed to search for user data"
+                });
+            }
+
+            console.log(result);
+
+            rawData = result;
+            
+            stateValidObject = [];
+            let keyCounter = 0
+
+            // Grab each value
+            result.forEach(function (arrayItem) {
+                var x = arrayItem;
+                console.log(x);
+
+                let name = arrayItem.first_name + " " + arrayItem.last_name 
+                let email = arrayItem.email
+
+                stateValidObject.push({title: name, description: email, key:++keyCounter} )
+            });
+
+            console.log(stateValidObject);
+
+            // send response back
+            res.json({
+                status: "success",
+                received: req.body,
+                foundUsers: stateValidObject,
+            });
+        });
+
+        console.log("pet the dwawg")
+        console.log(dog)
+    }
+})
 
 router.post("/create", authenticate.verifyToken ,function (req, res) // TODO: middleware to make sure that the user is an admin 
 {
@@ -113,7 +183,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res) // TODO: mi
 
     // Attempt to create new user
     connection.query(newUserSql, function (err, result, fields) {
-        if (err) throw err;
+        if (err) throw err ;
 
         console.log(result)
 

@@ -22,7 +22,7 @@ import axios from "axios";
 // ]
 
 
-const routeURL = "/users/names";
+// const routeURL = "/users/search";
 
 // Initial state of search bar   
 const initialState = {
@@ -50,7 +50,7 @@ function exampleReducer(state, action) {
 
 
 // Component displays autocomplete search bar that reacts based on the given "source"
-function SearchExampleStandard({handleUserClick}) {
+function SearchExampleStandard({handleUserClick, routeURL}) {
 
 
     const [state, dispatch] = useReducer(exampleReducer, initialState);
@@ -87,13 +87,13 @@ function SearchExampleStandard({handleUserClick}) {
     // Function retrieves list of users and adds that list to state of source data
     const grabUsers = (searchLetters) => {
         // Retreive 
+        console.log(routeURL)
         axios
             .post(routeURL, {
                 data:searchLetters,
             })
             .then((response) => {
     
-                
                 // set source data to what was retreived
                 setSource(response.data.foundUsers)
 
