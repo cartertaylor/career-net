@@ -20,30 +20,48 @@ var connection = mysql.createConnection(
 
 module.exports = router;
 
-
 // refresh token
 function generateAccesstoken(userId)
 {
     return (jwt.sign({userId}, "changeSecret", 
         {
-            expiresIn: '10m', // expires in 10 minutes
+            expiresIn: '2h', // expires in 10 minutes
         })
     )
 }
 
-router.get('/isUserAuthorized', authenticate.verifyToken,(req, res) =>
+router.post('/isAdmin', authenticate.verifyToken,(req, res) =>
 {   
+    console.log(req)
     console.log("But do we have the user name in our request? Yes")
     console.log(req.userId)
 
-    res.json(
-        {
-            status:"You are authenticated"
-        }
-    )
+    // Query to check admin status
+    let adminStatus = false;
+    
+    const verifyRoleSql = mysql.format("SELECT role from users2 WHERE user_id = ?", [req.userId])
+
+    console.log(verifyRoleSql)
+
+    connection.query(verifyRoleSql, function (err, results)
+    {
+        if (err) throw err;
+        console.log(results[0])
+        console.log(results[0].role)
+
+        res.json(
+            {
+                auth: true, 
+                status:"You are authenticatedd",
+                userRole: results[0].role,
+                
+            }
+        )
+    })
+
 }) 
 
-router.post("/", function (req, res) 
+router.post("/login", function (req, res) 
 {
     console.log("login attempt")
 
@@ -51,7 +69,7 @@ router.post("/", function (req, res)
     let password = req.body.loginCredentials.password // TODO: encrypt password
 
     console.log(email)
-    console.log(password)
+    console.log(password.role)
 
     if (email != "" && email != null)
     {

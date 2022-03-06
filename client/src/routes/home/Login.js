@@ -15,7 +15,7 @@ import axios from 'axios';
 
 function Login () {
 
-    let baseURL = "login"
+    let baseURL = "auth"
 
     let [credentials, setLoginCredentials] = useState({userName:null, password:null})
 
@@ -25,7 +25,7 @@ function Login () {
 
     function checkAuthenticated ()
     {
-        axios.get("/login/isUserAuthorized", 
+        axios.post("/auth/isAdmin", {message:"Checking if user is authenticated"},
         {
             headers:{
                 "x-access-token":localStorage.getItem("token")
@@ -44,7 +44,7 @@ function Login () {
         e.preventDefault();
 
         axios
-            .post(baseURL, {
+            .post(baseURL + "/login", {
                 loginCredentials: credentials,
             })
             .then((response) => {

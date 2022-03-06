@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
 
 module.exports = router;
 
-router.post("/search/permissions", function (req, res)
+router.post("/search/permissions",authenticate.verifyToken , function (req, res)
 {
     console.log(req.body)
 
@@ -43,6 +43,7 @@ router.post("/search/permissions", function (req, res)
         sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
             searchLetters, lastSearchLetters, email
         ]);
+
         console.log(sql);
 
         connection.query(sql, function (err, result, fields) {
@@ -148,7 +149,6 @@ router.post("/search", function (req, res)
         });
 
         console.log("pet the dwawg")
-        console.log(dog)
     }
 })
 

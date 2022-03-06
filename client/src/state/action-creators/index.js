@@ -55,3 +55,13 @@ export const addClickedStudent = (studentData) => {
         });
     }
 }
+
+export const userAdmin = (isAdmin) => {
+    
+    return (dispatch) => {
+        dispatch({
+            type: "clickedStudentProfile",
+            payload: isAdmin
+        });
+    }
+}

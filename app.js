@@ -11,7 +11,9 @@ var studentsRouter = require('./routes/students');
 var usersRouter = require('./routes/users');
 var searchUserRouter = require('./routes/searchUsers');
 var csvUpload = require('./routes/csvUpload');
-var userLogin = require('./routes/login');
+var userAuth = require('./routes/auth');
+// var userAuth = require('./routes/auth');
+
 
 var app = express();
 
@@ -30,7 +32,8 @@ app.use('/students', studentsRouter);
 app.use('/users', usersRouter);
 app.use('/search_user', searchUserRouter)
 app.use('/csvUpload', csvUpload)
-app.use('/login', userLogin)
+app.use('/auth', userAuth)
+// app.use('/auth', userAuth)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
