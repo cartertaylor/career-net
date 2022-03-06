@@ -8,6 +8,8 @@ import Container from "react-bootstrap/Container";
 import { Nav, Navbar } from "react-bootstrap/";
 //import Jumbotron from 'react-bootstrap/Jumbotron';
 
+
+
 // Import Router
 import { BrowserRouter as Router, Route, Routes, Navigate,Outlet } from "react-router-dom";
 
@@ -124,10 +126,10 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
-
+      
       {/* Routes  */}
       <Routes>
-
+        
         <Route path="/" element={<Login />} />
     
           {/* Protected Routes  */}

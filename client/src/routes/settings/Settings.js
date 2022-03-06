@@ -6,6 +6,10 @@ import AddUserMenu from "./components/AddUserMenu";
 import EditUserMenu from "./components/EditUserMenu";
 import SearchExampleStandard from "../../components/SearchBarAuto";
 
+// Importing Toast
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Settings() {
 
@@ -24,6 +28,21 @@ function Settings() {
         setCurrentMenu(e.target.innerText)
     }
 
+    // Function that displays a toast depending on passed in server status
+    function handleToastDisplay(serverStatus, message = null)
+    {   
+
+        if (serverStatus == true || serverStatus == "Success")
+        {
+            toast.success(message)
+        }
+
+        else{
+            toast.error(message)
+        }
+    }
+
+
     function showCurrentMenu()
     {
 
@@ -37,7 +56,7 @@ function Settings() {
                 <Card>
                     <Card.Header className="text-center"><h3>Add User</h3> </Card.Header>
                     <Card.Body>
-                        <AddUserMenu className="dropdown-menu-search"/>
+                        <AddUserMenu className="dropdown-menu-search" handleToastDisplay={handleToastDisplay}/>
                     </Card.Body>
                 </Card>
             );
@@ -49,7 +68,7 @@ function Settings() {
                 <Card>
                     <Card.Header className="text-center"><h3>Edit User</h3> </Card.Header>
                     <Card.Body>
-                        <EditUserMenu className="dropdown-menu-search"/>
+                        <EditUserMenu className="dropdown-menu-search" handleToastDisplay={handleToastDisplay}/>
                     </Card.Body>
                 </Card>
             );
@@ -60,6 +79,18 @@ function Settings() {
 
     return (
         <div>
+
+            {/* <ToastContainer /> */}
+            <ToastContainer
+                position="top-center"
+                autoClose={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                transition={Slide}
+            />
 
             <Container>
                 <h1 className="text-center">Admin Settings</h1>

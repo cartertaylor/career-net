@@ -4,13 +4,12 @@ import React, { useState } from 'react';
 // import Bootstrap
 // import './node_modules/react-bootstrap/'
 import Container from 'react-bootstrap/Container';
-import {Toast, Form, Button} from 'react-bootstrap/';
-//import Jumbotron from 'react-bootstrap/Jumbotron';
+import {Form, Button} from 'react-bootstrap/';
 
+// Importing Toast
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-// Import Router
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import axios from 'axios';
 
 function Login () {
@@ -25,6 +24,8 @@ function Login () {
 
     function checkAuthenticated ()
     {
+
+        
         axios.post("/auth/isAdmin", {message:"Checking if user is authenticated"},
         {
             headers:{
@@ -35,6 +36,7 @@ function Login () {
             (response) =>
             {
                 console.log(response)
+                handleToastDisplay(response.data.auth)
             }
         )
     }
@@ -62,8 +64,34 @@ function Login () {
 
     console.log(credentials)
 
+    function handleToastDisplay(serverStatus, message = "none")
+    {
+        if (serverStatus == true)
+        {
+            toast.success("Successfully Authenticated")
+        }
+
+        else{
+            toast.error("Failed to authenticate")
+        }
+    }
+
     return (
+        
         <Container className ="d-flex justify-content-center">
+            {/* <ToastContainer /> */}
+            <ToastContainer
+                position="top-center"
+                autoClose={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                transition={Slide}
+            />
+
+
             <Form>
                     <Form.Group className="mb-3" controlId="formBasicEmail"  onChange={
                             (e) =>
