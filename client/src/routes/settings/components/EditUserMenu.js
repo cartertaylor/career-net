@@ -18,8 +18,6 @@ function EditUserMenu() {
     // TODO: If ADMIN is selected, create popup dialoge warning submit
 
     // TODO: If DELETE user is selected, create popup dialoge warning on submit
-
-    // TODO: FETCH USER PERMISSIONS of selected USER, then, fill out the different form defaults with that data
     
     // State for selected filters
     let [permissions, setPermissions] = useState(
@@ -130,6 +128,8 @@ function EditUserMenu() {
 
             <div>
                 <h5>Permissions</h5>
+                {permissions.userType == 2 ? 
+                <div>
                 <Row>
                     <Form.Group as={Col} controlId="formGridState">
                         <Form.Label>User Type</Form.Label>
@@ -139,7 +139,7 @@ function EditUserMenu() {
                             <option>Admin</option>
                         </Form.Select>
                     </Form.Group>
-
+                
                     <Form.Group as={Col} controlId="formGridState">
                         <Form.Label>Upload New Data</Form.Label>
                         <Form.Check
@@ -152,6 +152,8 @@ function EditUserMenu() {
                     </Form.Group>
                 </Row>
 
+                
+                
                 
                 <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange}
                     clearButton={false}
@@ -170,6 +172,17 @@ function EditUserMenu() {
                         </Button>
                     </Col>
                 </Row>
+                </div>
+                : null}
+
+                {
+                    permissions.userType == 1 ?
+                    <div>
+                        <hr/>
+                        <p>This user is also an admin and has admin privledges</p>
+                    </div>
+                : null}
+            
             </div>
 }
         </Form>

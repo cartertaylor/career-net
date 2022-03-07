@@ -40,7 +40,7 @@ router.post("/search/permissions",authenticate.verifyToken , function (req, res)
     if (searchLetters != "")
     {
         // SELECT *(all) FROM (table) where
-        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
+        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
             searchLetters, lastSearchLetters, email
         ]);
 
@@ -48,9 +48,18 @@ router.post("/search/permissions",authenticate.verifyToken , function (req, res)
 
         connection.query(sql, function (err, result, fields) {
             if (err) throw err;
-
+            
             console.log("THIS IS THE RESULTS")
             console.log(result);
+
+
+
+            // Determine role
+            let userRoleId = 2;
+            if (result.length > 0)
+            {
+                userRoleId = result[0].role
+            }
 
             rawData = result;
             
@@ -58,7 +67,7 @@ router.post("/search/permissions",authenticate.verifyToken , function (req, res)
                 firstName:searchLetters,
                 lastName:lastSearchLetters,
                 email:email,
-                userType: 2, // Can only change permissions of non Admins
+                userType: userRoleId, // Can only change permissions of non Admins
                 canUploadNewData:false, 
                 majorAccess:[]
             };

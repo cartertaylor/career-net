@@ -5,7 +5,7 @@ import axios from "axios";
 // import Bootstrap
 // import './node_modules/react-bootstrap/'
 import Container from "react-bootstrap/Container";
-import { Nav, Navbar } from "react-bootstrap/";
+import { Nav, Navbar, Offcanvas, Form, FormControl, Button } from "react-bootstrap/";
 //import Jumbotron from 'react-bootstrap/Jumbotron';
 
 
@@ -113,11 +113,9 @@ function App() {
       <Navbar bg="primary" variant="dark" className="mb-4">
         <Container>
           <Navbar.Brand href="/">CareerNet</Navbar.Brand>
-          <Nav className="me-auto" >
+          <Nav className="" >
             <Nav.Link href="/school_dashboard">School Dashboard</Nav.Link>
             <Nav.Link href="/search_students">Search For Students</Nav.Link>
-            <Nav.Link href="/settings">Linkedin Fetch</Nav.Link>
-            <Nav.Link href="/csvUpload">Upload CSV</Nav.Link>
             <Nav.Link href="/uploadPage">Upload</Nav.Link>
             {adminAuthorized
               ? <Nav.Link href="/settings">Settings</Nav.Link> : null

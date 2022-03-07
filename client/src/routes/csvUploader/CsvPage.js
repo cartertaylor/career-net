@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
 import "../../css/main.css";
@@ -17,6 +17,24 @@ export default function CsvPage() {
             parseFile(acceptedFiles[0]);
         }
     }, []);
+    
+    
+    useEffect (() =>{
+        console.log("changing CSV")
+        checkValidCsv()
+
+    }, [parsedCsvData])
+
+    // checks currently Uploaded CSV and makes sure it either matches brand New students or  Milestone format
+    function checkValidCsv()
+    {
+        // Check for new student format
+            // Checks for key length of 6
+
+            // could also check for each key. 
+                // replace _ with " " and compare to sting 
+                // if (nau_id.replace("_", " ") == "nau string" give a checkmark) 
+    }
 
 
     const {
