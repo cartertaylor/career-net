@@ -63,7 +63,21 @@ function App() {
           // Set normal user authorized 
           if (response.data.auth)
           {
+            console.log("Authorized")
             setUserAuthorized(true)
+
+            // Check if Admin: if so, return true 
+            if (response.data.userRole == 1)
+            {
+              console.log("Setting Admin")
+              setAdminAuthorized(true);
+            }
+            
+            // Otherwise assume, we are a normal faculty
+            else {
+              console.log("Not Admin ")
+              setAdminAuthorized(false)
+            }
           }
 
           // Otherwise set authorized to false
@@ -72,17 +86,7 @@ function App() {
             setUserAuthorized(false)
           }
 
-          // Check if Admin: if so, return true 
-          if (response.data.userRole == 1)
-          {
-            console.log("returning true")
-            setAdminAuthorized(true);
-          }
           
-          // Otherwise assume, we are a normal faculty
-          else {
-            setAdminAuthorized(false)
-          }
         });
 
   
@@ -90,6 +94,7 @@ function App() {
 
   function RequireAuth() {
 
+    console.log(userAuthorized)
     // If Admin hasnt been set yet, return nothing
     if (userAuthorized == undefined)
     {
@@ -107,47 +112,75 @@ function App() {
   }
 
   return (
-    
-    <Router>
-      {/* Nav Bar */}
-      <Navbar bg="primary" variant="dark" className="mb-4">
-        <Container>
-          <Navbar.Brand href="/">CareerNet</Navbar.Brand>
-          <Nav className="" >
-            <Nav.Link href="/school_dashboard">School Dashboard</Nav.Link>
-            <Nav.Link href="/search_students">Search For Students</Nav.Link>
-            <Nav.Link href="/uploadPage">Upload</Nav.Link>
-            {adminAuthorized
-              ? <Nav.Link href="/settings">Settings</Nav.Link> : null
-            }
-          
-          </Nav>
-        </Container>
-      </Navbar>
-      
-      {/* Routes  */}
-      <Routes>
-        
-        <Route path="/" element={<Login />} />
-    
-          {/* Protected Routes  */}
-        <Route element={<RequireAuth />}>
-            <Route path="/uploadPage" element={<UploadPage />} />
-            <Route path="/csvUpload" element={<CsvPage />} />
-            <Route path="/school_dashboard" element={<DashboardPage />} />
-            <Route
-              path="/search_students"
-              element={<SearchStudents grabState={handleGrabComponentState} />}
-            />
-            <Route
-              path="/student_profile/:student"
-              element={<StudentProfile clickedStudentInfo={clickedStudentInfo} />}
-            />
-            <Route path="/settings" element={<Settings />} />
-        </Route>
+      <Router>
+          {/* Nav Bar */}
+          <Navbar bg="primary" variant="dark" className="mb-4">
+              <Container>
+                  <Navbar.Brand href="/">CareerNet</Navbar.Brand>
+                  <Nav className="">
+                      <Nav.Link href="/school_dashboard">
+                          School Dashboard
+                      </Nav.Link>
+                      <Nav.Link href="/search_students">
+                          Search For Students
+                      </Nav.Link>
+                      <Nav.Link href="/uploadPage">Upload</Nav.Link>
+                      {adminAuthorized ? (
+                          <Nav.Link href="/settings">Settings</Nav.Link>
+                      ) : null}
+                  </Nav>
+              </Container>
+          </Navbar>
 
-      </Routes>
-    </Router>
+          {/* Routes  */}
+          <Routes>
+
+              {/* Default Route (if not authorized) */}
+              {!userAuthorized ? (
+                    <Route
+                      path="*"
+                      element={<Navigate to="/" />}
+                  />
+                ) : null}
+
+              
+
+              {/* Protected Routes  */}
+              <Route element={<RequireAuth />}>
+                  <Route path="/uploadPage" element={<UploadPage />} />
+                  <Route path="/csvUpload" element={<CsvPage />} />
+                  <Route path="/school_dashboard" element={<DashboardPage />} />
+                  <Route
+                      path="/search_students"
+                      element={
+                          <SearchStudents
+                              grabState={handleGrabComponentState}
+                          />
+                      }
+                  />
+                  <Route
+                      path="/student_profile/:student"
+                      element={
+                          <StudentProfile
+                              clickedStudentInfo={clickedStudentInfo}
+                          />
+                      }
+                  />
+
+                  {/* Only allow settings if the user is an admin */}
+                  {adminAuthorized ? (
+                      <Route path="/settings" element={<Settings />} />
+                  ) : null}
+
+                  {/* Default route for authorized users */}
+                  <Route
+                      path="*"
+                      element={<Navigate to="/search_students" />}
+                  />
+
+              </Route>
+          </Routes>
+      </Router>
   );
 }
 

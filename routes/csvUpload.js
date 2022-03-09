@@ -5,9 +5,14 @@ var router = express.Router();
 router.post('/', function(req, res, next) {
     console.log("Receiving CSV upload")
     console.log(req.body)
-    
 
     // Send response depending on CSV upload success
+    res.json(
+        {
+            status:"Success",
+            message: "The data was uploaded"
+        }
+    )
 
 });
 
