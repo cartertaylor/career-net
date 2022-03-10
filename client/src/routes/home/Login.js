@@ -6,25 +6,36 @@ import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import {Form, Button} from 'react-bootstrap/';
 
+// Redux
+import {useSelector, useDispatch} from "react-redux" // Allows access to store
+import {bindActionCreators} from "redux"
+import {actionCreators} from "../../state/index"
+
+
 // Importing Toast
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 import axios from 'axios';
 
 function Login () {
 
+    const dispatch = useDispatch();
+
+    /// Find functions / actions we can use to store data
+    const { userLoggedInStatus } = bindActionCreators(
+        actionCreators,
+        dispatch
+    );
+
     let baseURL = "auth"
 
+    // State Variables
     let [credentials, setLoginCredentials] = useState({userName:null, password:null})
-
-    let [userAuthorized, setUserAuthorized] = useState(false)
-
-    console.log("User Logged in: " + userAuthorized)
 
     function checkAuthenticated ()
     {
-
         
         axios.post("/auth/isAdmin", {message:"Checking if user is authenticated"},
         {
@@ -37,10 +48,12 @@ function Login () {
             {
                 console.log(response)
                 handleToastDisplay(response.data.auth)
+                userLoggedInStatus(response.data.auth)
             }
         )
     }
 
+    // Attempts to log in user with given credentials
     function handleLoginSubmit(e)
     {
         e.preventDefault();
@@ -53,17 +66,19 @@ function Login () {
                 // setPost(response.data);
                 console.log(response);
 
+                // If user is authenticated, set login variables
                 if (response.data.auth)
                 {
-                    setUserAuthorized(true);
+                    // Store JWT token and set login status to true
                     localStorage.setItem("token", response.data.token)
+                    userLoggedInStatus(true)
                 }
                 
             });
     }
 
     console.log(credentials)
-
+    
     function handleToastDisplay(serverStatus, message = "none")
     {
         if (serverStatus == true)

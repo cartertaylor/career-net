@@ -57,11 +57,20 @@ export const addClickedStudent = (studentData) => {
 }
 
 export const userAdmin = (isAdmin) => {
-    
     return (dispatch) => {
         dispatch({
             type: "clickedStudentProfile",
             payload: isAdmin
+        });
+    }
+}
+
+
+export const userLoggedInStatus = (isLoggedIn) => {
+    return (dispatch) => {
+        dispatch({
+            type: "checkUserStatus",
+            payload: isLoggedIn
         });
     }
 }

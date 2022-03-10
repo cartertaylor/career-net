@@ -19,6 +19,10 @@ const reducer = (
         case "checkUserAdmin":
             return [...state, action.payload];
 
+        // Checks login status of user
+        case "checkUserStatus":
+            return action.payload;
+
         default:
             return state
     }
