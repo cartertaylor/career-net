@@ -17,11 +17,10 @@ export default function CsvPage() {
     // State containing CSV data
     const [parsedCsvData, setParsedCsvData] = useState([null]);
 
-    let [canUploadStatus, setCanUploadStatus] = useState(false)
-
-    // 
-    let [csvParseType, setCsvParseType] = useState(null)
-    let [listInvalidRows, setInvalidRows] = useState(null)
+    // State Variables
+    let [canUploadStatus, setCanUploadStatus] = useState(false) // Determines if user can upload data
+    let [csvParseType, setCsvParseType] = useState(null)  // Uploading new students or milestones for existing students
+    let [listInvalidRows, setInvalidRows] = useState(null)  
 
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles.length) {
@@ -89,26 +88,28 @@ export default function CsvPage() {
     // checks currently Uploaded CSV and makes sure it either matches brand New students or  Milestone format
     function checkValidCsv()
     {
-
         // Grab keys of object
-        let singleRow = parsedCsvData;
-        console.log(parsedCsvData)
         let arrayColNames = Object.keys(parsedCsvData[0])
         console.log(arrayColNames)
+
         // Check for new student format
         if (arrayColNames.length == 7)
         {
             
+            // Check if the rows are valid for 'new student upload' 
             let newStudentCsvCheck = checkValidNewStudentCsv(arrayColNames);
             console.log(newStudentCsvCheck)
-
 
             if (newStudentCsvCheck.success)
             {
                 toast.success(newStudentCsvCheck.message)
+                setCsvParseType("newStudents")
+                setCanUploadStatus(true)
             }
             else{
                 toast.warn(newStudentCsvCheck.message)
+                setCsvParseType(null)
+                setCanUploadStatus(false)
             }
             // could also check for each key. 
                 // replace _ with " " and compare to sting 
@@ -129,7 +130,9 @@ export default function CsvPage() {
 
         else 
         {
-            toast.error("No valid CSV provided. Please check the user guide for formatting CSVs for 'New Students' or 'New Milestones'. ")
+            toast.error("No valid CSV provided. Please check the user guide for formatting CSVs for 'New Students' or 'New Milestones'.")
+            setCsvParseType(null)
+            setCanUploadStatus(false)
         }
 
     }
@@ -158,24 +161,45 @@ export default function CsvPage() {
     };
 
     const uploadCsvToDatabase = () => {
+
+
+
         // send grabbed CSV data to backend
         toast.promise(
-        axios
-            .post(routeURL, {
-                data:parsedCsvData,
-            })
-            .then((response) => {
+            axios
+                .post(
+                    routeURL + "/" + csvParseType,
+                    {
+                        data: parsedCsvData,
+                    },
+                    {
+                        headers: {
+                            "x-access-token": localStorage.getItem("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    console.log(response);
 
-                console.log(response);
-                
-                if (response.status == "Failed")
-                {
-                    return Promise.reject()   
-                }
-                // TODO: Create front end reaction based on response from server (success / failure)
+                    if (response.status == "Failed") {
+                        return Promise.reject();
+                    }
+                    // TODO: Create front end reaction based on response from server (success / failure)
+                }),
+            {
+                pending: "Uploading Data",
+                error: "Failed to upload data",
+                success: "Succeeded in uploading data",
+            }
+        );
+    }
 
-            })
-        , {pending:"Uploading Data", error:"Failed to upload data", success:"Succeeded in uploading data"})
+    // On delete, we should clear all the settings 
+    function clearSettings()
+    {
+        setParsedCsvData([null])
+        setCsvParseType(null)
+        setCanUploadStatus(false)
     }
 
     return (
@@ -233,7 +257,7 @@ export default function CsvPage() {
                     <Col>
                         <Button
                             variant="danger"
-                            onClick={() => setParsedCsvData([null])}
+                            onClick={() => clearSettings()}
                         >
                             Delete
                         </Button>
