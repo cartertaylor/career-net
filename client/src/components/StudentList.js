@@ -13,7 +13,7 @@ export default function StudentList({studentList, toggleTodo, grabStudenProfileD
                     <tr >
                         <th style={{whiteSpace:"nowrap", width: "1%"}}>First Name</th>
                         <th style={{whiteSpace:"nowrap", width: "1%"}}>Major</th>
-                        <th style={{whiteSpace:"nowrap", width: "1%"}}>Work Experience</th>
+                        {/* <th style={{whiteSpace:"nowrap", width: "1%"}}>Work Experience</th> */}
                         <th style={{whiteSpace:"nowrap", width: "1%"}}>Year</th>
                         <th style={{whiteSpace:"nowrap", width: "1%"}}>View Student</th>
                     </tr>

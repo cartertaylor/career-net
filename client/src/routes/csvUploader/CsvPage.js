@@ -123,6 +123,9 @@ export default function CsvPage() {
             toast.success("CSV validated as a 'New Milestones' CSV. You can now upload it below.")
             // Check cols 3-7 for school milestone
 
+            setCsvParseType("newMilestones")
+            setCanUploadStatus(true)
+
 
             // Check 8 - 13 for job milestoone row 
 
@@ -162,36 +165,42 @@ export default function CsvPage() {
 
     const uploadCsvToDatabase = () => {
 
-
-
-        // send grabbed CSV data to backend
-        toast.promise(
-            axios
-                .post(
-                    routeURL + "/" + csvParseType,
-                    {
-                        data: parsedCsvData,
-                    },
-                    {
-                        headers: {
-                            "x-access-token": localStorage.getItem("token"),
+        // Only upload if they CSV has been determined valid
+        if (canUploadStatus == true)
+        {
+            // send grabbed CSV data to backend
+            toast.promise(
+                axios
+                    .post(
+                        routeURL + "/" + csvParseType,
+                        {
+                            data: parsedCsvData,
                         },
-                    }
-                )
-                .then((response) => {
-                    console.log(response);
+                        {
+                            headers: {
+                                "x-access-token": localStorage.getItem("token"),
+                            },
+                        }
+                    )
+                    .then((response) => {
+                        console.log(response);
 
-                    if (response.status == "Failed") {
-                        return Promise.reject();
-                    }
-                    // TODO: Create front end reaction based on response from server (success / failure)
-                }),
-            {
-                pending: "Uploading Data",
-                error: "Failed to upload data",
-                success: "Succeeded in uploading data",
-            }
-        );
+                        if (response.status == "Failed") {
+                            return Promise.reject();
+                        }
+                        // TODO: Create front end reaction based on response from server (success / failure)
+                    }),
+                {
+                    pending: "Uploading Data",
+                    error: "Failed to upload data",
+                    success: "Succeeded in uploading data",
+                }
+            );
+        }
+        else
+        {
+            toast.warning("No valid CSV provided. You must have a valid CSV in order to upload.")
+        }
     }
 
     // On delete, we should clear all the settings 

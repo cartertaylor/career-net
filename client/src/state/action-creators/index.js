@@ -56,10 +56,10 @@ export const addClickedStudent = (studentData) => {
     }
 }
 
-export const userAdmin = (isAdmin) => {
+export const setUserAdmin = (isAdmin) => {
     return (dispatch) => {
         dispatch({
-            type: "clickedStudentProfile",
+            type: "checkUserAdmin",
             payload: isAdmin
         });
     }

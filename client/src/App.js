@@ -31,24 +31,27 @@ function App() {
   const dispatch = useDispatch();
 
   /// Find functions / actions we can use to store data
-  const { userLoggedInStatus } = bindActionCreators( // If a user is authenticated, we store the truth of that here
+  const { userLoggedInStatus, setUserAdmin } = bindActionCreators( // If a user is authenticated, we store the truth of that here
       actionCreators,
       dispatch
   );
 
   // Accessing store data (Tells if user is authoirzed or not)
-  let userIsAuthorized = useSelector((state) => state.users);
+  let userIsAuthorized = useSelector((state) => state.users.userLoggedIn);
+
+  // Accessing store data (Tells if user is an admin or not)
+  let adminIsAuthorized = useSelector((state) => state.users.userAdmin);
+
+  console.log(userIsAuthorized)
+  console.log(adminIsAuthorized)
 
   // State
   const [clickedStudentInfo, setClickedStudentInfo] = useState();
-  let [adminAuthorized, setAdminAuthorized] = useState(undefined);
 
   // Creat Handle function to grab information from other props
   function handleGrabComponentState(otheComponentState) {
     setClickedStudentInfo(otheComponentState);
   }
-
-  console.log(adminAuthorized)
   
   // At the end of render, check for admin status
   useEffect(()=>
@@ -83,13 +86,13 @@ function App() {
             if (response.data.userRole == 1)
             {
               console.log("Setting Admin")
-              setAdminAuthorized(true);
+              setUserAdmin(true)
             }
             
             // Otherwise assume, we are a normal faculty
             else {
               console.log("Not Admin ")
-              setAdminAuthorized(false)
+              setUserAdmin(false)
             }
           }
 
@@ -128,17 +131,17 @@ function App() {
   function AdminAuth() {
 
     // If Admin hasnt been set yet, return nothing
-    if (adminAuthorized == undefined)
+    if (userIsAuthorized == null)
     {
       return null
     }
     // Redirect to login
-    else if (adminAuthorized != true) {
+    else if (userIsAuthorized != true) {
       
         return <Navigate to="/search_student" />;
       }
 
-    else if (adminAuthorized == true){
+    else if (userIsAuthorized == true){
       // Otherwise return child Route
       return <Outlet />;
     }
@@ -158,7 +161,7 @@ function App() {
                           Search For Students
                       </Nav.Link>
                       <Nav.Link href="/uploadPage">Upload</Nav.Link>
-                      {adminAuthorized ? (
+                      {userIsAuthorized ? (
                           <Nav.Link href="/settings">Settings</Nav.Link>
                       ) : null}
                   </Nav>
