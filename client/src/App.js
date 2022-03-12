@@ -191,7 +191,9 @@ function App() {
 
 
           <Navbar bg="primary" variant="dark" expand={false} className="mb-4">
+            
               <Container fluid className="">
+              
                   <Navbar.Toggle aria-controls="offcanvasNavbar" />
 
                   <Navbar.Brand className = "" href="/">Career Net</Navbar.Brand>
@@ -204,16 +206,16 @@ function App() {
                   <p></p>
                   <p></p>
                   
-                
-                {userIsAuthorized ? (<div className="ms-4"><Navbar.Text className = "ms-4 justify-content-end ml-auto"> 
-                      <a className="" href="/settings"> <AiOutlineUser className="me-2 mb-1"/>{loggedInUserName}</a>
+
+                  
+                {userIsAuthorized ? (<div className="ms-4"><Navbar.Text pullRight className = "ms-4 justify-content-end ml-auto"> 
+                      <a className="" href="/search_students"> <AiOutlineUser className="me-2 mb-1"/>{loggedInUserName}</a>
                   </Navbar.Text>
                   
                   <Button variant="danger" className = "ms-4" href="/" onClick={()=> window.localStorage.removeItem("token")}>
                     <BiLogOut className = "me-1 mb-1" />Logout</Button> </div>) : null}
                   
-                  <Row>
-                      <Col xs={2} id="sidebar-wrapper">  
+                    
                       <Navbar.Offcanvas
                       id="offcanvasNavbar"
                       aria-labelledby="offcanvasNavbarLabel"
@@ -258,11 +260,8 @@ function App() {
                           </Nav>
                       </Offcanvas.Body>
                   </Navbar.Offcanvas>
-                      </Col>
-
-                      <Col>
-                      </Col>
-                  </Row>
+                    
+                  
   
               </Container>
           </Navbar>
