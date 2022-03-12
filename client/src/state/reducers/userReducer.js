@@ -3,7 +3,8 @@
 // action contains (function, payload). Payload being the new value you are setting
 const initialState = {
     userLoggedIn:null,
-    userAdmin:null
+    userAdmin:null,
+    userName:null,
 }; // TODO: Make this an object, and set a key for user logged in and admin status
 
 const reducer = (
@@ -25,6 +26,9 @@ const reducer = (
         // Checks login status of user
         case "checkUserStatus":
             return {...state, userLoggedIn:action.payload}; // Returns (true or false) 
+
+        case "setUserName":
+            return {...state, userName:action.payload}; // Returns (true or false) 
 
         default:
             return state

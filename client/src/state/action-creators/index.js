@@ -65,12 +65,20 @@ export const setUserAdmin = (isAdmin) => {
     }
 }
 
-
 export const userLoggedInStatus = (isLoggedIn) => {
     return (dispatch) => {
         dispatch({
             type: "checkUserStatus",
             payload: isLoggedIn
+        });
+    }
+}
+
+export const setUserName = (logInName) => {
+    return (dispatch) => {
+        dispatch({
+            type: "setUserName",
+            payload: logInName
         });
     }
 }

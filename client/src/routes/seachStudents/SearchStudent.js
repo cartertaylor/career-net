@@ -103,7 +103,7 @@ async function fetchUserData (event)  {
     // POST request using fetch with async/await
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', "x-access-token":localStorage.getItem("token") },
         body: JSON.stringify(filterOptions)
     };
 

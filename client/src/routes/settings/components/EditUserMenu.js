@@ -179,7 +179,7 @@ function EditUserMenu() {
                     permissions.userType == 1 ?
                     <div>
                         <hr/>
-                        <p>This user is also an admin and has admin privledges</p>
+                        <p>This user is also an admin and has admin privileges</p>
                     </div>
                 : null}
             

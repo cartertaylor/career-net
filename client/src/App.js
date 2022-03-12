@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+// import './css/sidebar.css'
 import axios from "axios";
 
 // import Bootstrap
 // import './node_modules/react-bootstrap/'
 import Container from "react-bootstrap/Container";
-import { Nav, Navbar, Offcanvas, Form, FormControl, Button } from "react-bootstrap/";
+import { Nav, Navbar, Offcanvas, Form, FormControl, Button, Row,Col } from "react-bootstrap/";
+
 //import Jumbotron from 'react-bootstrap/Jumbotron';
+
+// Import Icons for navigation
+import { FaCog } from 'react-icons/fa';
+import { BsFillBarChartLineFill, BsSearch} from 'react-icons/bs';
+import {FiUpload} from 'react-icons/fi'
+import {HiOutlineLogout} from 'react-icons/hi'
+import {BiLogOut} from 'react-icons/bi'
+import {AiOutlineUser} from 'react-icons/ai'
+
 
 // Redux 
 import {useSelector, useDispatch} from "react-redux" // Allows access to store
@@ -31,7 +42,7 @@ function App() {
   const dispatch = useDispatch();
 
   /// Find functions / actions we can use to store data
-  const { userLoggedInStatus, setUserAdmin } = bindActionCreators( // If a user is authenticated, we store the truth of that here
+  const { userLoggedInStatus, setUserAdmin, setUserName } = bindActionCreators( // If a user is authenticated, we store the truth of that here
       actionCreators,
       dispatch
   );
@@ -42,8 +53,12 @@ function App() {
   // Accessing store data (Tells if user is an admin or not)
   let adminIsAuthorized = useSelector((state) => state.users.userAdmin);
 
+  // Accessing username store data (Tells if user is an admin or not)
+  let loggedInUserName = useSelector((state) => state.users.userName);
+
   console.log(userIsAuthorized)
   console.log(adminIsAuthorized)
+  console.log(loggedInUserName)
 
   // State
   const [clickedStudentInfo, setClickedStudentInfo] = useState();
@@ -80,7 +95,9 @@ function App() {
           if (response.data.auth)
           {
             console.log("Authorized")
+            console.log(response.data)
             userLoggedInStatus(true)
+            setUserName(response.data.userName)
 
             // Check if Admin: if so, return true 
             if (response.data.userRole == 1)
@@ -149,15 +166,19 @@ function App() {
 
   return (
       <Router>
+
+
           {/* Nav Bar */}
-          <Navbar bg="primary" variant="dark" className="mb-4">
+          {/* <Navbar bg="primary" variant="dark" className="mb-4">
               <Container>
                   <Navbar.Brand href="/">CareerNet</Navbar.Brand>
                   <Nav className="">
                       <Nav.Link href="/school_dashboard">
+                          <BsFillBarChartLineFill className="mb-1" />
                           School Dashboard
                       </Nav.Link>
                       <Nav.Link href="/search_students">
+                          <BsSearch className="mb-1" />
                           Search For Students
                       </Nav.Link>
                       <Nav.Link href="/uploadPage">Upload</Nav.Link>
@@ -166,18 +187,94 @@ function App() {
                       ) : null}
                   </Nav>
               </Container>
+          </Navbar> */}
+
+
+          <Navbar bg="primary" variant="dark" expand={false} className="mb-4">
+              <Container fluid className="">
+                  <Navbar.Toggle aria-controls="offcanvasNavbar" />
+
+                  <Navbar.Brand className = "" href="/">Career Net</Navbar.Brand>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  
+                
+                {userIsAuthorized ? (<div className="ms-4"><Navbar.Text className = "ms-4 justify-content-end ml-auto"> 
+                      <a className="" href="/settings"> <AiOutlineUser className="me-2 mb-1"/>{loggedInUserName}</a>
+                  </Navbar.Text>
+                  
+                  <Button variant="danger" className = "ms-4" href="/" onClick={()=> window.localStorage.removeItem("token")}>
+                    <BiLogOut className = "me-1 mb-1" />Logout</Button> </div>) : null}
+                  
+                  <Row>
+                      <Col xs={2} id="sidebar-wrapper">  
+                      <Navbar.Offcanvas
+                      id="offcanvasNavbar"
+                      aria-labelledby="offcanvasNavbarLabel"
+                      placement="start"
+                      style={{ width: "18%" }}
+                  >
+                  
+                      <Offcanvas.Header closeButton>
+                          <Offcanvas.Title id="offcanvasNavbarLabel">
+                              Career Net Options
+                          </Offcanvas.Title>
+                      </Offcanvas.Header>
+                      <Offcanvas.Body>
+                          <Nav className="justify-content-end flex-grow-1 pe-3">
+                              <Nav.Link
+                                  href="/school_dashboard"
+                                  className="mb-2"
+                              >
+                                  <BsFillBarChartLineFill className="mb-1 me-2" />
+                                  School Dashboard
+                              </Nav.Link>
+
+                              <Nav.Link
+                                  href="/search_students"
+                                  className="mb-2"
+                              >
+                                  <BsSearch className="mb-1 me-2" />
+                                  Search For Students
+                              </Nav.Link>
+
+                              <Nav.Link href="/uploadPage" className="mb-2">
+                                  <FiUpload className="mb-1 me-2" />
+                                  Upload
+                              </Nav.Link>
+
+                              {userIsAuthorized ? (
+                                  <Nav.Link href="/settings" className="mb-2">
+                                      <FaCog className="mb-1 me-2" />
+                                      Settings
+                                  </Nav.Link>
+                              ) : null}
+                          </Nav>
+                      </Offcanvas.Body>
+                  </Navbar.Offcanvas>
+                      </Col>
+
+                      <Col>
+                      </Col>
+                  </Row>
+  
+              </Container>
           </Navbar>
+
+        
 
           {/* Routes  */}
           <Routes>
-              
               {/* Default route */}
-              {userIsAuthorized != true ?
-                (
+              {userIsAuthorized != true ? (
                   <Route path="/" element={<Login />} />
-
-                ): null}
-          
+              ) : null}
 
               {/* Protected Routes  */}
               <Route element={<RequireAuth />}>
@@ -201,18 +298,16 @@ function App() {
                   />
 
                   {/* Only allow settings if the user is an admin */}
-                  
-                  <Route element = {<AdminAuth/>}>
-                    <Route path="/settings" element={<Settings />} />
+
+                  <Route element={<AdminAuth />}>
+                      <Route path="/settings" element={<Settings />} />
                   </Route>
-                  
 
                   {/* Default route for authorized users */}
                   <Route
                       path="*"
                       element={<Navigate to="/search_students" />}
                   />
-
               </Route>
           </Routes>
       </Router>

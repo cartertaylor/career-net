@@ -24,7 +24,7 @@ function Login () {
     const dispatch = useDispatch();
 
     /// Find functions / actions we can use to store data
-    const { userLoggedInStatus } = bindActionCreators(
+    const { userLoggedInStatus, setUserName } = bindActionCreators(
         actionCreators,
         dispatch
     );
@@ -72,6 +72,7 @@ function Login () {
                     // Store JWT token and set login status to true
                     localStorage.setItem("token", response.data.token)
                     userLoggedInStatus(true)
+                    setUserName(response.data.userName)
                 }
                 
             });
