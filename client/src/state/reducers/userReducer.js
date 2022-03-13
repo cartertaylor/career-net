@@ -5,6 +5,7 @@ const initialState = {
     userLoggedIn:null,
     userAdmin:null,
     userName:null,
+    majorPermissions:[]
 }; // TODO: Make this an object, and set a key for user logged in and admin status
 
 const reducer = (
