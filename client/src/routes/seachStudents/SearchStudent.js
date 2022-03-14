@@ -203,9 +203,7 @@ async function fetchUserData (event)  {
 
           
           {/* Search bar for Students */}
-          <Container> 
-
-
+          <Container style={{width:"70%"}}> 
             {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
             <Form onSubmit = {fetchUserData} className=""> 
 
@@ -237,7 +235,7 @@ async function fetchUserData (event)  {
           </div>
 
            {/*Add Student Form */}
-          <StudentForm addUserData = {handleAddUser} key = {uuid}/>
+          {/* <StudentForm addUserData = {handleAddUser} key = {uuid}/> */}
           
 
         </div>

@@ -5,6 +5,11 @@ import "../../css/main.css";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import TableMaker from "../../components/TableMaker";
 import axios from "axios";
+
+// Icons
+import {FiTrash2} from "react-icons/fi"
+import {HiUpload} from "react-icons/hi"
+
 // Importing Toast
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -268,11 +273,13 @@ export default function CsvPage() {
                             variant="danger"
                             onClick={() => clearSettings()}
                         >
+                            <FiTrash2 className="mb-1 me-1"/>
                             Delete
                         </Button>
                     </Col>
                     <Col>
                         <Button onClick={() => uploadCsvToDatabase()}>
+                            <HiUpload className="mb-1 me-1"/>
                             Upload
                         </Button>
                     </Col>

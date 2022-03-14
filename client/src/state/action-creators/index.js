@@ -38,6 +38,8 @@ export const removeUser = (userData) => {
 
 export const addLinkedinFilter = (userData) => {
     
+    console.log("LETS GO BOY")
+    console.log(userData)
     return (dispatch) => {
         dispatch({
             type: "filterChanged",

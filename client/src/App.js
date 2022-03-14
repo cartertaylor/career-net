@@ -193,8 +193,8 @@ function App() {
           <Navbar bg="primary" variant="dark" expand={false} className="mb-4">
             
               <Container fluid className="">
-              
-                  <Navbar.Toggle aria-controls="offcanvasNavbar" />
+
+                  {userIsAuthorized ?  <Navbar.Toggle aria-controls="offcanvasNavbar" /> : null}
 
                   <Navbar.Brand className = "" href="/">Career Net</Navbar.Brand>
                   <p></p>

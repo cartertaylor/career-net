@@ -2,9 +2,8 @@ import {React, useState} from "react";
 
 
 
-import {Button, Offcanvas, Dropdown, ListGroup } from "react-bootstrap"
+import {Offcanvas, ListGroup } from "react-bootstrap"
 
-import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
 import CalendarFilterMenu from "../../../components/CalendarFilterMenu";
 
@@ -22,7 +21,10 @@ export default function SideMenu({...props})
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        
+    };
     const handleShow = () => setShow(true);
 
     // This list will depend on the users available users
@@ -57,7 +59,7 @@ export default function SideMenu({...props})
                 {(currentMenu)}
             </ListGroup.Item>
 
-            <Offcanvas show={show} onHide={handleClose} placement="end">
+            <Offcanvas show={show} onHide={handleClose}  placement="end">
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>{currentMenu}</Offcanvas.Title>
                 </Offcanvas.Header>

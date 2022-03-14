@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 
 
 // import Bootstrap
-// import './node_modules/react-bootstrap/'
 import Container from 'react-bootstrap/Container';
-import {Form, Button} from 'react-bootstrap/';
+import {Form, Button, Card} from 'react-bootstrap/';
 
 // Redux
 import {useSelector, useDispatch} from "react-redux" // Allows access to store
 import {bindActionCreators} from "redux"
 import {actionCreators} from "../../state/index"
+
+// Icons
+import {AiFillLock} from "react-icons/ai"
 
 
 // Importing Toast
@@ -94,7 +96,12 @@ function Login () {
 
     return (
         
-        <Container className ="d-flex justify-content-center">
+        <Container className ="d-flex justify-content-center" style={{
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
+
+
             {/* <ToastContainer /> */}
             <ToastContainer
                 position="top-center"
@@ -107,49 +114,57 @@ function Login () {
                 transition={Slide}
             />
 
-
-            <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail"  onChange={
-                            (e) =>
-                            {
-                                setLoginCredentials((prevState) => {
-                                    return { ...prevState, userName: e.target.value }
-                                })
-                            }
-                        }>
-
-                        <Form.Label>NAU ID</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
-                        <Form.Text className="text-muted">
-                            Please provide your NAU email
-                        </Form.Text>
-                    </Form.Group>
-                
-                    <Form.Group className="mb-3" controlId="formBasicPassword" 
-                        onChange={
-                            (e) =>
-                            {
-                                setLoginCredentials((prevState) => {
-                                    return { ...prevState, password: e.target.value }
-                                })
-                            }
-                        }
-                    >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
+            <Card style={{ width: '25rem' , height:'23rem' }}>
+            <Card.Header className ="text-center"><h3><AiFillLock className="mb-1 me-1"/>Login</h3></Card.Header>
+            
+                <Card.Body>
                     
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Remember me" />
-                    </Form.Group>
+                    <Form>
+                            <Form.Group className="mb-3" controlId="formBasicEmail"  onChange={
+                                    (e) =>
+                                    {
+                                        setLoginCredentials((prevState) => {
+                                            return { ...prevState, userName: e.target.value }
+                                        })
+                                    }
+                                }>
 
-                    <Button variant="primary" type="submit" onClick={(e) =>handleLoginSubmit(e)}>
-                        Log in
-                    </Button>
-            </Form>
+                                <Form.Label>NAU ID</Form.Label>
+                                <Form.Control type="email" placeholder="Enter email" />
+                                <Form.Text className="text-muted">
+                                    Please provide your NAU email
+                                </Form.Text>
+                            </Form.Group>
+                        
+                            <Form.Group className="mb-3" controlId="formBasicPassword" 
+                                onChange={
+                                    (e) =>
+                                    {
+                                        setLoginCredentials((prevState) => {
+                                            return { ...prevState, password: e.target.value }
+                                        })
+                                    }
+                                }
+                            >
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder="Password" />
+                            </Form.Group>
+                            
+                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                <Form.Check type="checkbox" label="Remember me" />
+                            </Form.Group>
+
+                            <Button variant="primary" type="submit" onClick={(e) =>handleLoginSubmit(e)}>
+                                Log in
+                            </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
 
 
-            <Button onClick={checkAuthenticated}>Check Auth</Button>
+                    
+                
+
         </Container>
 
         

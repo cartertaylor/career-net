@@ -6,10 +6,7 @@ import axios from "axios";
 import Container from "react-bootstrap/Container";
 import { Button, Spinner, Alert, Row, Col, Card, ListGroup} from "react-bootstrap/";
 
-import StudentSearchBar from "../seachStudents/SearchBarComponents/StudentSearcher";
 import FilterSelectors from "./components/FilterSelectors";
-
-import CalendarFilterMenu from "../../components/CalendarFilterMenu";
 
 // Redux Store acccess
 import {useSelector, useDispatch} from "react-redux" // Allows access to store
@@ -40,9 +37,15 @@ function Settings() {
     const [isLoading, setLoading] = useState(false);
     const [bannerContenet, setBannerContent] = useState(null);
 
-    const [selectedFilters, setSelectedFilters] = useState(state.linkedinFilters.selectedFilters);
+    const [selectedFilters, setSelectedFilters] = useState({
+        dateRanges: { startDate: undefined, endDate: undefined },
+        filteredMajors: null,
+        lastTimeUpdatedRange: { startDate: undefined, endDate: undefined },
+        fetchDataUploadedByCurrentUser:false
+    });
 
     console.log(selectedFilters)
+    console.log("Hey HEY HYE")
 
     function AlertDismissibleExample({ linkedinStatus }) {
         const [show, setShow] = useState(true);
@@ -93,6 +96,7 @@ function Settings() {
         axios
             .post(baseURL, {
                 title: "Sending request for Linkedin data",
+                filters: selectedFilters
             })
             .then((response) => {
                 setPost(response.data);
@@ -119,7 +123,7 @@ function Settings() {
             setSelectedFilters((prevState) => {
                 return { ...prevState, filteredMajors: arrayOfFilteredMajor };
             });
-            addLinkedinFilter(selectedFilters);
+            // addLinkedinFilter(selectedFilters);
             console.log(state.linkedinFilters);
         }
     }
@@ -136,6 +140,7 @@ function Settings() {
         setSelectedFilters((prevState) => {
             return { ...prevState, lastTimeUpdatedRange: ranges };
         });
+        
     }
 
     console.log(selectedFilters);
@@ -165,11 +170,11 @@ function Settings() {
                 <Row>
                     <Col>
                         <FilterSelectors
-                            handleMajorFilterChange={handleMajorFilterChange}
-                            handleLastTimeUpdatedRange={
-                                handleLastTimeUpdatedRange
-                            }
-                            handleDateRangeChange={handleDateRangeChange}
+                            // handleMajorFilterChange={handleMajorFilterChange}
+                            // handleLastTimeUpdatedRange={
+                            //     handleLastTimeUpdatedRange
+                            // }
+                            // handleDateRangeChange={handleDateRangeChange}
                             parentState={selectedFilters}
                         ></FilterSelectors>
                     </Col>
