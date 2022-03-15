@@ -4,10 +4,10 @@
 const initialState = {
         selectedFilters:
         {
-            dateRanges: { startDate: undefined, endDate: undefined },
+            gradDateRanges: { startDate: undefined, endDate: undefined },
             filteredMajors: null,
             lastTimeUpdatedRange: { startDate: undefined, endDate: undefined },
-            fetchDataUploadedByCurrentUser:false
+            fetchOnlyUserAddedData:false
         }
 }
 
@@ -22,7 +22,7 @@ const reducer = (
         
         case "filterChanged":
             console.log("IN Linkedin change")
-            console.log(action.payload.fetchDataUploadedByCurrentUser)
+            console.log(action.payload.fetchOnlyUserAddedData)
             return action.payload
             return {...state.selectedFilters, fetchDataUploadedByCurrentUser:action.payload};
         

@@ -6,7 +6,10 @@ import axios from "axios";
 import Container from "react-bootstrap/Container";
 import { Button, Spinner, Alert, Row, Col, Card, ListGroup} from "react-bootstrap/";
 
+import StudentSearchBar from "../seachStudents/SearchBarComponents/StudentSearcher";
 import FilterSelectors from "./components/FilterSelectors";
+
+import CalendarFilterMenu from "../../components/CalendarFilterMenu";
 
 // Redux Store acccess
 import {useSelector, useDispatch} from "react-redux" // Allows access to store
@@ -37,15 +40,9 @@ function Settings() {
     const [isLoading, setLoading] = useState(false);
     const [bannerContenet, setBannerContent] = useState(null);
 
-    const [selectedFilters, setSelectedFilters] = useState({
-        dateRanges: { startDate: undefined, endDate: undefined },
-        filteredMajors: null,
-        lastTimeUpdatedRange: { startDate: undefined, endDate: undefined },
-        fetchDataUploadedByCurrentUser:false
-    });
+    const [selectedFilters, setSelectedFilters] = useState(state.linkedinFilters.selectedFilters);
 
     console.log(selectedFilters)
-    console.log("Hey HEY HYE")
 
     function AlertDismissibleExample({ linkedinStatus }) {
         const [show, setShow] = useState(true);
@@ -96,8 +93,16 @@ function Settings() {
         axios
             .post(baseURL, {
                 title: "Sending request for Linkedin data",
-                filters: selectedFilters
-            })
+                selectedFilters:selectedFilters
+            },
+            {
+                headers: 
+                {
+                    "x-access-token":localStorage.getItem("token")
+                },
+            }
+            
+            )
             .then((response) => {
                 setPost(response.data);
                 console.log(response);
@@ -123,7 +128,7 @@ function Settings() {
             setSelectedFilters((prevState) => {
                 return { ...prevState, filteredMajors: arrayOfFilteredMajor };
             });
-            // addLinkedinFilter(selectedFilters);
+            addLinkedinFilter(selectedFilters);
             console.log(state.linkedinFilters);
         }
     }
@@ -131,7 +136,7 @@ function Settings() {
     // Grabs the selected year ranges from the filter menu ()
     function handleDateRangeChange(ranges) {
         setSelectedFilters((prevState) => {
-            return { ...prevState, dateRanges: ranges };
+            return { ...prevState, gradDateRanges: ranges };
         });
     }
 
@@ -140,7 +145,13 @@ function Settings() {
         setSelectedFilters((prevState) => {
             return { ...prevState, lastTimeUpdatedRange: ranges };
         });
-        
+    }
+
+    function handlefetchOnlyUserAddedDataChange()
+    {
+        setSelectedFilters((prevState) => {
+            return { ...prevState, fetchOnlyUserAddedData: !selectedFilters.fetchOnlyUserAddedData };
+        });
     }
 
     console.log(selectedFilters);
@@ -170,11 +181,12 @@ function Settings() {
                 <Row>
                     <Col>
                         <FilterSelectors
-                            // handleMajorFilterChange={handleMajorFilterChange}
-                            // handleLastTimeUpdatedRange={
-                            //     handleLastTimeUpdatedRange
-                            // }
-                            // handleDateRangeChange={handleDateRangeChange}
+                            handleMajorFilterChange={handleMajorFilterChange}
+                            handleLastTimeUpdatedRange={
+                                handleLastTimeUpdatedRange
+                            }
+                            handleDateRangeChange={handleDateRangeChange}
+                            handlefetchOnlyUserAddedDataChange={handlefetchOnlyUserAddedDataChange}
                             parentState={selectedFilters}
                         ></FilterSelectors>
                     </Col>
