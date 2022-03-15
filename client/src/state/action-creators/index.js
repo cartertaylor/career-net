@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const depositMoney = (amount) => {
     return (dispatch) => {
         dispatch({
@@ -38,8 +40,11 @@ export const removeUser = (userData) => {
 
 export const addLinkedinFilter = (userData) => {
     
+
+    if (userData)
     console.log("LETS GO BOY")
     console.log(userData)
+    
     return (dispatch) => {
         dispatch({
             type: "filterChanged",
@@ -84,3 +89,35 @@ export const setUserName = (logInName) => {
         });
     }
 }
+
+// Example using a post request to dispatch data
+export const grabUserPermissions = () => {
+
+    return dispatch => { //return function
+        return axios
+                .post("/users/current/permissions", 
+                    {
+                        message:"Grabbing current user major permissions"
+                    },
+                    {
+                    headers: {
+                        "x-access-token":localStorage.getItem("token")
+                    },                
+                })
+                .then((response) => {
+                    // setPost(response.data);
+                    console.log(
+                        response.data
+                    );
+
+                        dispatch({
+                            type: "grabUserPermissions",
+                            payload: response.data
+                        });
+                    
+                });
+        }
+
+    
+}
+

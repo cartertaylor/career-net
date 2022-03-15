@@ -5,7 +5,8 @@ const initialState = {
     userLoggedIn:null,
     userAdmin:null,
     userName:null,
-    majorPermissions:[]
+    majorPermissions:[],
+    userCanUploadNewData:null
 }; // TODO: Make this an object, and set a key for user logged in and admin status
 
 const reducer = (
@@ -31,6 +32,14 @@ const reducer = (
         case "setUserName":
             return {...state, userName:action.payload}; // Returns (true or false) 
 
+        case "grabUserPermissions":
+            console.log("USER PERMISSIONS!")
+            console.log(action.payload)
+            // Find out if user can upload data
+
+            // Set both that value, and the major acces array
+
+            return {...state, majorPermissions:action.payload.majorPermissions, userCanUploadNewData:action.payload.userCanUploadNewData}
         default:
             return state
     }

@@ -42,7 +42,7 @@ function App() {
   const dispatch = useDispatch();
 
   /// Find functions / actions we can use to store data
-  const { userLoggedInStatus, setUserAdmin, setUserName } = bindActionCreators( // If a user is authenticated, we store the truth of that here
+  const { userLoggedInStatus, setUserAdmin, setUserName, grabUserPermissions } = bindActionCreators( // If a user is authenticated, we store the truth of that here
       actionCreators,
       dispatch
   );
@@ -55,6 +55,7 @@ function App() {
 
   // Accessing username store data (Tells if user is an admin or not)
   let loggedInUserName = useSelector((state) => state.users.userName);
+
 
   console.log(userIsAuthorized)
   console.log(adminIsAuthorized)
@@ -98,6 +99,7 @@ function App() {
             console.log(response.data)
             userLoggedInStatus(true)
             setUserName(response.data.userName)
+            grabUserPermissions()
 
             // Check if Admin: if so, return true 
             if (response.data.userRole == 1)

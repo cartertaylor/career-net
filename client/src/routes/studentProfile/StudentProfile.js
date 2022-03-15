@@ -21,7 +21,9 @@ export default function StudentProfile() {
 
     // Accessing store data.
     const studentInfo = useSelector((state) => state.studentInfo);
-    
+    console.log("riggity")
+    const otherInfo = useSelector((state) => state.users); // grabUserPermissions
+    console.log(otherInfo)
     // GRAB specific store data
     let clickedStudentInfo = studentInfo.studentInfo
 
