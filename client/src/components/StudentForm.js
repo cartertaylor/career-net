@@ -1,6 +1,5 @@
 import { React } from "react";
-import Student from "./Student";
-import { Container,Form,Button,Row,Col,Table,InputGroup} from "react-bootstrap/";
+import { Container,Form,Button} from "react-bootstrap/";
 
 export default function StudentForm({ addUserData }) {
     function handleFormSubmit(event) {
@@ -33,14 +32,6 @@ export default function StudentForm({ addUserData }) {
         addUserData(formArray);
     }
 
-    // function handleFormChange(fieldBox)
-    // {
-    //     console.log(fieldBox)
-    //     console.log(formData)
-    //     setFormData(formData.state);
-    //     console.log(formData)
-    //     // e => setFormData(prevName =>e.target.value)
-    // }
 
     return (
         <Container>

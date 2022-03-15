@@ -93,7 +93,16 @@ function Settings() {
         axios
             .post(baseURL, {
                 title: "Sending request for Linkedin data",
-            })
+                selectedFilters:selectedFilters
+            },
+            {
+                headers: 
+                {
+                    "x-access-token":localStorage.getItem("token")
+                },
+            }
+            
+            )
             .then((response) => {
                 setPost(response.data);
                 console.log(response);
@@ -127,7 +136,7 @@ function Settings() {
     // Grabs the selected year ranges from the filter menu ()
     function handleDateRangeChange(ranges) {
         setSelectedFilters((prevState) => {
-            return { ...prevState, dateRanges: ranges };
+            return { ...prevState, gradDateRanges: ranges };
         });
     }
 
@@ -135,6 +144,13 @@ function Settings() {
     function handleLastTimeUpdatedRange(ranges) {
         setSelectedFilters((prevState) => {
             return { ...prevState, lastTimeUpdatedRange: ranges };
+        });
+    }
+
+    function handlefetchOnlyUserAddedDataChange()
+    {
+        setSelectedFilters((prevState) => {
+            return { ...prevState, fetchOnlyUserAddedData: !selectedFilters.fetchOnlyUserAddedData };
         });
     }
 
@@ -170,6 +186,7 @@ function Settings() {
                                 handleLastTimeUpdatedRange
                             }
                             handleDateRangeChange={handleDateRangeChange}
+                            handlefetchOnlyUserAddedDataChange={handlefetchOnlyUserAddedDataChange}
                             parentState={selectedFilters}
                         ></FilterSelectors>
                     </Col>

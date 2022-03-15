@@ -38,6 +38,8 @@ export const removeUser = (userData) => {
 
 export const addLinkedinFilter = (userData) => {
     
+    console.log("LETS GO BOY")
+    console.log(userData)
     return (dispatch) => {
         dispatch({
             type: "filterChanged",
@@ -52,6 +54,33 @@ export const addClickedStudent = (studentData) => {
         dispatch({
             type: "clickedStudentProfile",
             payload: studentData
+        });
+    }
+}
+
+export const setUserAdmin = (isAdmin) => {
+    return (dispatch) => {
+        dispatch({
+            type: "checkUserAdmin",
+            payload: isAdmin
+        });
+    }
+}
+
+export const userLoggedInStatus = (isLoggedIn) => {
+    return (dispatch) => {
+        dispatch({
+            type: "checkUserStatus",
+            payload: isLoggedIn
+        });
+    }
+}
+
+export const setUserName = (logInName) => {
+    return (dispatch) => {
+        dispatch({
+            type: "setUserName",
+            payload: logInName
         });
     }
 }

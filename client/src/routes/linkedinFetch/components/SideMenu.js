@@ -41,7 +41,7 @@ export default function SideMenu({...props})
         {
             menuJSX = (<DateFilterMenu grabDateRanges= {grabDateRanges}/>)
         }
-        else if (currentMenu == "Student Last Updated")
+        else if (currentMenu == "Student Upload Range")
         {
             menuJSX = (<CalendarFilterMenu handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}/>)
         }

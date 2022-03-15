@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
 
 module.exports = router;
 
-router.post("/search/permissions", function (req, res)
+router.post("/search/permissions",authenticate.verifyToken , function (req, res)
 {
     console.log(req.body)
 
@@ -40,16 +40,26 @@ router.post("/search/permissions", function (req, res)
     if (searchLetters != "")
     {
         // SELECT *(all) FROM (table) where
-        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
+        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
             searchLetters, lastSearchLetters, email
         ]);
+
         console.log(sql);
 
         connection.query(sql, function (err, result, fields) {
             if (err) throw err;
-
+            
             console.log("THIS IS THE RESULTS")
             console.log(result);
+
+
+
+            // Determine role
+            let userRoleId = 2;
+            if (result.length > 0)
+            {
+                userRoleId = result[0].role
+            }
 
             rawData = result;
             
@@ -57,7 +67,7 @@ router.post("/search/permissions", function (req, res)
                 firstName:searchLetters,
                 lastName:lastSearchLetters,
                 email:email,
-                userType: 2, // Can only change permissions of non Admins
+                userType: userRoleId, // Can only change permissions of non Admins
                 canUploadNewData:false, 
                 majorAccess:[]
             };
@@ -86,7 +96,7 @@ router.post("/search/permissions", function (req, res)
             res.json({
                 status: "success",
                 received: req.body,
-                foundUsers: stateValidObject,
+                userPermissions: stateValidObject,
             });
         });
     }
@@ -148,13 +158,16 @@ router.post("/search", function (req, res)
         });
 
         console.log("pet the dwawg")
-        console.log(dog)
     }
 })
 
-router.post("/create", authenticate.verifyToken ,function (req, res) // TODO: middleware to make sure that the user is an admin 
+router.post("/create", authenticate.verifyToken ,function (req, res) 
 {
+
     console.log(req.body)
+
+    // Status variable to determine to send response or not
+    let statusDone = false; 
 
     // Create Variable for the new user trying to be added's credentials
     let newUserCredentials = req.body.newUserData
@@ -182,49 +195,108 @@ router.post("/create", authenticate.verifyToken ,function (req, res) // TODO: mi
     console.log(newUserSql)
 
     // Attempt to create new user
-    connection.query(newUserSql, function (err, result, fields) {
-        if (err) throw err ;
-
-        console.log(result)
-
-        // Id for newly added user
-        let newUserId = result.insertId;
-        
-        // If not admin, add the permissions listed
-        if (roleId == 2)
-        {      
-            let permissionList = newUserCredentials.majorAccess
-
-            // Check for permissions for user to upload new data
-            if (newUserCredentials.uploadNewData)
+    try {
+        connection.query(newUserSql, function (err, result, fields) {
+            console.log(result)
+            if (err) 
             {
-                permissionList.push("Upload New Data")
+                console.log("[mysql error]",err);
+                res.json({
+                    status: "Failure",
+                    received: req.body,
+                    message: "Unable to add user " + newUserCredentials.firstName + " "+ newUserCredentials.lastName + " . If this problem persists, please contact an administrator."
+                    
+                });
+                return err;
+                
             }
+            
+            // Id for newly added user
+            let newUserId = result.insertId;
 
-            // Create permission, associated with the user_id and permission access associated with permission_id's
-            createPermissionSql = mysql.format("INSERT IGNORE INTO faculty_permissions2 (user_id, permission_id) SELECT ?, permission_id FROM permissions2 WHERE permission_name IN (?)",
-                [newUserId, permissionList])
+            // If not admin, add the permissions listed
+            try {
+                if (roleId == 2)
+                {      
+                    let permissionList = newUserCredentials.majorAccess
 
-            console.log(createPermissionSql)
+                    // Check for permissions for user to upload new data
+                    if (newUserCredentials.uploadNewData)
+                    {
+                        permissionList.push("Upload New Data")
+                    }
 
-            connection.query(createPermissionSql, function (err, result, fields) {
-                if (err) throw err;
-                console.log(result)
+                    // Create permission, associated with the user_id and permission access associated with permission_id's
+                    createPermissionSql = mysql.format("INSERT IGNORE INTO faculty_permissions2 (user_id, permission_id) SELECT ?, permission_id FROM permissions2 WHERE permission_name IN (?)",
+                        [newUserId, permissionList])
 
-                res.info = "New user permissions added"
+                    console.log(createPermissionSql)
 
-            }) 
-        }
+                    connection.query(createPermissionSql, function (err, result, fields) {
+                        if (err)
+                        {
+                            console.log("[mysql error]",err);
+                            res.json({
+                                status: "Failure",
+                                received: req.body,
+                                message: "Unable to add user " + newUserCredentials.firstName + " "+ newUserCredentials.lastName + " . If this problem persists, please contact an administrator."
+                                
+                            });
+                            return err;
+                        }
+                        console.log(result)
 
-        // send response back
+                        res.info = "New user permissions added"
+
+                        statusDone = true
+
+                    }) 
+                    
+                }
+                
+                else 
+                {
+                    statusDone = true
+                }
+            }
+            // Catch error for permission adding
+            catch (err)
+            {
+                console.log(err)
+
+                // Send failure response back
+                res.json({
+                    status: "Failure",
+                    received: req.body,
+                    message: "Unable to add user " + newUserCredentials.firstName + " "+ newUserCredentials.lastName + " . If this problem persists, please contact an administrator."
+                    
+                });
+            }
+        
+            
+            // send Success response back
+            res.json({
+                status: "Success",
+                received: req.body,
+                message: newUserCredentials.firstName + " "+ newUserCredentials.lastName +" was added to the system with a role of: " + newUserCredentials.role
+                
+            });
+
+        });
+}
+    // Catch error for adding user
+    catch (err)
+    {
+        console.log(err)
+
+        // Send failure response back
         res.json({
-            status: "success",
+            status: "Failure",
             received: req.body,
+            message: "Unable to add user " + newUserCredentials.firstName + " "+ newUserCredentials.lastName + " . If this problem persists, please contact an administrator."
             
         });
-
-    });
-
+    }
 })
 
 

@@ -1,7 +1,7 @@
 import {React, useState} from "react";
 
 // Bootstrap
-import {Card, ListGroup, Button} from "react-bootstrap"
+import {Card, ListGroup, Button, Form} from "react-bootstrap"
 
 // Other Components
 import SideMenu from "./SideMenu";
@@ -15,9 +15,12 @@ export default function FilterSelectors({...props})
     const [showSideMenu, setShowSideMenu] = useState(false)
     const [clickedFilter, setClickedFilter] =useState(undefined)
     const [selectedFilters, setSelectedFilters] = useState({
-        dateRanges: {startDate:undefined, endDate:undefined},
+        gradDateRanges: {startDate:undefined, endDate:undefined},
         filteredMajors: null,
-        lastTimeUpdatedRange:{startDate:undefined, endDate:undefined}
+        lastTimeUpdatedRange:{startDate:undefined, endDate:undefined,
+        fetchOnlyUserAddedData:false
+        
+        }
 
         
     })
@@ -26,6 +29,7 @@ export default function FilterSelectors({...props})
     const handleSearchFilterChange = props.handleMajorFilterChange
     const handleLastTimeUpdatedRange = props.handleLastTimeUpdatedRange
     const handleDateRangeChange = props.handleDateRangeChange
+    const handlefetchOnlyUserAddedDataChange = props.handlefetchOnlyUserAddedDataChange
     let parentState = props.parentState
 
 
@@ -61,14 +65,28 @@ export default function FilterSelectors({...props})
         <ListGroup variant="flush">
 
             <SideMenu currentMenu = "Major" handleSearchFilterChange = {handleSearchFilterChange} parentState = {parentState.filteredMajors} filterMenu = {filterMenu}/>
-            <SideMenu currentMenu = "Student Last Updated" handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}/>
+            <SideMenu currentMenu = "Student Upload Range" handleLastTimeUpdatedRange = {handleLastTimeUpdatedRange}/>
             <SideMenu currentMenu = "Graduation Year" handleDateRangeChange = {handleDateRangeChange}/>  
 
         </ListGroup >
         
         {/* <SideMenu currentMenu = "Graduation Year"/> */}
-        
-        
+        <Form.Check
+                            className="text-center"
+                            type="switch"
+                            id="custom-switch"
+                            // label="Check for user to have ability to upload new student data"
+                            defaultChecked={false}
+                            className="text-muted"
+                            onClick={
+                                (e) =>
+                                {
+                                    handlefetchOnlyUserAddedDataChange()
+                                }
+                            }
+                            
+                        />
+        <p className = "text-muted">Select this option to only fetch data uploaded by you</p>
     </Card>
     )
 }

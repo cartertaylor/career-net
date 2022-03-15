@@ -25,12 +25,13 @@ export default function TableMaker({givenJsonData})
 
     }
 
+
     return (
-        <div >
+        <div style = {{maxWidth:"100%", overflow:"auto", maxHeight:"100vh"}}>
             <Table style ={{overflow:"scroll",  minWidth:"600px"}} striped bordered hover className="mt-4" >
                 {/* Create headers dynamically */}
                 <thead >
-                    <tr >
+                    <tr>
                         {Object.keys(givenJsonData[0]).map(value =>
                             {
                                 console.log(value)

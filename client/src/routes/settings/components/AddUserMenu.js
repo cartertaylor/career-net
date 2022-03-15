@@ -1,11 +1,11 @@
 import {Form, Button, Row, Col} from "react-bootstrap"
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 
-function AddUserMenu() {
+function AddUserMenu({handleToastDisplay}) {
 
     let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
 
@@ -18,11 +18,7 @@ function AddUserMenu() {
         uploadNewData:false,
     })
 
-    // Use Effect runs afer state changes
-    useEffect(()=>
-    {
-        console.log("user searched")
-    }, newUserData)
+    
 
     // Grabs the selected majors to filter and returns them in an array of strings
     function handleMajorFilterChange(arrayOfFilteredMajor) {
@@ -30,24 +26,6 @@ function AddUserMenu() {
         setNewUserData((prevState ) => {return {...prevState, majorAccess:arrayOfFilteredMajor}})
     }
     
-    function checkAuthenticated (e)
-    {
-        e.preventDefault();
-
-        axios.get("/login/isUserAuthorized", 
-        {
-            headers:{
-                "x-access-token":localStorage.getItem("token")
-            },
-
-        }).then(
-            (response) =>
-            {
-                console.log(response)
-            }
-        )
-    }
-
     function handleUserAdd(e)
     {
         e.preventDefault();
@@ -67,7 +45,9 @@ function AddUserMenu() {
             .then((response) => {
                 // setPost(response.data);
                 console.log(response);
-                
+                console.log(response.data)
+                handleToastDisplay(response.data.status, response.data.message)
+
             });
     }
 
@@ -77,7 +57,7 @@ function AddUserMenu() {
 
     // Yo whats up
     return (
-        <div style ={{overflow:"scroll", height:"500px"}}>
+        <div style ={{overflow:"auto", height:"500px"}}>
             <h5>User Information</h5>
             <Form>
                 <Row>

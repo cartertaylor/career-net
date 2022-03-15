@@ -103,7 +103,7 @@ async function fetchUserData (event)  {
     // POST request using fetch with async/await
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', "x-access-token":localStorage.getItem("token") },
         body: JSON.stringify(filterOptions)
     };
 
@@ -203,9 +203,7 @@ async function fetchUserData (event)  {
 
           
           {/* Search bar for Students */}
-          <Container> 
-
-
+          <Container style={{width:"70%"}}> 
             {/* WILL REPLACE THIS FORM WITH THE NEW SEARCH COMPONENT */}
             <Form onSubmit = {fetchUserData} className=""> 
 
@@ -237,7 +235,7 @@ async function fetchUserData (event)  {
           </div>
 
            {/*Add Student Form */}
-          <StudentForm addUserData = {handleAddUser} key = {uuid}/>
+          {/* <StudentForm addUserData = {handleAddUser} key = {uuid}/> */}
           
 
         </div>
