@@ -63,6 +63,7 @@ function App() {
   console.log(userIsAuthorized)
   console.log(adminIsAuthorized)
   console.log(loggedInUserName)
+  console.log(userCanUploadNewData)
 
   // State
   const [clickedStudentInfo, setClickedStudentInfo] = useState();
@@ -164,6 +165,25 @@ function App() {
       }
 
     else if (adminIsAuthorized == true){
+      // Otherwise return child Route
+      return <Outlet />;
+    }
+  }
+
+  function UploadAuth() {
+
+    // If Admin hasnt been set yet, return nothing
+    if (userCanUploadNewData == null)
+    {
+      return null
+    }
+    // Redirect to login
+    else if (userCanUploadNewData != true) {
+      
+        return <Navigate to="/search_student" />;
+      }
+
+    else if (userCanUploadNewData == true){
       // Otherwise return child Route
       return <Outlet />;
     }
@@ -285,7 +305,12 @@ function App() {
               {/* Protected Routes  */}
               <Route element={<RequireAuth />}>
 
-                  {userCanUploadNewData ? <Route path="/uploadPage" element={<UploadPage />} /> : null}
+
+                <Route element={<UploadAuth />}>
+                  <Route path="/uploadPage" element={<UploadPage />} />
+                </Route>
+
+                  
                   
                   <Route path="/school_dashboard" element={<DashboardPage />} />
                   <Route

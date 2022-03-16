@@ -21,9 +21,7 @@ export default function StudentProfile() {
 
     // Accessing store data.
     const studentInfo = useSelector((state) => state.studentInfo);
-    console.log("riggity")
-    const otherInfo = useSelector((state) => state.users); // grabUserPermissions
-    console.log(otherInfo)
+
     // GRAB specific store data
     let clickedStudentInfo = studentInfo.studentInfo
 
@@ -97,16 +95,17 @@ export default function StudentProfile() {
                 <div>
                     <Container className="">
                         <h1 className="text-center">
-                            My name is {currentStudentProfileInfo.firstName}{" "}
+                            Profile of {currentStudentProfileInfo.firstName}{" "}
                             {currentStudentProfileInfo.lastName}
                         </h1>
                         <h4 className="text-center">
                             Majoring in{" "}
                             {currentStudentProfileInfo.newInfo.degree}
                         </h4>
-                        <h2 className="text-center mt-4">
+                        <h3 className="text-center mt-4">
                             Experience Milestones
-                        </h2>
+                        </h3>
+                        <hr/>
                     </Container>
                     <Container className="mt-4 d-flex justify-content-center">
                         <Timeline

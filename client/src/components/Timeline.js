@@ -192,6 +192,7 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
                         scrollable={{ scrollbar: true }}
                         allowDynamicUpdate={true}
                         cardHeight="50px"
+                        
                     >
                         <div className="chrono-icons">
                             {studentMilestoneList.map((milestone) => {
