@@ -31,20 +31,51 @@ function EditUserMenu() {
 
     // State for Modal
     const [modalShow, setModalShow] = useState(false);
-
+    const [userModalShow, setUserModalShow] = useState(false);
     
     // Function handles when the current user submits changes to the user permissions they are editing 
     function handleEditPermissionSubmit()
     {
         // Check to make sure all fields are filled out.  (make sure userType != Choose)
-
+        console.log("Success Submit")
             // Report back if they are missing a field
 
         // Bring up modal to check and see if they really want to edit users permissions
+        console.log(permissions)
+        
+        // Update the data for the user being edited
+        axios
+        .post("/users/edit/permissions", 
+            {
+                newPermissions:permissions
+            },
+            {
+            headers: {
+                "x-access-token":localStorage.getItem("token")
+            },
 
-        setModalShow(true)
+            
+        })
+        .then((response) => {
+            // setPost(response.data);
+            console.log(
+                response.data
+            );
+
+        });
+
+        
 
     }
+
+
+    function handleUserDelete()
+    {
+        console.log("Deleting user")
+
+        // Send request to delete user
+    }
+
 
     // Function asks user if they are sure they want to make the user an Admin. 
     function handleUserTypeChange ()
@@ -130,6 +161,17 @@ function EditUserMenu() {
         <ModalPopup
                 show={modalShow}
                 onHide={() => setModalShow(false)}
+                modalText= {{title:"Edit User Submission", subTitle:"Confirmation", body:"Are you sure you would like to alter this users permisisions?"}}
+                successSubmit = {handleEditPermissionSubmit}
+                
+        />
+        <ModalPopup
+                show={userModalShow}
+                onHide={() => setUserModalShow(false)}
+                modalText= {{title:"Delete User Confirmation", subTitle:null, body:"Are you sure you would like to delete this user? Once they are deleted,  will no longer have access to data."}}
+                successSubmit = {handleEditPermissionSubmit}
+                buttonVariant="danger"
+                
         />
         <h5>Select User</h5>
         <Form>
@@ -141,13 +183,6 @@ function EditUserMenu() {
                 <SearchBarAuto as = {Col} routeURL="/users/search" handleUserClick={
                     
                     handleUserClick
-                    
-                    // (userSelected)=> setPermissions((prevState)=> 
-                    // ({...prevState,
-                    //     firstName:userSelected.title.split(" ")[0],
-                    //     lastName:userSelected.title.split(" ")[1],
-                    //     email:userSelected.description
-                    // })) 
                 }
                 />
                 {/* <Col></Col> */}
@@ -172,7 +207,7 @@ function EditUserMenu() {
                                 })
                             }
                         }>
-                            <option>Choose...</option>
+                            
                             <option>Normal Faculty</option>
                             <option>Admin</option>
                         </Form.Select>
@@ -211,24 +246,18 @@ function EditUserMenu() {
                 <hr/>
                 
                 
-
-    return (
         <>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-                Launch vertically centered modal
-            </Button>
-
             
         </>
 
-                <Row>
+                <Row className="mb-1">
                     <Col>
-                        <Button  variant="primary" size="lg" type="" onClick={handleEditPermissionSubmit}>
+                        <Button  variant="primary" size="lg" type="" onClick={()=>setModalShow(true)}>
                             Save Changes
                         </Button>
                     </Col>
                     <Col>
-                        <Button variant="danger" size="lg" type="submit">
+                        <Button variant="danger" size="lg" type="" onClick={()=>setUserModalShow(true)} >
                             Remove User
                         </Button>
                     </Col>

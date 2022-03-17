@@ -1,22 +1,29 @@
 import {Modal, Button} from "react-bootstrap"
 
-function ModalPopup(props) {
+function ModalPopup({show, onHide, props, modalText, successSubmit,submitButton= "Submit", buttonVariant="primary"}) {
 
     console.log(props)
+
+    console.log(buttonVariant)
+    // Format of modalText
+    // Title: Top title for the modal popup
+
+    // Subtitle: sub header with bigger letters before body
+    // Body: longer message with main content (smaller letters)
 
     function handleSuccess()
     {
         // Run the success function
-
+        successSubmit()
 
         // Run the close function
-        props.onHide()
+        onHide()
         
     }
 
     function handleCancel()
     {
-        props.onHide()
+        onHide()
     }
 
     return (
@@ -25,21 +32,23 @@ function ModalPopup(props) {
             size=""
             aria-labelledby="contained-modal-title-vcenter"
             centered
+            show={show}
+            onHide={onHide}
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Edit User Submission
+                    {modalText.title}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4>Confirm</h4>
+                <h4>{modalText.subTitle}</h4>
                 <p>
-                    Are you sure you would like to alter this users permisisions?
+                    {modalText.body}
                 </p>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={handleCancel}>Close</Button>
-                <Button variant="primary" onClick={props.onHide}>
+                <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
+                <Button variant={buttonVariant} onClick={handleSuccess}>
                     Confirm Submission
                 </Button>
             </Modal.Footer>
@@ -47,22 +56,7 @@ function ModalPopup(props) {
     );
 }
 
-// function App() {
-//     const [modalShow, setModalShow] = React.useState(false);
 
-//     return (
-//         <>
-//             <Button variant="primary" onClick={() => setModalShow(true)}>
-//                 Launch vertically centered modal
-//             </Button>
-
-//             <MyVerticallyCenteredModal
-//                 show={modalShow}
-//                 onHide={() => setModalShow(false)}
-//             />
-//         </>
-//     );
-// }
 
 
 export default ModalPopup;
