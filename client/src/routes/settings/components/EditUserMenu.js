@@ -7,7 +7,7 @@ import ModalPopup from "../../../components/ModalPopup";
 import {useState, useEffect} from "react"
 import axios from "axios";
 
-function EditUserMenu() {
+function EditUserMenu({handleToastDisplay}) {
 
     let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
 
@@ -23,6 +23,7 @@ function EditUserMenu() {
             majorAccess:[],
             initialUserType:null, // Gets the original value the user has. The ones above is for updates
             initialMajorAccess:[],
+            userId:null
             
 
         }
@@ -61,6 +62,7 @@ function EditUserMenu() {
             console.log(
                 response.data
             );
+            handleToastDisplay(response.data.status, response.data.message)
 
         });
 
@@ -109,7 +111,7 @@ function EditUserMenu() {
     function handleUserClick (userSelected)
     {   
         console.log(userSelected)
-
+        
         let searchUser = {
             firstName:userSelected.title.split(" ")[0],
             lastName:userSelected.title.split(" ")[1],
@@ -133,7 +135,9 @@ function EditUserMenu() {
             console.log(
                 response.data
             );
+            
 
+            
             setPermissions( (prevState => 
                 (
                     {...prevState, ...response.data.userPermissions}
@@ -154,6 +158,18 @@ function EditUserMenu() {
     }, [permissions])
 
     console.log(permissions)
+
+    function getPermissionBasedOnId(permissionId)
+    {
+        if (permissionId == 1)
+        {
+            return "Admin"
+        }
+        else
+        {
+            return "Normal Faculty"
+        }
+    }
 
     return (
         <div style ={{overflow:"scroll", height:"500px"}}>
@@ -197,7 +213,7 @@ function EditUserMenu() {
                 <Row>
                     <Form.Group as={Col} controlId="formGridState">
                         <Form.Label>User Type</Form.Label>
-                        <Form.Select defaultValue="Normal Faculty"
+                        <Form.Select value={getPermissionBasedOnId(permissions.initialUserType)}
                         onChange={
                             (e) =>
                             {   
@@ -220,12 +236,14 @@ function EditUserMenu() {
                             id="custom-switch"
                             label="Check for user to have ability to upload new student data"
                             defaultChecked={permissions.canUploadNewData}
+                            checked={permissions.canUploadNewData}
                             className="text-muted"
-                            onClick={
+                            onChange={
                                 (e) =>
                                 {
+                                    console.log(permissions.canUploadNewData )
                                     setPermissions((prevState) => {
-                                        return { ...prevState, uploadNewData:!permissions.uploadNewData }
+                                        return { ...prevState, canUploadNewData:!permissions.canUploadNewData }
                                     })
                                 }
                             }
@@ -233,9 +251,6 @@ function EditUserMenu() {
                     </Form.Group>
                 </Row>
 
-                
-                
-                
                 <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange}
                     clearButton={false}
                     searchTitle="Edit Major Access"
@@ -269,7 +284,7 @@ function EditUserMenu() {
                     permissions.userType == 1 ?
                     <div>
                         <hr/>
-                        <p>This user is also an admin and has admin privilegesg</p>
+                        <p>This user is also an admin and has admin privileges</p>
                     </div>
                 : null}
             
