@@ -23,7 +23,8 @@ const reducer = (
             return 1;
 
         case "checkUserAdmin":
-            return {...state, userAdmin:action.payload};
+            console.log("Checking user admin")
+            return {...state, userAdmin:action.payload, userCanUploadNewData:true};
 
         // Checks login status of user
         case "checkUserStatus":
@@ -38,7 +39,6 @@ const reducer = (
             // Find out if user can upload data
 
             // Set both that value, and the major acces array
-
             return {...state, majorPermissions:action.payload.majorPermissions, userCanUploadNewData:action.payload.userCanUploadNewData}
         default:
             return state

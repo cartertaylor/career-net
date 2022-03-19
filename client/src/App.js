@@ -96,6 +96,7 @@ function App() {
         .then((response) => 
         {
 
+          console.log(response.data)
           // Set normal user authorized 
           if (response.data.auth)
           {
