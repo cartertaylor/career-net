@@ -162,7 +162,7 @@ function AddUserMenu({handleToastDisplay}) {
                     </Form.Group>
                 </Row>
 
-                {newUserData.role != "Admin" ? <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange} clearButton={false} searchTitle="Choose Major Access"/> : null}
+                {newUserData.role != "Admin" ? <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange} clearButton={false} autoFocus={false} searchTitle="Choose Major Access"/> : null}
                 
                 <hr/>
                 <Button variant="primary" size="lg" type="submit" onClick={handleUserAdd}>

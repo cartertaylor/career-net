@@ -15,16 +15,18 @@ export default function Student({ studentInfo, grabStudenProfileData }) {
     const dispatch = useDispatch();
 
     /// Find functions / actions we can use to store data
-    const { addClickedStudent } = bindActionCreators(
+    const { addClickedStudent, grabUserPermissions } = bindActionCreators(
         actionCreators,
         dispatch
     );
 
+    
     // IF a student is clicked, store that student info in the store 
     function handleStudentClick (studentInfo)
     {
         console.log(studentInfo)
         addClickedStudent(studentInfo)
+        grabUserPermissions()
     }
 
     // returns objects

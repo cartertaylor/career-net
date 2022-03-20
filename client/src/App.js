@@ -42,7 +42,7 @@ function App() {
   const dispatch = useDispatch();
 
   /// Find functions / actions we can use to store data
-  const { userLoggedInStatus, setUserAdmin, setUserName } = bindActionCreators( // If a user is authenticated, we store the truth of that here
+  const { userLoggedInStatus, setUserAdmin, setUserName, grabUserPermissions } = bindActionCreators( // If a user is authenticated, we store the truth of that here
       actionCreators,
       dispatch
   );
@@ -56,9 +56,14 @@ function App() {
   // Accessing username store data (Tells if user is an admin or not)
   let loggedInUserName = useSelector((state) => state.users.userName);
 
+  // Accessing permission to upload new data (true or false)
+  let userCanUploadNewData = useSelector((state) => state.users.userCanUploadNewData);
+
+
   console.log(userIsAuthorized)
   console.log(adminIsAuthorized)
   console.log(loggedInUserName)
+  console.log(userCanUploadNewData)
 
   // State
   const [clickedStudentInfo, setClickedStudentInfo] = useState();
@@ -91,6 +96,7 @@ function App() {
         .then((response) => 
         {
 
+          console.log(response.data)
           // Set normal user authorized 
           if (response.data.auth)
           {
@@ -98,6 +104,7 @@ function App() {
             console.log(response.data)
             userLoggedInStatus(true)
             setUserName(response.data.userName)
+            grabUserPermissions()
 
             // Check if Admin: if so, return true 
             if (response.data.userRole == 1)
@@ -148,17 +155,36 @@ function App() {
   function AdminAuth() {
 
     // If Admin hasnt been set yet, return nothing
-    if (userIsAuthorized == null)
+    if (adminIsAuthorized == null)
     {
       return null
     }
     // Redirect to login
-    else if (userIsAuthorized != true) {
+    else if (adminIsAuthorized != true) {
       
         return <Navigate to="/search_student" />;
       }
 
-    else if (userIsAuthorized == true){
+    else if (adminIsAuthorized == true){
+      // Otherwise return child Route
+      return <Outlet />;
+    }
+  }
+
+  function UploadAuth() {
+
+    // If Admin hasnt been set yet, return nothing
+    if (userCanUploadNewData == null)
+    {
+      return null
+    }
+    // Redirect to login
+    else if (userCanUploadNewData != true) {
+      
+        return <Navigate to="/search_student" />;
+      }
+
+    else if (userCanUploadNewData == true){
       // Otherwise return child Route
       return <Outlet />;
     }
@@ -245,13 +271,15 @@ function App() {
                                   <BsSearch className="mb-1 me-2" />
                                   Search For Students
                               </Nav.Link>
-
-                              <Nav.Link href="/uploadPage" className="mb-2">
+                              {userCanUploadNewData ? (
+                                <Nav.Link href="/uploadPage" className="mb-2">
                                   <FiUpload className="mb-1 me-2" />
                                   Upload
-                              </Nav.Link>
+                                </Nav.Link>
+                              ) : null}
+                              
 
-                              {userIsAuthorized ? (
+                              {adminIsAuthorized ? (
                                   <Nav.Link href="/settings" className="mb-2">
                                       <FaCog className="mb-1 me-2" />
                                       Settings
@@ -277,7 +305,14 @@ function App() {
 
               {/* Protected Routes  */}
               <Route element={<RequireAuth />}>
+
+
+                <Route element={<UploadAuth />}>
                   <Route path="/uploadPage" element={<UploadPage />} />
+                </Route>
+
+                  
+                  
                   <Route path="/school_dashboard" element={<DashboardPage />} />
                   <Route
                       path="/search_students"

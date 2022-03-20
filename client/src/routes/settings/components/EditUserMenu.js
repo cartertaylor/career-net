@@ -1,24 +1,17 @@
-import {Form, Button, Row, Col} from "react-bootstrap"
+import {Form, Button, Row, Col, Modal} from "react-bootstrap"
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import SearchBarAuto from "../../../components/SearchBarAuto";
+import ModalPopup from "../../../components/ModalPopup";
+
 import {useState, useEffect} from "react"
 import axios from "axios";
 
-function EditUserMenu() {
+function EditUserMenu({handleToastDisplay}) {
 
     let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
 
-    // Grabs the selected majors to filter and returns them in an array of strings
-    function handleMajorFilterChange(arrayOfFilteredMajor) 
-        {
 
-        }
-    
-    // TODO: If ADMIN is selected, create popup dialoge warning submit
-
-    // TODO: If DELETE user is selected, create popup dialoge warning on submit
-    
     // State for selected filters
     let [permissions, setPermissions] = useState(
         {
@@ -27,16 +20,98 @@ function EditUserMenu() {
             email:null,
             userType:null,
             canUploadNewData:false,
-            majorAccess:[]
+            majorAccess:[],
+            initialUserType:null, // Gets the original value the user has. The ones above is for updates
+            initialMajorAccess:[],
+            userId:null
+            
 
         }
         
     )
+
+    // State for Modal
+    const [modalShow, setModalShow] = useState(false);
+    const [userModalShow, setUserModalShow] = useState(false);
+    
+    // Function handles when the current user submits changes to the user permissions they are editing 
+    function handleEditPermissionSubmit()
+    {
+        // Check to make sure all fields are filled out.  (make sure userType != Choose)
+        console.log("Success Submit")
+            // Report back if they are missing a field
+
+        // Bring up modal to check and see if they really want to edit users permissions
+        console.log(permissions)
+        
+        // Update the data for the user being edited
+        axios
+        .post("/users/edit/permissions", 
+            {
+                newPermissions:permissions
+            },
+            {
+            headers: {
+                "x-access-token":localStorage.getItem("token")
+            },
+
+            
+        })
+        .then((response) => {
+            // setPost(response.data);
+            console.log(
+                response.data
+            );
+            handleToastDisplay(response.data.status, response.data.message)
+
+        });
+
+        
+
+    }
+
+
+    function handleUserDelete()
+    {
+        console.log("Deleting user")
+
+        // Send request to delete user
+    }
+
+
+    // Function asks user if they are sure they want to make the user an Admin. 
+    function handleUserTypeChange ()
+    {
+        
+    }
+
+
+    // Grabs the selected majors to filter and returns them in an array of strings
+    function handleMajorFilterChange(arrayOfFilteredMajor) 
+        {
+
+            console.log(arrayOfFilteredMajor)
+            setPermissions( (prevState => 
+                (
+                    {...prevState, majorAccess:arrayOfFilteredMajor}
+                )
+                    
+            ))
+        }
+
+    
+    
+    
+    // TODO: If ADMIN is selected, create popup dialoge warning submit
+
+    // TODO: If DELETE user is selected, create popup dialoge warning on submit
+    
+
     
     function handleUserClick (userSelected)
     {   
         console.log(userSelected)
-
+        
         let searchUser = {
             firstName:userSelected.title.split(" ")[0],
             lastName:userSelected.title.split(" ")[1],
@@ -60,7 +135,9 @@ function EditUserMenu() {
             console.log(
                 response.data
             );
+            
 
+            
             setPermissions( (prevState => 
                 (
                     {...prevState, ...response.data.userPermissions}
@@ -76,32 +153,42 @@ function EditUserMenu() {
     useEffect(()=>
     {
         console.log("user searched")
-        
-        // Retreive users permissions 
-        // axios
-        //     .post("/users/search/permissions", 
-        //         {
-        //             newUserData:newUserData
-        //         },
-        //         {
-        //         headers: {
-        //             "x-access-token":localStorage.getItem("token")
-        //         },
-                
-        //     })
-        //     .then((response) => {
-        //         // setPost(response.data);
-        //         console.log(response);
-                
-        //     });
-        
+    
         
     }, [permissions])
 
     console.log(permissions)
 
+    function getPermissionBasedOnId(permissionId)
+    {
+        if (permissionId == 1)
+        {
+            return "Admin"
+        }
+        else
+        {
+            return "Normal Faculty"
+        }
+    }
+
     return (
         <div style ={{overflow:"scroll", height:"500px"}}>
+
+        <ModalPopup
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                modalText= {{title:"Edit User Submission", subTitle:"Confirmation", body:"Are you sure you would like to alter this users permisisions?"}}
+                successSubmit = {handleEditPermissionSubmit}
+                
+        />
+        <ModalPopup
+                show={userModalShow}
+                onHide={() => setUserModalShow(false)}
+                modalText= {{title:"Delete User Confirmation", subTitle:null, body:"Are you sure you would like to delete this user? Once they are deleted,  will no longer have access to data."}}
+                successSubmit = {handleEditPermissionSubmit}
+                buttonVariant="danger"
+                
+        />
         <h5>Select User</h5>
         <Form>
             <Row className = "m-2"> 
@@ -112,13 +199,6 @@ function EditUserMenu() {
                 <SearchBarAuto as = {Col} routeURL="/users/search" handleUserClick={
                     
                     handleUserClick
-                    
-                    // (userSelected)=> setPermissions((prevState)=> 
-                    // ({...prevState,
-                    //     firstName:userSelected.title.split(" ")[0],
-                    //     lastName:userSelected.title.split(" ")[1],
-                    //     email:userSelected.description
-                    // })) 
                 }
                 />
                 {/* <Col></Col> */}
@@ -128,13 +208,22 @@ function EditUserMenu() {
 
             <div>
                 <h5>Permissions</h5>
-                {permissions.userType == 2 ? 
+                {permissions.initialUserType == 2 ? 
                 <div>
                 <Row>
                     <Form.Group as={Col} controlId="formGridState">
                         <Form.Label>User Type</Form.Label>
-                        <Form.Select defaultValue="Normal Faculty">
-                            <option>Choose...</option>
+                        <Form.Select value={getPermissionBasedOnId(permissions.initialUserType)}
+                        onChange={
+                            (e) =>
+                            {   
+                                console.log("LET GO BOY")
+                                setPermissions((prevState) => {
+                                    return { ...prevState, userType: e.target.value }
+                                })
+                            }
+                        }>
+                            
                             <option>Normal Faculty</option>
                             <option>Admin</option>
                         </Form.Select>
@@ -147,27 +236,43 @@ function EditUserMenu() {
                             id="custom-switch"
                             label="Check for user to have ability to upload new student data"
                             defaultChecked={permissions.canUploadNewData}
+                            checked={permissions.canUploadNewData}
                             className="text-muted"
+                            onChange={
+                                (e) =>
+                                {
+                                    console.log(permissions.canUploadNewData )
+                                    setPermissions((prevState) => {
+                                        return { ...prevState, canUploadNewData:!permissions.canUploadNewData }
+                                    })
+                                }
+                            }
                         />
                     </Form.Group>
                 </Row>
 
-                
-                
-                
                 <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange}
                     clearButton={false}
                     searchTitle="Edit Major Access"
-                    initialFilters ={permissions.majorAccess}/>
+                    initialFilters ={permissions.initialMajorAccess}/>
+
+                    {/* {permissions.userType != "Admin" ? <SearchFilterMenu customOption = {filterList} handleSearchFilterChange={handleMajorFilterChange} clearButton={false} autoFocus={false} searchTitle="Choose Major Access"/> : null} */}
+
                 <hr/>
-                <Row>
+                
+                
+        <>
+            
+        </>
+
+                <Row className="mb-1">
                     <Col>
-                        <Button  variant="primary" size="lg" type="submit">
+                        <Button  variant="primary" size="lg" type="" onClick={()=>setModalShow(true)}>
                             Save Changes
                         </Button>
                     </Col>
                     <Col>
-                        <Button variant="danger" size="lg" type="submit">
+                        <Button variant="danger" size="lg" type="" onClick={()=>setUserModalShow(true)} >
                             Remove User
                         </Button>
                     </Col>

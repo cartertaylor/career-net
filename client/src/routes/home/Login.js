@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import {Form, Button, Card} from 'react-bootstrap/';
 
 // Redux
-import {useSelector, useDispatch} from "react-redux" // Allows access to store
+import {useDispatch} from "react-redux" // Allows access to store
 import {bindActionCreators} from "redux"
 import {actionCreators} from "../../state/index"
 
@@ -26,7 +26,7 @@ function Login () {
     const dispatch = useDispatch();
 
     /// Find functions / actions we can use to store data
-    const { userLoggedInStatus, setUserName } = bindActionCreators(
+    const { userLoggedInStatus, setUserName, grabUserPermissions} = bindActionCreators(
         actionCreators,
         dispatch
     );
@@ -71,10 +71,13 @@ function Login () {
                 // If user is authenticated, set login variables
                 if (response.data.auth)
                 {
+                    console.log("Response man")
+                    console.log(response.data)
                     // Store JWT token and set login status to true
                     localStorage.setItem("token", response.data.token)
                     userLoggedInStatus(true)
                     setUserName(response.data.userName)
+                    grabUserPermissions()
                 }
                 
             });

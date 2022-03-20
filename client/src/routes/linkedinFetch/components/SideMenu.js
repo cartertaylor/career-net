@@ -1,12 +1,14 @@
 import {React, useState} from "react";
 
 
+import { useSelector } from "react-redux";
 
 import {Button, Offcanvas, Dropdown, ListGroup } from "react-bootstrap"
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import DateFilterMenu from "../../../components/DateFilterMenu";
 import CalendarFilterMenu from "../../../components/CalendarFilterMenu";
+import { filter } from "lodash";
 
 
 export default function SideMenu({...props})
@@ -26,7 +28,10 @@ export default function SideMenu({...props})
     const handleShow = () => setShow(true);
 
     // This list will depend on the users available users
-    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
+    // let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
+
+    const filterList = useSelector(state => state.users.majorPermissions)
+    console.log(filterList)
 
     function chooseMenu(currentMenu)
     {

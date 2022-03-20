@@ -4,7 +4,6 @@ import {useState} from "react"
 // Import other Components
 import AddUserMenu from "./components/AddUserMenu";
 import EditUserMenu from "./components/EditUserMenu";
-import SearchExampleStandard from "../../components/SearchBarAuto";
 
 // Importing Toast
 import { ToastContainer, toast, Slide } from 'react-toastify';
@@ -15,9 +14,6 @@ function Settings() {
 
     const [show, setShow] = useState(false);
     let [currentMenu, setCurrentMenu] = useState(null);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     
 
     function showSideMenu(e)
@@ -47,7 +43,7 @@ function Settings() {
     {
 
         let showMenu = (
-            null
+            <p>Please Select a menu option on the left</p>
         )
 
         if (currentMenu == "Add User")

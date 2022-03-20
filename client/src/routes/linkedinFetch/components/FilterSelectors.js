@@ -1,7 +1,10 @@
 import {React, useState} from "react";
 
+// Redux variables
+import {useSelector} from "react-redux"
+
 // Bootstrap
-import {Card, ListGroup, Button, Form} from "react-bootstrap"
+import {Card, ListGroup, Form} from "react-bootstrap"
 
 // Other Components
 import SideMenu from "./SideMenu";
@@ -32,6 +35,10 @@ export default function FilterSelectors({...props})
     const handlefetchOnlyUserAddedDataChange = props.handlefetchOnlyUserAddedDataChange
     let parentState = props.parentState
 
+    // Grab redux variable of user permissions
+    const filterList = useSelector(state => state.users.majorPermissions)
+
+
 
     // // Grabs the selected majors to filter and returns them in an array of strings 
     // function handleSearchFilterChange(arrayOfFilteredMajor)
@@ -51,8 +58,6 @@ export default function FilterSelectors({...props})
     // {
     //     setSelectedFilters((prevState => { return {...prevState, lastTimeUpdatedRange:ranges}}))
     // }
-
-    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
 
 
     let filterMenu =<SearchFilterMenu customOption = {filterList} handleSearchFilterChange = {handleSearchFilterChange} parentState ={parentState}/>

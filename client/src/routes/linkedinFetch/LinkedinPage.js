@@ -26,7 +26,7 @@ function Settings() {
 
     const dispatch = useDispatch();
 
-    const { depositMoney, withdrawMoney, addUser, addLinkedinFilter } =
+    const { depositMoney, addLinkedinFilter } =
         bindActionCreators(actionCreators, dispatch);
 
     console.log(depositMoney);

@@ -39,7 +39,7 @@ router.post('/isAdmin', authenticate.verifyToken,(req, res) =>
     // Query to check admin status
     let adminStatus = false;
     
-    const verifyRoleSql = mysql.format("SELECT role from users2 WHERE user_id = ?", [req.userId])
+    const verifyRoleSql = mysql.format("SELECT role, first_name, last_name from users2 WHERE user_id = ?", [req.userId])
 
     console.log(verifyRoleSql)
 
@@ -54,6 +54,7 @@ router.post('/isAdmin', authenticate.verifyToken,(req, res) =>
                 auth: true, 
                 status:"You are authenticatedd",
                 userRole: results[0].role,
+                userName: results[0].first_name + " " + results[0].last_name
                 
             }
         )
@@ -95,11 +96,13 @@ router.post("/login", function (req, res)
                 // TODO: Implement refresh token at some point 
                 const refreshToken = jwt.sign({id}, "changeSecret")
 
+                console.log(result[0].first_name + " " + result[0].last_name)
+
                 // send response back
                 res.json({
                     auth: true,
                     token:token,
-                    foundUser: email,
+                    userName: result[0].first_name + " " + result[0].last_name
                 });
             }
 
