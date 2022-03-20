@@ -3,9 +3,10 @@ var router = express.Router();
 let arg1 = "dog123"
 const spawn = require("child_process").spawn;
 
+// Middleware
+const authenticate = require("../middleware/authenticate") 
 
 const mysql = require('mysql');
-
 
 // SQL 
 let studentCols = ( ['first_name', 'last_name', 'degree', 'work_experience', 'school_year'] );
@@ -26,15 +27,66 @@ router.get('/', function(req, res, next) {
 });
 
 // Route to fetch data of existing stored Student data
-router.post('/get_linkedin_data', async function(req, res, next) {
+router.post('/get_linkedin_data', authenticate.verifyToken, authenticate.retreivePermissions,  async function(req, res, next) {
   console.log(req.body)
+  console.log(req.body.selectedFilters.lastTimeUpdatedRange)
   console.log("YO YO YO 2")
+
+  // Grab variables for current user from middleware 
+  let currentUserId = req.userId
+  let userAvailablePermissions = req.userPermissions
+
+
+  // -- Grab values from post request --
+
+  // Figure out if user only wants to update students added by them 
+  let fetchOnlyUserAddedData = req.body.selectedFilters.fetchOnlyUserAddedData
+
+  // Grab Values for the dates the student was created
+  let startDateCreatedRange = null
+  let endDateCreatedRange = null
+  if (Object.keys( req.body.selectedFilters.lastTimeUpdatedRange).length != 0 ) 
+  {
+    startDateCreatedRange = req.body.selectedFilters.lastTimeUpdatedRange[0].startDate
+    endDateCreatedRange = req.body.selectedFilters.lastTimeUpdatedRange[0].endDate
+  }
+
+
+  // Grab graduation date ranges filter
+  let startGradYearRange = new Date(req.body.selectedFilters.gradDateRanges.startDate, 0);
+  let endYearGradRange =  new Date(req.body.selectedFilters.gradDateRanges.endDate, 11);
+
+
+   // Grab the end range year dynamically 
+  const date = new Date();
+  let fourYearsFromNow = date.getFullYear() + 4;
+  let fourYearsDate = new Date(fourYearsFromNow, 4)
+
+  // Grab major Filters
+  let filteredMajors = req.body.selectedFilters.filteredMajors
+
+  // If we receive an empty array, it should be assumed as NULL
+  if (filteredMajors < 1)
+  {
+      filteredMajors = null
+  }
+  // Make sure that filtered majors has values in it
+  let joinedMajorFilters = null
+  if (filteredMajors != null)
+  {
+      joinedMajorFilters = filteredMajors.join(",")
+  }
+
+  // Create SQL query to send to python script 
+  let sql = mysql.format ( "SELECT * FROM students8 WHERE ((?) is false OR created_by_user_id = ?) AND ((?) IS NULL OR  degree IN (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) AND date_created >= IF( ? IS NOT NULL,?, 2010 ) AND date_created <= IF( ? IS NOT NULL,?, ? ) AND degree in (?)",
+    [fetchOnlyUserAddedData, currentUserId, joinedMajorFilters, filteredMajors ,startGradYearRange, startGradYearRange, endYearGradRange,endYearGradRange, fourYearsDate, startDateCreatedRange, startDateCreatedRange, endDateCreatedRange, endDateCreatedRange, fourYearsDate, userAvailablePermissions])
   
-  // Call Python Script
+  
   // const dataFromPython = await pythonPromise();
   // console.log(dataFromPython)
 
-  const python = spawn('python3', ["./pythonScripts/LinkedinFetcher.py", JSON.stringify(req.body)]);
+  // Call Python Script
+  const python = spawn('python3', ["./pythonScripts/LinkedinFetcher.py", JSON.stringify({message:"Requesting Linkedin Milestone data", sqlQuery:sql})]);
   python.stdout.on("data", (data) => {
     console.log("Bro whats up")
     console.log(data.toString())
@@ -63,7 +115,7 @@ router.post('/get_student_milestones', async function(req, res, next) {
   studentId = req.body.studentInfo.id
 
   // QUERY to grab each milestone given the studetns id
-  sql = mysql.format( "SELECT * from milestones_test5 WHERE student_id = ?", [studentId])  
+  sql = mysql.format( "SELECT * from milestones_test8 WHERE student_id = ?", [studentId])  
 
   console.log(sql)
 
@@ -130,20 +182,31 @@ router.post('/add_student', function (req, res)
 })
 
 /* POST Student Data*/
-router.post("/search", function (req, res, next) {
+router.post("/search", authenticate.verifyToken,function (req, res, next) {
+
+  // Grab Id of user searching for students
+  let createdByUserId = req.userId;
 
   console.log("Howdy");
+  console.log(createdByUserId)
   console.log(req.body);
+
 
   // Grab Filter Data TODO: Add date / year to be filtered
   let searchLetters = req.body.searchedLetters;
   let filteredMajors = req.body.filteredMajors;
-  let startYearRange = req.body.dateRanges.startDate;
-  let endYearRange = req.body.dateRanges.endDate;
+  let startYearRange = new Date(req.body.dateRanges.startDate, 0);
+  let endYearRange =  new Date(req.body.dateRanges.endDate, 11);
 
   // Grab the end range year dynamically 
   const date = new Date();
   let fourYearsFromNow = date.getFullYear() + 4;
+  let fourYearsDate = new Date(fourYearsFromNow, 4)
+
+  console.log(fourYearsDate)
+  console.log(endYearRange)
+  console.log(startYearRange)
+  
 
   // If we receive an empty array, it should be assumed as NULL
   if (filteredMajors < 1)
@@ -164,8 +227,8 @@ router.post("/search", function (req, res, next) {
       searchLetters = searchLetters + "%";
 
       // SQL query to receive optional filter parameters
-      sql = mysql.format("SELECT * FROM students WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND school_year >= IF( ? IS NOT NULL,?, 2010 ) AND school_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
-          searchLetters, joinedMajorFilters, filteredMajors, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsFromNow
+      sql = mysql.format("SELECT * FROM students8 WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
+          searchLetters, joinedMajorFilters, filteredMajors, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate
       ]);
 
       console.log(sql)
@@ -181,19 +244,26 @@ router.post("/search", function (req, res, next) {
 
           rawData = result;
 
+          let studentGradYear=2022
           stateValidObject = [];
+          if (result.length >0)  
+          {
+            let studentGradYear = (rawData[index].grad_year + "")
+            studentGradYear = studentGradYear.split(" ")[3]
+          }
 
+          
           console.log("------SPACES------");
           // iterate over list of results
           for (index = 0; index < rawData.length; index++) {
               stateValidObject.push({
-                  id: rawData[index].id,
+                  id: rawData[index].student_id,
                   firstName: rawData[index].first_name,
                   lastName: rawData[index].last_name,
                   newInfo: {
                       degree: rawData[index].degree,
                       workExperience: rawData[index].work_experience,
-                      schoolYear: rawData[index].school_year,
+                      schoolYear: studentGradYear,
                   },
               });
           }

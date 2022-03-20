@@ -5,9 +5,12 @@ from linkedin_api import Linkedin
 
 sqlFilters = json.loads(sys.argv[1])
 print (json.dumps(sqlFilters))
-print (json.dumps(sqlFilters["title"]))
+print (json.dumps(sqlFilters["sqlQuery"]))
 
-#print(sys.argv[1]["title"])
+### Grab sql query from arugment ###
+sqlQuery = sqlFilters["sqlQuery"]
+
+
 # Authenticate using any Linkedin account credentials
 api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!')
 
@@ -34,7 +37,6 @@ def getDateFromMilestone(milestoneType, givenDates, month ):
     if (milestoneType == "education"):
         # if year is even
         foundDate = datetime.datetime(givenDates["year"], month, 1)
-
 
     else:
         foundDate = datetime.datetime(givenDates["year"], givenDates["month"], 1)
@@ -66,9 +68,14 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
         milestoneType = "Education"
 
         for school in profileJson["education"]:
+            # Default values 
+            schoolName = None
+            degree = None
+            if ("schoolName" in school):
+                schoolName = school["schoolName"]
+            if ("fieldOfStudy" in school):
+                degree = school["fieldOfStudy"]
 
-            schoolName = school["schoolName"]
-            degree = school["fieldOfStudy"]
             dateStart = getDateFromMilestone ("education", school["timePeriod"]["startDate"], 8)
             dateEnd = getDateFromMilestone ("education", school["timePeriod"]["endDate"], 5)
 
@@ -115,7 +122,7 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     print(studentMilestoneArray)
     
     print("Trying to store student Data")
-    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test5 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, date_start, date_end, last_updated)
+    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test8 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, date_start, date_end, last_updated)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
     # sqlInsertManyMilestones2 = """INSERT INTO milestones_test2 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
@@ -131,7 +138,8 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
 # Create variable to communicate with database
 mycursor = mydb.cursor()
 
-mycursor.execute("SELECT * FROM students")
+# Run the query given by back end
+mycursor.execute(sqlQuery)
 
 myresult = mycursor.fetchall()
 
@@ -143,8 +151,7 @@ for student in myresult:
 
     print("Checking search value:")
 
-    print (student[1])
-    print (student[2])
+    # print (student[1])
 
     # SEARCH FOR THE STUDENT TO FIND THEIR PROFILE ID
     search_results = api.search_people(keyword_school="Northern Arizona University",
