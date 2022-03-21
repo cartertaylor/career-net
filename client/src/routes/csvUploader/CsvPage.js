@@ -189,9 +189,12 @@ export default function CsvPage() {
                     )
                     .then((response) => {
                         console.log(response);
-
                         if (response.status == "Failed") {
                             return Promise.reject();
+                        }
+                        if (response.data.invalidRows.length > 0)
+                        {
+                            toast.warning("The following students were not added: " + response.data.invalidRows)
                         }
                         // TODO: Create front end reaction based on response from server (success / failure)
                     }),
