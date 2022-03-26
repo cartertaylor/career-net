@@ -1,5 +1,7 @@
-*.json
 .DS_Store
 node_modules
 public
 views
+build
+.vscode
+package-lock.json
