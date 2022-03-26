@@ -18,7 +18,7 @@ export default function CsvPage() {
 
     // Arrays for the columns that are validated for students ne wmilestones or new student entries  
     const validNewStudentCsvCols = ["nau_id", "first_name", "last_name", "college_name", "degree", "degree_type", "graduation_year"]
-    const validNewMilestoneCsvCols = ["nau_id","college_name","school_name","area_of_study","degree_type","education_start_date", "end_date" ,"education_location","milestone_employer","job_title","milestone_location","milestone_description","milestone_start_date","milestone_end_date"]
+    const validNewMilestoneCsvCols = ["nau_id","college_name","school_name","area_of_study","degree_type","education_start_date", "education_end_date" ,"education_location","milestone_employer","job_title","milestone_location","milestone_description","milestone_start_date","milestone_end_date"]
 
 
     // State containing CSV data
@@ -318,7 +318,7 @@ export default function CsvPage() {
                             Delete
                         </Button>
                     </Col>
-                    <Col>
+                    <Col className= "mb-4">
                         <Button onClick={() => uploadCsvToDatabase()}>
                             <HiUpload className="mb-1 me-1"/>
                             Upload
