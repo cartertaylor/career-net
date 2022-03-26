@@ -115,7 +115,7 @@ router.post('/get_student_milestones', async function(req, res, next) {
   studentId = req.body.studentInfo.id
 
   // QUERY to grab each milestone given the studetns id
-  sql = mysql.format( "SELECT * from milestones_test8 WHERE student_id = ?", [studentId])  
+  sql = mysql.format( "SELECT * from milestones_test9 WHERE student_id = ?", [studentId])  
 
   console.log(sql)
 

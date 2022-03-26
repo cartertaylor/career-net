@@ -32,9 +32,13 @@ export default function TableMaker({givenJsonData})
                 {/* Create headers dynamically */}
                 <thead >
                     <tr>
-                        {Object.keys(givenJsonData[0]).map(value =>
+                        {Object.keys(givenJsonData[0]).map((value) =>
                             {
-                                console.log(value)
+                                console.log("'"+value+"'")
+                                // Clear any extra whitespace
+                                value = value.trim();
+                                console.log("'"+value+"'")
+
                                 return <th style={{whiteSpace:"nowrap", width: "1%"}}>{value}</th>
                             })}
                     </tr>

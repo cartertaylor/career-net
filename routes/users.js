@@ -408,8 +408,6 @@ router.post("/current/permissions", authenticate.verifyToken, function (req, res
                 try{
                     connection.query(adminMajorSql, function(err, result)
                     {
-
-
                         console.log("Admin matey")
                         console.log(result)
 

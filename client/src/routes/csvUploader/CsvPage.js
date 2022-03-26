@@ -16,7 +16,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function CsvPage() {
 
+    // Arrays for the columns that are validated for students ne wmilestones or new student entries  
     const validNewStudentCsvCols = ["nau_id", "first_name", "last_name", "college_name", "degree", "degree_type", "graduation_year"]
+    const validNewMilestoneCsvCols = ["nau_id","college_name","school_name","area_of_study","degree_type","education_start_date", "education_end_date" ,"education_location","milestone_employer","job_title","milestone_location","milestone_description","milestone_start_date","milestone_end_date"]
 
 
     // State containing CSV data
@@ -50,26 +52,54 @@ export default function CsvPage() {
 
     function handleInvalidRowEntry ()
     {
-
+        
     }
 
     // Checks to see if collumns match up
-    function checkValidNewStudentCsv(arrayColNames)
+    function checkValidCols(arrayColNames, uploadType)
     {
-        let index = 0;        
 
+        // Set default messages for validation failure
         let csvStatus = {
-            success:true,
-            message:"CSV validated as a 'New Students' CSV. You can now upload it below."
+            success:false,
+            message:"CSV verification failed"
         }
-
         let sendMessage = ("There was an issue validating this CSV for new students because it is missing certain columns or may have mispelled said columns. Columns not found: ")
 
+        let verifyArray = []
+
+        // Set messages and for uploading new milestoness
+        if (uploadType == "newStudent")
+        {
+            csvStatus = {
+                success:true,
+                message:"CSV validated as a 'New Students' CSV. You can now upload it below."
+            }
+    
+            sendMessage = ("There was an issue validating this CSV for new students because it is missing certain columns or may have mispelled said columns. Columns not found: ")
+
+            verifyArray = validNewStudentCsvCols
+        }   
+
+        // Set messages for uploading new milestones
+        else if (uploadType == "newMilestones")
+        {
+            csvStatus = {
+                success:true,
+                message:"CSV validated as a 'New Milestones' CSV. You can now upload it below."
+            }
+    
+            sendMessage = ("There was an issue validating this CSV for new milestones because it is missing certain columns or may have mispelled said columns. Columns not found: ")
+            
+            verifyArray = validNewMilestoneCsvCols
+        }
+
+        // Compare each column title to see if they are valid
         arrayColNames.forEach(element => {
             console.log(element)
+            
             // Compare inputted element to what is considered valid for a brand new student
-
-            if (!validNewStudentCsvCols.includes(element))
+            if (!verifyArray.includes(element.trim()))
             {   
                 if (csvStatus.success )
                 {
@@ -78,15 +108,19 @@ export default function CsvPage() {
                 else{
                     sendMessage+= ", '" + element + "' "
                 }
+
+                // Set status to false since we found an invalid column 
                 csvStatus.success = false; 
             }
         });
         
+        // If there was no success, set error message
         if (!csvStatus.success)
         {
             csvStatus.message = sendMessage
         }
 
+        // Return the status based on if the CSV was validated
         return csvStatus;
     }
 
@@ -99,10 +133,9 @@ export default function CsvPage() {
 
         // Check for new student format
         if (arrayColNames.length == 7)
-        {
-            
+        {     
             // Check if the rows are valid for 'new student upload' 
-            let newStudentCsvCheck = checkValidNewStudentCsv(arrayColNames);
+            let newStudentCsvCheck = checkValidCols(arrayColNames,"newStudent");
             console.log(newStudentCsvCheck)
 
             if (newStudentCsvCheck.success)
@@ -116,26 +149,31 @@ export default function CsvPage() {
                 setCsvParseType(null)
                 setCanUploadStatus(false)
             }
-            // could also check for each key. 
-                // replace _ with " " and compare to sting 
-                // if (nau_id.replace("_", " ") == "nau string" give a checkmark) 
+
         }
 
-        // Check for milestones  (we set the standards)
+        // Check for milestones (we set the standards)
         else if (arrayColNames.length >7 & arrayColNames[0] == "nau_id")
         {
 
-            toast.success("CSV validated as a 'New Milestones' CSV. You can now upload it below.")
-            // Check cols 3-7 for school milestone
+            // Check each individual column name to make sure it is valid for new milestones
+            let newStudentCsvCheck = checkValidCols(arrayColNames,"newMilestones");
 
-            setCsvParseType("newMilestones")
-            setCanUploadStatus(true)
-
-
-            // Check 8 - 13 for job milestoone row 
-
+            // Notfy user based on column calidation
+            if (newStudentCsvCheck.success)
+            {
+                toast.success(newStudentCsvCheck.message)
+                setCsvParseType("newMilestones")
+                setCanUploadStatus(true)
+            }
+            else{
+                toast.warn(newStudentCsvCheck.message)
+                setCsvParseType(null)
+                setCanUploadStatus(false)
+            }
         }
 
+        // If neither were validated, notify user of failure
         else 
         {
             toast.error("No valid CSV provided. Please check the user guide for formatting CSVs for 'New Students' or 'New Milestones'.")
@@ -189,9 +227,12 @@ export default function CsvPage() {
                     )
                     .then((response) => {
                         console.log(response);
-
                         if (response.status == "Failed") {
                             return Promise.reject();
+                        }
+                        if (response.data.invalidRows.length > 0)
+                        {
+                            toast.warning("The following students were not added: " + response.data.invalidRows)
                         }
                         // TODO: Create front end reaction based on response from server (success / failure)
                     }),
@@ -277,7 +318,7 @@ export default function CsvPage() {
                             Delete
                         </Button>
                     </Col>
-                    <Col>
+                    <Col className= "mb-4">
                         <Button onClick={() => uploadCsvToDatabase()}>
                             <HiUpload className="mb-1 me-1"/>
                             Upload
