@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mysql = require('mysql');
+require('dotenv').config()
+
+console.log(process.env.REACT_APP_API_KEY)
 
 // Routes (import js file)
 var indexRouter = require('./routes/index');

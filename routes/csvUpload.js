@@ -8,6 +8,10 @@ const mysql = require('mysql');
 // Middleware
 const authenticate = require("../middleware/authenticate") 
 
+// ENV variables
+const studentsTable = process.env.STUDENTS_TABLE;
+const milestonesTable = process.env.MILESTONE_TABLE;
+
 /* GET home page. */
 router.post('/', function(req, res, next) {
     console.log("Receiving CSV upload OG")
@@ -33,14 +37,11 @@ router.post('/newStudents', authenticate.verifyToken, authenticate.retreivePermi
     console.log("riggity wrecked")
     console.log(req.userPermissions )
     let currentUserPermissions = req.userPermissions;
-    
 
     console.log("Receiving CSV upload for new students")
     console.log(req.body.data)
     let sql = mysql.format("SELECT * FROM users2");
 
-
-    
     let csvRows = req.body.data
 
     let validRow;
@@ -76,8 +77,8 @@ router.post('/newStudents', authenticate.verifyToken, authenticate.retreivePermi
             console.log(gradeDate)
             console.log(todaysDate)
 
-            sql = mysql.format("INSERT IGNORE INTO students8 (student_id, first_name, last_name, degree, grad_year, date_created, created_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [row.nau_id, row.first_name, row.last_name, row.degree, gradeDate, todaysDate, createdByUserId]);
+            sql = mysql.format("INSERT IGNORE INTO ?? (student_id, first_name, last_name, degree, grad_year, date_created, created_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [studentsTable,row.nau_id, row.first_name, row.last_name, row.degree, gradeDate, todaysDate, createdByUserId]);
 
             console.log(sql)
 
@@ -209,7 +210,7 @@ router.post ('/newMilestones',authenticate.verifyToken, authenticate.retreivePer
 
 
                 // Take the milestone array data and create a SQL query
-                let sql = mysql.format( "INSERT IGNORE INTO milestones_test9 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, milestone_location ,date_start, date_end, last_updated) VALUES ?")
+                let sql = mysql.format( "INSERT IGNORE INTO ?? (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, milestone_location ,date_start, date_end, last_updated) VALUES ?", [milestonesTable])
 
                 console.log(sql)
                 // Insert each milestones for given student

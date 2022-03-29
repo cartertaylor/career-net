@@ -8,6 +8,11 @@ const authenticate = require("../middleware/authenticate")
 
 const mysql = require('mysql');
 
+// ENV variables
+const milestoneTable = process.env.MILESTONE_TABLE;
+const studentsTable = process.env.STUDENTS_TABLE;
+
+
 // SQL 
 let studentCols = ( ['first_name', 'last_name', 'degree', 'work_experience', 'school_year'] );
 
@@ -78,8 +83,8 @@ router.post('/get_linkedin_data', authenticate.verifyToken, authenticate.retreiv
   }
 
   // Create SQL query to send to python script 
-  let sql = mysql.format ( "SELECT * FROM students8 WHERE ((?) is false OR created_by_user_id = ?) AND ((?) IS NULL OR  degree IN (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) AND date_created >= IF( ? IS NOT NULL,?, 2010 ) AND date_created <= IF( ? IS NOT NULL,?, ? ) AND degree in (?)",
-    [fetchOnlyUserAddedData, currentUserId, joinedMajorFilters, filteredMajors ,startGradYearRange, startGradYearRange, endYearGradRange,endYearGradRange, fourYearsDate, startDateCreatedRange, startDateCreatedRange, endDateCreatedRange, endDateCreatedRange, fourYearsDate, userAvailablePermissions])
+  let sql = mysql.format ( "SELECT * FROM ?? WHERE ((?) is false OR created_by_user_id = ?) AND ((?) IS NULL OR  degree IN (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) AND date_created >= IF( ? IS NOT NULL,?, 2010 ) AND date_created <= IF( ? IS NOT NULL,?, ? ) AND degree in (?)",
+    [studentsTable,fetchOnlyUserAddedData, currentUserId, joinedMajorFilters, filteredMajors ,startGradYearRange, startGradYearRange, endYearGradRange,endYearGradRange, fourYearsDate, startDateCreatedRange, startDateCreatedRange, endDateCreatedRange, endDateCreatedRange, fourYearsDate, userAvailablePermissions])
   
   
   // const dataFromPython = await pythonPromise();
@@ -115,7 +120,7 @@ router.post('/get_student_milestones', async function(req, res, next) {
   studentId = req.body.studentInfo.id
 
   // QUERY to grab each milestone given the studetns id
-  sql = mysql.format( "SELECT * from milestones_test9 WHERE student_id = ?", [studentId])  
+  sql = mysql.format( "SELECT * from ?? WHERE student_id = ?", [milestoneTable,studentId])  
 
   console.log(sql)
 
@@ -227,8 +232,8 @@ router.post("/search", authenticate.verifyToken,function (req, res, next) {
       searchLetters = searchLetters + "%";
 
       // SQL query to receive optional filter parameters
-      sql = mysql.format("SELECT * FROM students8 WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
-          searchLetters, joinedMajorFilters, filteredMajors, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate
+      sql = mysql.format("SELECT * FROM ?? WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
+          studentsTable, searchLetters, joinedMajorFilters, filteredMajors, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate
       ]);
 
       console.log(sql)
