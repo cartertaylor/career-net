@@ -161,6 +161,9 @@ function EditUserMenu({handleToastDisplay}) {
 
     function getPermissionBasedOnId(permissionId)
     {
+
+        console.log(permissionId)
+
         if (permissionId == 1)
         {
             return "Admin"
@@ -213,7 +216,7 @@ function EditUserMenu({handleToastDisplay}) {
                 <Row>
                     <Form.Group as={Col} controlId="formGridState">
                         <Form.Label>User Type</Form.Label>
-                        <Form.Select value={getPermissionBasedOnId(permissions.initialUserType)}
+                        <Form.Select value={permissions.userType}
                         onChange={
                             (e) =>
                             {   
