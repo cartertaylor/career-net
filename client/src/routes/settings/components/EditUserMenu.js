@@ -1,3 +1,5 @@
+import React, { Component }  from 'react';
+
 import {Form, Button, Row, Col, Modal} from "react-bootstrap"
 
 import SearchFilterMenu from "../../../components/SearchFilterMenu";
