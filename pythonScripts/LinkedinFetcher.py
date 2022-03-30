@@ -1,7 +1,7 @@
 import sys, json, datetime
 import mysql.connector
 from linkedin_api import Linkedin
-
+import os
 
 sqlFilters = json.loads(sys.argv[1])
 print (json.dumps(sqlFilters))
@@ -122,8 +122,8 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     print(studentMilestoneArray)
     
     print("Trying to store student Data")
-    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test9 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, milestone_location ,date_start, date_end, last_updated)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test12 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, milestone_location ,date_start, date_end, last_updated)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""  
 
     # sqlInsertManyMilestones2 = """INSERT INTO milestones_test2 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
     #      SELECT * FROM (SELECT  %s, %s, %s, %s, %s, %s) AS tmp 

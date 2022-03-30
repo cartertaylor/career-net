@@ -25,7 +25,7 @@ import {bindActionCreators} from "redux"
 import {actionCreators} from "./state/index"
 
 // Import Router
-import { BrowserRouter as Router, Route, Routes, Navigate,Outlet } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate,Outlet } from "react-router-dom";
 
 // Import different Routes
 import Login from "./routes/home/Login";
@@ -257,7 +257,7 @@ function App() {
                       <Offcanvas.Body>
                           <Nav className="justify-content-end flex-grow-1 pe-3">
                               <Nav.Link
-                                  href="/school_dashboard"
+                                  href="#/school_dashboard"
                                   className="mb-2"
                               >
                                   <BsFillBarChartLineFill className="mb-1 me-2" />
@@ -272,7 +272,7 @@ function App() {
                                   Search For Students
                               </Nav.Link>
                               {userCanUploadNewData ? (
-                                <Nav.Link href="/uploadPage" className="mb-2">
+                                <Nav.Link href="#/uploadPage" className="mb-2">
                                   <FiUpload className="mb-1 me-2" />
                                   Upload
                                 </Nav.Link>
@@ -280,7 +280,7 @@ function App() {
                               
 
                               {adminIsAuthorized ? (
-                                  <Nav.Link href="/settings" className="mb-2">
+                                  <Nav.Link href="#/settings" className="mb-2">
                                       <FaCog className="mb-1 me-2" />
                                       Settings
                                   </Nav.Link>

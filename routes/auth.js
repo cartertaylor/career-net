@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken")
 // Middleware
 const authenticate = require("../middleware/authenticate") 
 
+// ENV variables
+const userTable = process.env.USER_TABLE;
+
 // Instanstiate database
 var connection = mysql.createConnection(
     {
@@ -74,8 +77,8 @@ router.post("/login", function (req, res)
 
     if (email != "" && email != null)
     {
-        sql = mysql.format("SELECT * FROM users2 WHERE email= ? ", [
-            email,
+        sql = mysql.format("SELECT * FROM ?? WHERE email= ? ", [userTable,
+            email
         ]);
 
         // Most basic implementation of authorization
