@@ -1,4 +1,5 @@
 import {Modal, Button} from "react-bootstrap"
+import React  from 'react';
 
 function ModalPopup({show, onHide, props, modalText, successSubmit,submitButton= "Submit", buttonVariant="primary"}) {
 
