@@ -84,7 +84,7 @@ function App() {
   // Check if current user should have access to admin pages (checks also for normal login authorization)
   async function checkAdmin()
   {
-        await axios.post("/auth/isAdmin", "word",
+        await axios.post("api/auth/isAdmin", "word",
           
             {
               headers: 

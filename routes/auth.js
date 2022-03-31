@@ -8,15 +8,19 @@ const authenticate = require("../middleware/authenticate")
 
 // ENV variables
 const userTable = process.env.USER_TABLE;
+const databaseHost = process.env.DATABASE_HOST;
+const databaseUser = process.env.DATABASE_USER;
+const databasePassword = process.env.DATABASE_PASSWORD;
+const defaultPassword = process.env.DEFAULT_PASSWORD;
 
 // Instanstiate database
 var connection = mysql.createConnection(
     {
-        host: "localhost",
+        host: databaseHost,
         port: 3306,
-        user: "root",
-        password: "polpol11",
-        database: "mysql",
+        user: databaseUser,
+        password: databasePassword,
+        database: "testDB",
     },
     "pool"
 );
@@ -80,14 +84,17 @@ router.post("/login", function (req, res)
         sql = mysql.format("SELECT * FROM ?? WHERE email= ? ", [userTable,
             email
         ]);
-
+	console.log("checking variables")
+	console.log(sql)
+	console.log(userTable)
         // Most basic implementation of authorization
         // TODO: Replace with CAS client. On CAS successful authentication -> generate JWT token
         connection.query(sql, function (err, result) 
         { 
+		console.log("inside sql query function")
             console.log(result) 
-            console.log(result.length > 0 && result[0].password == password)
-
+        
+	    console.log(result.length > 0 && result[0].password == password)
             if (result.length > 0 && result[0].password == password)
             {
                 console.log("valid password")

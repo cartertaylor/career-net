@@ -5,3 +5,6 @@ build
 .vscode
 package-lock.json
 .env
+.env.swp
+*.swp
+*.swo

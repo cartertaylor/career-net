@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-
+console.log("connected");
 var app = require('../app');
 var debug = require('debug')('practice-react-router:server');
 var http = require('http');

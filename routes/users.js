@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
+const defaultPassword = process.env.DEFAULT_PASSWORD;
 
 // Middleware
 const authenticate = require("../middleware/authenticate") 
@@ -478,7 +479,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     
     // Default row is normal faculty
     let roleId = 2; 
-    let password = "password"
+    let password = defaultPassword
 
     // Get ID of user created this new user from authentication (req.userId) 
     let createdByUserId = req.userId;

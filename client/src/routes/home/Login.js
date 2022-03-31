@@ -39,7 +39,7 @@ function Login () {
     function checkAuthenticated ()
     {
         
-        axios.post("/auth/isAdmin", {message:"Checking if user is authenticated"},
+        axios.post("/api/auth/isAdmin", {message:"Checking if user is authenticated"},
         {
             headers:{
                 "x-access-token":localStorage.getItem("token")
@@ -61,7 +61,7 @@ function Login () {
         e.preventDefault();
 
         axios
-            .post(baseURL + "/login", {
+            .post("api/" + baseURL + "/login", {
                 loginCredentials: credentials,
             })
             .then((response) => {

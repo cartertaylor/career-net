@@ -6,7 +6,10 @@ var logger = require('morgan');
 const mysql = require('mysql');
 require('dotenv').config()
 
+
+console.log("in app.js")
 console.log(process.env.REACT_APP_API_KEY)
+console.log("number 2")
 
 // Routes (import js file)
 var indexRouter = require('./routes/index');
@@ -35,7 +38,7 @@ app.use('/students', studentsRouter);
 app.use('/users', usersRouter);
 app.use('/search_user', searchUserRouter)
 app.use('/csvUpload', csvUpload)
-app.use('/auth', userAuth)
+app.use('/api/auth', userAuth)
 // app.use('/auth', userAuth)
 
 // catch 404 and forward to error handler
