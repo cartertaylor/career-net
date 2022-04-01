@@ -215,7 +215,7 @@ export default function CsvPage() {
             toast.promise(
                 axios
                     .post(
-                        "/api/"+ routeURL + "/" + csvParseType,
+                        "/api"+ routeURL + "/" + csvParseType,
                         {
                             data: parsedCsvData,
                         },
