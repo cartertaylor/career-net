@@ -35,6 +35,10 @@ import DashboardPage from "./routes/dashBoard/DashboardPage";
 import UploadPage from "./routes/uploadPage/UploadPage";
 import Settings from "./routes/settings/Settings"
 
+
+// ENV variables for user roles
+const userAdminValue = parseInt(process.env.REACT_APP_USER_ADMIN_VALUE);
+
 // functional component
 function App() {
 
@@ -107,7 +111,7 @@ function App() {
             grabUserPermissions()
 
             // Check if Admin: if so, return true 
-            if (response.data.userRole == 1)
+            if (response.data.userRole == userAdminValue)
             {
               console.log("Setting Admin")
               setUserAdmin(true)

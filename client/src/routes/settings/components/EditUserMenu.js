@@ -6,8 +6,13 @@ import SearchFilterMenu from "../../../components/SearchFilterMenu";
 import SearchBarAuto from "../../../components/SearchBarAuto";
 import ModalPopup from "../../../components/ModalPopup";
 
+
 import {useState, useEffect} from "react"
 import axios from "axios";
+
+// ENV variables for user roles
+const userAdminValue = parseInt( process.env.REACT_APP_USER_ADMIN_VALUE);
+const userFacultyValue = parseInt(process.env.REACT_APP_USER_FACULTY_VALUE);
 
 function EditUserMenu({handleToastDisplay}) {
 
@@ -166,7 +171,7 @@ function EditUserMenu({handleToastDisplay}) {
 
         console.log(permissionId)
 
-        if (permissionId == 1)
+        if (permissionId == userAdminValue)
         {
             return "Admin"
         }
@@ -213,7 +218,7 @@ function EditUserMenu({handleToastDisplay}) {
 
             <div>
                 <h5>Permissions</h5>
-                {permissions.initialUserType == 2 ? 
+                {permissions.initialUserType == userFacultyValue? 
                 <div>
                 <Row>
                     <Form.Group as={Col} controlId="formGridState">
@@ -286,7 +291,7 @@ function EditUserMenu({handleToastDisplay}) {
                 : null}
 
                 {
-                    permissions.userType == 1 ?
+                    permissions.userType == userAdminValue ?
                     <div>
                         <hr/>
                         <p>This user is also an admin and has admin privileges</p>
