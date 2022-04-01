@@ -32,7 +32,7 @@ function AddUserMenu({handleToastDisplay}) {
 
         // TODO: Make sure that all the forms are entered
         axios
-            .post("/users/create", 
+            .post("/api/users/create", 
                 {
                     newUserData:newUserData
                 },
