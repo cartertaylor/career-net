@@ -7,6 +7,13 @@ sqlFilters = json.loads(sys.argv[1])
 print (json.dumps(sqlFilters))
 print (json.dumps(sqlFilters["sqlQuery"]))
 
+# Env variables
+DATABASE_USER = os.environ['DATABASE_USER']
+DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
+DATABASE_HOST = os.environ['DATABASE_HOST']
+DATABASE_NAME = os.environ['DATABASE_NAME']
+
+
 ### Grab sql query from arugment ###
 sqlQuery = sqlFilters["sqlQuery"]
 
@@ -14,12 +21,14 @@ sqlQuery = sqlFilters["sqlQuery"]
 # Authenticate using any Linkedin account credentials
 api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!')
 
+
+
 # Connect to Database
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="polpol11",
-    database="mysql"
+    host=DATABASE_HOST,
+    user=DATABASE_USER,
+    password=DATABASE_PASSWORD,
+    database=DATABASE_NAME
 )
 
 
