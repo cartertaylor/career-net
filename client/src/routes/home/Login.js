@@ -26,7 +26,7 @@ function Login () {
     const dispatch = useDispatch();
 
     /// Find functions / actions we can use to store data
-    const { userLoggedInStatus, setUserName, grabUserPermissions} = bindActionCreators(
+    const { userLoggedInStatus, setUserName, grabUserPermissions, setUserAdmin} = bindActionCreators(
         actionCreators,
         dispatch
     );
@@ -77,6 +77,7 @@ function Login () {
                     localStorage.setItem("token", response.data.token)
                     userLoggedInStatus(true)
                     setUserName(response.data.userName)
+                    setUserAdmin(response.data.isAdmin)
                     grabUserPermissions()
                 }
                 

@@ -51,7 +51,7 @@ function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
     function getPermissions()
         {
             axios
-            .post("/users/current/permissions", 
+            .post("/api/users/current/permissions", 
                 {
                     message:"Grabbing current user major permissions"
                 },
@@ -63,7 +63,7 @@ function StudentSearchBar({ grabDateRanges, handleSearchFilterChange }) {
                 
             })
             .then((response) => {
-                // setPost(response.data);
+            
                 console.log(
                     response.data
                 );

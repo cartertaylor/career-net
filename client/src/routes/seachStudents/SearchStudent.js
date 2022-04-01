@@ -108,7 +108,7 @@ async function fetchUserData (event)  {
     };
 
     // attempt to fetch for user info
-    const response = await fetch('/students/search', requestOptions);
+    const response = await fetch('/api/students/search', requestOptions);
     const data = await response.json();
     console.log(data)
 
@@ -148,7 +148,7 @@ async function fetchUserData (event)  {
     };
 
     // attempt to store data fof student from form
-    const response = await fetch('students/add_student', requestOptions);
+    const response = await fetch('/api/students/add_student', requestOptions);
     const serverResponse = await response.json();
 
     console.log(serverResponse)

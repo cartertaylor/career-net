@@ -95,7 +95,7 @@ export const grabUserPermissions = () => {
 
     return dispatch => { //return function
         return axios
-                .post("/users/current/permissions", 
+                .post("api/users/current/permissions", 
                     {
                         message:"Grabbing current user major permissions"
                     },
@@ -118,6 +118,16 @@ export const grabUserPermissions = () => {
                 });
         }
 
+}
+
+export const setUserPermissions = (adminStatus) => {
+    return (dispatch) => {
+        dispatch({
+            type: "setUserAdmin",
+            payload: adminStatus
+        });
+    }
     
 }
+
 

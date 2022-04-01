@@ -34,10 +34,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/students', studentsRouter);
-app.use('/users', usersRouter);
-app.use('/search_user', searchUserRouter)
-app.use('/csvUpload', csvUpload)
+app.use('/api/students', studentsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/search_user', searchUserRouter)
+app.use('/api/csvUpload', csvUpload)
 app.use('/api/auth', userAuth)
 // app.use('/auth', userAuth)
 

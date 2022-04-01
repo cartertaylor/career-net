@@ -24,6 +24,7 @@ const reducer = (
 
         case "checkUserAdmin":
             console.log("Checking user admin")
+            console.log(action.payload)
             return {...state, userAdmin:action.payload, userCanUploadNewData:true};
 
         // Checks login status of user
@@ -31,6 +32,7 @@ const reducer = (
             return {...state, userLoggedIn:action.payload}; // Returns (true or false) 
 
         case "setUserName":
+            console.log("setting user")
             return {...state, userName:action.payload}; // Returns (true or false) 
 
         case "grabUserPermissions":
@@ -40,6 +42,11 @@ const reducer = (
 
             // Set both that value, and the major acces array
             return {...state, majorPermissions:action.payload.majorPermissions, userCanUploadNewData:action.payload.userCanUploadNewData}
+
+        // Set on user login
+        case "setUserAdmin":
+            return {...state, userAdmin:action.payload}
+
         default:
             return state
     }

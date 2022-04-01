@@ -7,16 +7,7 @@ const defaultPassword = process.env.DEFAULT_PASSWORD;
 const authenticate = require("../middleware/authenticate") 
 
 // Instanstiate database
-var connection = mysql.createConnection(
-    {
-        host: "localhost",
-        port: 3306,
-        user: "root",
-        password: "polpol11",
-        database: "mysql",
-    },
-    "pool"
-);
+const connection = require("../database/db")
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
@@ -40,8 +31,6 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
 
     let status = "success"
     
-
-
     if (searchLetters != "")
     {
         // SELECT *(all) FROM (table) where

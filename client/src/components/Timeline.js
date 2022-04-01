@@ -16,7 +16,7 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
         console.log("Carter is working ");
         console.log(studentProfileInfo);
         axios
-            .post("/students/get_student_milestones", {
+            .post("/api/students/get_student_milestones", {
                 title: "Hello World!",
                 studentInfo: studentProfileInfo,
             })

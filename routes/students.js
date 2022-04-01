@@ -7,6 +7,9 @@ const spawn = require("child_process").spawn;
 const authenticate = require("../middleware/authenticate") 
 
 const mysql = require('mysql');
+// Instanstiate database
+const connection = require("../database/db")
+
 
 // ENV variables
 const milestoneTable = process.env.MILESTONE_TABLE;
@@ -16,14 +19,8 @@ const studentsTable = process.env.STUDENTS_TABLE;
 // SQL 
 let studentCols = ( ['first_name', 'last_name', 'degree', 'work_experience', 'school_year'] );
 
-// Instanstiate database
-var connection = mysql.createConnection({
-host: 'localhost',
-port: 3306,
-user : 'root',
-password:'polpol11',
-database:'mysql'
-}, 'pool');
+
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {

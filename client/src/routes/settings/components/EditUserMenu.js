@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React  from 'react';
 
 import {Form, Button, Row, Col, Modal} from "react-bootstrap"
 
@@ -48,7 +48,7 @@ function EditUserMenu({handleToastDisplay}) {
         
         // Update the data for the user being edited
         axios
-        .post("/users/edit/permissions", 
+        .post("/api/users/edit/permissions", 
             {
                 newPermissions:permissions
             },
@@ -121,7 +121,7 @@ function EditUserMenu({handleToastDisplay}) {
         }
 
         axios
-        .post("/users/search/permissions", 
+        .post("/api/users/search/permissions", 
             {
                 searchedUser:searchUser
             },
@@ -201,7 +201,7 @@ function EditUserMenu({handleToastDisplay}) {
                 {/* <SearchFilterMenu customOption = {exampleEmails} handleSearchFilterChange={handleMajorFilterChange} clearButton={false}/> */}
                 
                 {/* <Col></Col> */}
-                <SearchBarAuto as = {Col} routeURL="/users/search" handleUserClick={
+                <SearchBarAuto as = {Col} routeURL="/api/users/search" handleUserClick={
                     
                     handleUserClick
                 }

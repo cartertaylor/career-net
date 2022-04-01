@@ -5,25 +5,15 @@ const jwt = require("jsonwebtoken")
 
 // Middleware
 const authenticate = require("../middleware/authenticate") 
+// Instanstiate database
+const connection = require("../database/db")
+
 
 // ENV variables
 const userTable = process.env.USER_TABLE;
-const databaseHost = process.env.DATABASE_HOST;
-const databaseUser = process.env.DATABASE_USER;
-const databasePassword = process.env.DATABASE_PASSWORD;
-const defaultPassword = process.env.DEFAULT_PASSWORD;
+const userAdminValue = process.env.USER_ADMIN_VALUE;
 
-// Instanstiate database
-var connection = mysql.createConnection(
-    {
-        host: databaseHost,
-        port: 3306,
-        user: databaseUser,
-        password: databasePassword,
-        database: "testDB",
-    },
-    "pool"
-);
+
 
 module.exports = router;
 
@@ -97,6 +87,8 @@ router.post("/login", function (req, res)
 	    console.log(result.length > 0 && result[0].password == password)
             if (result.length > 0 && result[0].password == password)
             {
+
+                let isAdmin = false;
                 console.log("valid password")
                 
                 const id = result[0].user_id
@@ -108,11 +100,19 @@ router.post("/login", function (req, res)
 
                 console.log(result[0].first_name + " " + result[0].last_name)
 
+                // Figure out if user is admin or not
+                if (parseInt(userAdminValue) == result[0].role)
+                {
+                    isAdmin = true;
+                }
+
                 // send response back
                 res.json({
                     auth: true,
                     token:token,
-                    userName: result[0].first_name + " " + result[0].last_name
+                    userName: result[0].first_name + " " + result[0].last_name,
+                    isAdmin:isAdmin
+                    
                 });
             }
 

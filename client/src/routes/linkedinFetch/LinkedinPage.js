@@ -18,7 +18,7 @@ import {actionCreators} from "../../state/index"
 
 
 function Settings() {
-    const baseURL = "/students/get_linkedin_data";
+    const baseURL = "/api/students/get_linkedin_data";
 
     // Accessing store data.
     const state = useSelector((state) => state);

@@ -5,16 +5,7 @@ const mysql = require('mysql');
 
 
 // Instanstiate database
-var connection = mysql.createConnection(
-    {
-        host: "localhost",
-        port: 3306,
-        user: "root",
-        password: "polpol11",
-        database: "mysql",
-    },
-    "pool"
-);
+const connection = require("../database/db")
 
 // Middleware function to determine if user token is authenticated or not
 const verifyToken = (req, res, next) =>
