@@ -6,6 +6,12 @@ const defaultPassword = process.env.DEFAULT_PASSWORD;
 // Middleware
 const authenticate = require("../middleware/authenticate") 
 
+// Import user type values 
+const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
+const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
+
+
+
 // Instanstiate database
 const connection = require("../database/db")
 
@@ -45,9 +51,10 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
             
             console.log("THIS IS THE RESULTS")
             console.log(result);
-            if (result.length >0)
+            console.log(result.length)
+            if (result.length > 0)
             {    // Determine role
-                let userRoleId = 2;
+                let userRoleId = userFacultyValue;
                 if (result.length > 0)
                 {
                     userRoleId = result[0].role
@@ -107,6 +114,7 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
                 {
                     if (err || result.length < 1)
                     {
+                        console.log("FAAIL FAAIL")
                         res.json({
                             status: "Failure",
                             received: req.body,
@@ -115,27 +123,31 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
                         });
                     }
 
-                    userRoleId = result[0].role
+                    else
+                    {
+                        console.log(result.length < 1)
+                        userRoleId = result[0].role
 
-                    stateValidObject = {
-                        firstName:searchLetters,
-                        lastName:lastSearchLetters,
-                        email:email,
-                        initialUserType: userRoleId, // Can only change permissions of non Admins
-                        canUploadNewData:false,
-                        userType: userRoleId, 
-                        majorAccess:[],
-                        initialMajorAccess:[],
-                        userId: result[0].user_id
-                    };
+                        stateValidObject = {
+                            firstName:searchLetters,
+                            lastName:lastSearchLetters,
+                            email:email,
+                            initialUserType: userRoleId, // Can only change permissions of non Admins
+                            canUploadNewData:false,
+                            userType: userRoleId, 
+                            majorAccess:[],
+                            initialMajorAccess:[],
+                            userId: result[0].user_id
+                        };
 
-                    console.log(result)
+                        console.log(result)
 
-                    res.json({
-                        status: "success",
-                        received: req.body,
-                        userPermissions: stateValidObject,
-                    });
+                        res.json({
+                            status: "success",
+                            received: req.body,
+                            userPermissions: stateValidObject,
+                        });
+                }
 
                 })
 
@@ -164,7 +176,7 @@ router.post("/edit/permissions", authenticate.verifyToken, authenticate.authAdmi
     let newUserCredentials = req.body.newPermissions
     
     // Default row is normal faculty
-    let roleId = 2; 
+    let roleId = userFacultyValue; 
 
     // Get ID of user created this new user from authentication (req.userId) 
     let createdByUserId = req.userId;
@@ -172,7 +184,7 @@ router.post("/edit/permissions", authenticate.verifyToken, authenticate.authAdmi
     // Get role ID based on provided roles (if Admin : 1, if Normal Faculty : 2)
     if (newUserCredentials.userType == "Admin")
     {
-        roleId = 1;
+        roleId = userAdminValue;
     }
 
     // Remove current permissions
@@ -216,7 +228,7 @@ router.post("/edit/permissions", authenticate.verifyToken, authenticate.authAdmi
         console.log(result)
 
          // Add permissions if the user isn't an admin
-        if (roleId == 2)
+        if (roleId == userFacultyValue)
         {      
             let permissionList = newUserCredentials.majorAccess
 
@@ -303,6 +315,7 @@ router.post("/search", function (req, res)
             
             stateValidObject = [];
             let keyCounter = 0
+            
 
             // Grab each value
             result.forEach(function (arrayItem) {
@@ -345,7 +358,7 @@ router.post("/current/permissions", authenticate.verifyToken, function (req, res
         
         connection.query(initialSqlCheck, function (err, result)
         {
-            if (result[0].role == 2)
+            if (result[0].role == userFacultyValue)
             {
                 try
                 {
@@ -467,7 +480,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     let newUserCredentials = req.body.newUserData
     
     // Default row is normal faculty
-    let roleId = 2; 
+    let roleId = userFacultyValue; 
     let password = defaultPassword
 
     // Get ID of user created this new user from authentication (req.userId) 
@@ -476,7 +489,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     // Get role ID based on provided roles (if Admin : 1, if Normal Faculty : 2)
     if (newUserCredentials.role == "Admin")
     {
-        roleId = 1;
+        roleId = userAdminValue;
     }
 
     // get current Date
@@ -510,7 +523,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
 
             // If not admin, add the permissions listed
             try {
-                if (roleId == 2)
+                if (roleId == userFacultyValue)
                 {      
                     let permissionList = newUserCredentials.majorAccess
 

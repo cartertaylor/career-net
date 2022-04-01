@@ -7,6 +7,12 @@ const mysql = require('mysql');
 // Instanstiate database
 const connection = require("../database/db")
 
+
+// Import user type values 
+const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
+const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
+
+
 // Middleware function to determine if user token is authenticated or not
 const verifyToken = (req, res, next) =>
 {
@@ -59,7 +65,7 @@ function retreivePermissions(req, res, next)
         
         connection.query(initialSqlCheck, function (err, result)
         {
-            if (result[0].role == 2)
+            if (result[0].role == userFacultyValue)
             {
                 try
                 {
@@ -158,7 +164,7 @@ function authAdmin (req, res, next)
     connection.query(verifyRoleSql, function (err,results)
     {   
         // Check rolel of user to make sure they are an admin
-        if (results[0].role == 1)
+        if (results[0].role == userAdminValue)
         {
             next()
         }
