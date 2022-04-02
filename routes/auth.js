@@ -12,7 +12,7 @@ const connection = require("../database/db")
 // ENV variables
 const userTable = process.env.USER_TABLE;
 const userAdminValue = process.env.USER_ADMIN_VALUE;
-
+const userFacultyValue = process.env.USER_FACULTY_VALUE;
 
 
 module.exports = router;
@@ -22,7 +22,7 @@ function generateAccesstoken(userId)
 {
     return (jwt.sign({userId}, "changeSecret", 
         {
-            expiresIn: '2h', // expires in 10 minutes
+            expiresIn: '3h', // expires in 3h
         })
     )
 }
