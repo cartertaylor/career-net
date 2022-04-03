@@ -119,7 +119,7 @@ export default function StudentProfile() {
             )}
 
             <Container className=" d-flex justify-content-center">
-                <ButtonGroup>
+                <ButtonGroup className="mb-4">
                     {radios.map((radio, idx) => (
                         <ToggleButton
                             key={idx}

@@ -12,6 +12,7 @@ DATABASE_USER = os.environ['DATABASE_USER']
 DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
 DATABASE_HOST = os.environ['DATABASE_HOST']
 DATABASE_NAME = os.environ['DATABASE_NAME']
+MILESTONE_TABLE = os.environ['MILESTONE_TABLE']
 
 
 ### Grab sql query from arugment ###
@@ -70,6 +71,8 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
 
     tableCols = ("student_id" , "milestone_type", "milestone_name", "milestone_job_title", "date_start", "date_end", "milestone_description")
 
+    milestoneLocation = None
+
     # Iterate over education and grab education milestones
 
     if (profileJson["education"]):
@@ -92,17 +95,20 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
             milestoneDescription = ""
             if ("description" in school):
                 milestoneDescription = school["description"]
-
-            indvidualMilestoneTuple = (studentTableId, milestoneType, schoolName, degree, milestoneDescription, "Insert Location" ,dateStart, dateEnd , currentDate)
+            
+            # Create tuple of milestone information to insert into database
+            indvidualMilestoneTuple = (studentTableId, milestoneType, schoolName, degree, milestoneDescription, milestoneLocation ,dateStart, dateEnd , currentDate)
 
             # add milestone to array 
             studentMilestoneArray.append(indvidualMilestoneTuple)
     
     if (profileJson["experience"]):
         for job in profileJson["experience"]:
-
+            
             # get milestone info
             milestoneType = getJobMilestoneType(job["title"])
+            if ("locationName" in job):
+                milestoneLocation = job["locationName"]
             companyName = job["companyName"]
             jobTitle = job["title"]
             dateStart = getDateFromMilestone("experience", job["timePeriod"]["startDate"], 1)
@@ -116,8 +122,8 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
             if ("description" in job):
                 milestoneDescription = job["description"]
             
-    
-            indvidualMilestoneTuple = (studentTableId, milestoneType, companyName, jobTitle, milestoneDescription, "insert Location here",dateStart, dateEnd, currentDate)
+            # Create tuple of milestone information to insert into database
+            indvidualMilestoneTuple = (studentTableId, milestoneType, companyName, jobTitle, milestoneDescription, milestoneLocation,dateStart, dateEnd, currentDate)
             
             # add milestone to array 
             studentMilestoneArray.append(indvidualMilestoneTuple)
@@ -131,8 +137,10 @@ def getMilestonesFromLinkedinProfile(profileJson, currentStudent):
     print(studentMilestoneArray)
     
     print("Trying to store student Data")
-    sqlInsertManyMilestones = """INSERT IGNORE INTO milestones_test12 (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, milestone_location ,date_start, date_end, last_updated)
+    print(MILESTONE_TABLE)
+    sqlInsertManyMilestones = """INSERT IGNORE INTO """ + MILESTONE_TABLE + """ (student_id , milestone_type, milestone_name, milestone_job_title, milestone_description, milestone_location ,date_start, date_end, last_updated)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""  
+    print(sqlInsertManyMilestones)
 
     # sqlInsertManyMilestones2 = """INSERT INTO milestones_test2 (student_id , milestone_type, milestone_name, milestone_job_title, date_start, date_end)
     #      SELECT * FROM (SELECT  %s, %s, %s, %s, %s, %s) AS tmp 

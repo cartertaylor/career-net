@@ -69,19 +69,34 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
         let finalizedMilestoneList = [];
 
         console.log(rawStudentMilestones);
-
+    
         // Sort milestones by data
         rawStudentMilestones.sort((milestone1, milestone2) =>
-            milestone1.date_start.localeCompare(milestone2.date_start)
+            {
+                
+                // Default value if a date isn't provided
+                if (milestone1.date_end == null &  milestone2.date_end != null)
+                {
+                    milestone1.date_end = "0000-00-00"
+                }
+                if (milestone2.date_end == null)
+                {
+                    milestone2.date_end  = "0000-00-00"
+                }
+            
+                return milestone1.date_end.localeCompare(milestone2.date_end)
+                
+            }
+            
         );
 
-        // iterate over current grabbed
+        // iterate over current grabbed milestones and put them in proper format for timeline 
         for (let milestoneIndex in rawStudentMilestones) {
             console.log(milestoneIndex);
             console.log(rawStudentMilestones[milestoneIndex]);
 
             let dateStr = new Date(
-                rawStudentMilestones[milestoneIndex].date_start
+                rawStudentMilestones[milestoneIndex].date_end
             );
             dateStr = dateStr.toLocaleDateString();
             
@@ -181,8 +196,8 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
             ) : (
                 <div
                     style={{
-                        width: "850px",
-                        height: { getHeightByOrientation },
+                        width: "65em",
+                        height: {getHeightByOrientation},
                     }}
                 >
                     <Chrono
@@ -192,7 +207,7 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
                         scrollable={{ scrollbar: true }}
                         allowDynamicUpdate={true}
                         cardHeight="50px"
-                        
+                    
                     >
                         <div className="chrono-icons">
                             {studentMilestoneList.map((milestone) => {

@@ -53,11 +53,9 @@ router.post('/get_linkedin_data', authenticate.verifyToken, authenticate.retreiv
     endDateCreatedRange = req.body.selectedFilters.lastTimeUpdatedRange[0].endDate
   }
 
-
   // Grab graduation date ranges filter
   let startGradYearRange = new Date(req.body.selectedFilters.gradDateRanges.startDate, 0);
   let endYearGradRange =  new Date(req.body.selectedFilters.gradDateRanges.endDate, 11);
-
 
    // Grab the end range year dynamically 
   const date = new Date();
@@ -83,6 +81,16 @@ router.post('/get_linkedin_data', authenticate.verifyToken, authenticate.retreiv
   let sql = mysql.format ( "SELECT * FROM ?? WHERE ((?) is false OR created_by_user_id = ?) AND ((?) IS NULL OR  degree IN (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) AND date_created >= IF( ? IS NOT NULL,?, 2010 ) AND date_created <= IF( ? IS NOT NULL,?, ? ) AND degree in (?)",
     [studentsTable,fetchOnlyUserAddedData, currentUserId, joinedMajorFilters, filteredMajors ,startGradYearRange, startGradYearRange, endYearGradRange,endYearGradRange, fourYearsDate, startDateCreatedRange, startDateCreatedRange, endDateCreatedRange, endDateCreatedRange, fourYearsDate, userAvailablePermissions])
   
+    
+
+  // connection.query(sql, function(err, results)
+  // {
+  //   console.log(results)
+  //   console.log(req.body)
+  //   res.json(
+  //     {note:'respond with a resource: 0 means good, anything else means error', linkedinFetchStatus: 1}
+  //   )
+  // })
   
   // const dataFromPython = await pythonPromise();
   // console.log(dataFromPython)
