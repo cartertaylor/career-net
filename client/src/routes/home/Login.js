@@ -80,6 +80,10 @@ function Login () {
                     setUserAdmin(response.data.isAdmin)
                     grabUserPermissions()
                 }
+                // Failed to login
+                else{
+                    handleToastDisplay(false)
+                }
                 
             });
     }
@@ -94,7 +98,7 @@ function Login () {
         }
 
         else{
-            toast.error("Failed to authenticate")
+            toast.error("Failed to authenticate with the provided username and password")
         }
     }
 

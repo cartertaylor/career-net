@@ -67,8 +67,7 @@ router.post("/login", function (req, res)
     let password = req.body.loginCredentials.password // TODO: encrypt password
 
     console.log(email)
-    console.log(password.role)
-
+    
     if (email != "" && email != null)
     {
         sql = mysql.format("SELECT * FROM ?? WHERE email= ? ", [userTable,
@@ -79,15 +78,15 @@ router.post("/login", function (req, res)
 	console.log(userTable)
         // Most basic implementation of authorization
         // TODO: Replace with CAS client. On CAS successful authentication -> generate JWT token
-        connection.query(sql, function (err, result) 
+    connection.query(sql, function (err, result) 
         { 
 		console.log("inside sql query function")
             console.log(result) 
         
-	    console.log(result.length > 0 && result[0].password == password)
-            if (result.length > 0 && result[0].password == password)
+        if (result.length > 0 && result[0].password == password)
             {
-
+                
+                // Set default values
                 let isAdmin = false;
                 console.log("valid password")
                 
