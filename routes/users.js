@@ -606,4 +606,12 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     }
 })
 
+// Delete user route
+router.post("/delete", authenticate.verifyToken, authenticate.authAdmin, function (req, res) 
+{
+    let currentUserId = req.userId;
+    let permissionsArray = []
+    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;", [currentUserId])
+})
+
 
