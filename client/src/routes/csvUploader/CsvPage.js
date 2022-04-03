@@ -192,7 +192,7 @@ export default function CsvPage() {
         isDragReject,
     } = useDropzone({
         onDrop,
-        accept: "text/csv",
+        accept: ".csv",
     });
 
     const routeURL = "/csvUpload";
