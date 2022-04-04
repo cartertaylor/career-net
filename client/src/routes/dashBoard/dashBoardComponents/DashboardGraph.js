@@ -41,71 +41,93 @@ const renderCustomizedLabel = ({
         </text>
     );
 };
-const data = [
+
+const COLORS = ["#8884d8", "#82ca9d", "#ff4a6a", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
+const barGraphData = [
     {
-        name: "Computer Science",
+        groupName: "Computer Science",
         "Number of Graduates": 2000,
         "Received Job": 1500,
         "Had an Internship": 700,
     },
     {
-        name: "Exercise Science",
+        groupName: "Exercise Science",
         "Number of Graduates": 2500,
         "Received Job": 1100,
         "Had an Internship": 200,
     },
     {
-        name: "Mechanical Engineering",
+        groupName: "Mechanical Engineering",
         "Number of Graduates": 1000,
         "Received Job": 600,
         "Had an Internship": 100,
     },
 ];
 
+// barGraphData[0].map((value, index)=> {
+//     console.log(value)
+// })
+let dog = []
+console.log(barGraphData[0])
+var vals = Object.keys(barGraphData[0]).map(function(key, index) {
+    console.log(key)
+    console.log(index)
+
+    // Generate Bar for each filter
+    if (key != "groupName")
+    {
+        return <Bar dataKey={key} fill={COLORS[index % COLORS.length]}/>;
+    }
+})
+
+console.log(vals)
+//console.log([ ...barGraphData[0].keys() ])
+
+
 const data2 = [
     {
-        name: "2019 Graduates",
+        groupName: "2019 Graduates",
         "Grad Numbers": 1000,
         "Received Job": 500,
     },
     {
-        name: "2020 Graduates",
+        groupName: "2020 Graduates",
         "Grad Numbers": 1500,
         "Received Job": 900,
     },
     {
-        name: "2021 Graduates",
+        groupName: "2021 Graduates",
         "Grad Numbers": 2000,
         "Received Job": 1500,
     },
 ];
 
 const data3 = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-    { name: "Group C", value: 300 },
-    { name: "Group D", value: 200 },
+    { groupName: "Group A", value: 400 },
+    { groupName: "Group B", value: 300 },
+    { groupName: "Group C", value: 300 },
+    { groupName: "Group D", value: 200 },
 ];
 
 export default function DashboardGraph({ graphSettings }) {
     function buildGraph() {
         let graph = null;
 
-        const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-
         if (graphSettings.currentGraphStyle == "BAR") {
             graph = (
-                <Container className="mt-4 d-flex justify-content-center">
-                    <BarChart width={730} height={250} data={data}>
+                <Container className="mt-2 d-flex justify-content-center">
+                    <BarChart width={730} height={250} data={barGraphData}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="groupName" />
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="Number of Graduates" fill="#8884d8" />
+                        {/* Filters  */}
+                        {vals}
+                        {/* <Bar dataKey="Number of Graduates" fill="#8884d8" />
                         <Bar dataKey="Received Job" fill="#82ca9d" />
-                        <Bar dataKey="Had an Internship" fill="#ff4a6a" />
+                        <Bar dataKey="Had an Internship" fill="#ff4a6a" /> */}
                     </BarChart>
                 </Container>
             );
@@ -119,7 +141,7 @@ export default function DashboardGraph({ graphSettings }) {
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="groupName" />
                         <YAxis />
                         <Tooltip />
                         <Legend />
@@ -142,7 +164,7 @@ export default function DashboardGraph({ graphSettings }) {
                     {/* <h3 className="text-center">Percentage for each major that started a job after college</h3> */}
                     <PieChart width={400} height={400}>
                         <Pie
-                            data={data}
+                            data={barGraphData}
                             cx={200}
                             cy={200}
                             labelLine={false}
@@ -151,7 +173,7 @@ export default function DashboardGraph({ graphSettings }) {
                             fill="#8884d8"
                             dataKey="Received Job"
                         >
-                            {data.map((entry, index) => (
+                            {barGraphData.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
                                     fill={COLORS[index % COLORS.length]}

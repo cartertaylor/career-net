@@ -4,7 +4,7 @@ import {Form, Container, Button} from 'react-bootstrap/';
 
 // Pass in an array of elements, and this component will generate a menu to search those elements
 const DateFilterMenu = React.forwardRef(
-    ({ className, grabDateRanges, "aria-labelledby": labeledBy }, ref) => {
+    ({ className, grabDateRanges, clearButton=true,"aria-labelledby": labeledBy }, ref) => {
         
         // State of each date box
         const [dateValues, setDateValues] = useState({startDate:undefined, endDate: undefined})
@@ -100,8 +100,13 @@ const DateFilterMenu = React.forwardRef(
                     </Form.Select>
 
                 </Container>
-                <hr className = "mt-4"/>
-                <Button className = "" variant="danger" onClick={clearAllSelectors}>Clear </Button>
+                {clearButton ? 
+                    <div>
+                        <hr className = "mt-4"/>
+                        <Button className = "" variant="danger" onClick={clearAllSelectors}>Clear </Button>
+                    </div>
+                    : null}
+                
             </div>
         );
     }
