@@ -2,9 +2,17 @@ import { React, useState } from "react";
 
 
 import { Container, Dropdown, ListGroup, Button, Row, Col, Form } from "react-bootstrap";
+import axios from "axios";
+
+// Importing Toast
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Custom made components
 import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 import DateFilterMenu from "../../components/DateFilterMenu";
 
+const routeURL = "/api/graph/internshipFilter"
 
 
 const data = [
@@ -99,12 +107,60 @@ export default function DashboardPage() {
     function handleAddFilter()
     {   console.log("goku")
         console.log(currentFilters)
-        setCurrentFilters((prevState) =>
-            {
-                return [...prevState, newFilter]
-            })
 
-            console.log(currentFilters)
+        // Check to make sure that filter isnt already applied
+        if (currentFilters.includes(newFilter) == false)
+            {
+
+                
+            setCurrentFilters((prevState) =>
+                {
+                    return [...prevState, newFilter]
+                })
+
+            // over each group and apply this new filter
+
+            selectedGroups.forEach(individualGroup =>
+                {
+                    console.log(individualGroup)
+
+                    console.log("trying to add new filter")
+                // Grab data for each group given the filter from the database
+                toast.promise(
+                    axios
+                        .post(
+                            routeURL,
+                            {
+                                filter:newFilter,
+                                group:individualGroup,
+                                message:"Retreiving data given the selected group and filter"
+                            },
+                            {
+                                headers: {
+                                    "x-access-token": localStorage.getItem("token"),
+                                },
+                            }
+                        )
+                        .then((response) => {
+                            console.log(response);
+                            if (response.status == "Failed") {
+                                return Promise.reject();
+                            }
+                            // TODO: Create front end reaction based on response from server (success / failure)
+                        }),
+                    {
+                        pending: "Applying Filter",
+                        error: "Failed to apply new filter, there was an issue retreiving server data",
+                        success: "New filter added to graph",
+                    }
+                );
+
+                })
+            
+            }
+        
+
+            
     }
 
     // Function 
@@ -136,14 +192,16 @@ export default function DashboardPage() {
 
     function handleRemoveFilter(filterToBeRemoved)
     {
+        console.log("hey man")
 
+        console.log(currentFilters)
+        console.log("Removing: " + filterToBeRemoved)
         
         let newFilterList = currentFilters.filter(individualFilter=>individualFilter!=filterToBeRemoved)
-
+        console.log(newFilterList)
         // Set the state of the new group list
         setCurrentFilters(newFilterList)
 
-     
     }
 
     console.log(newGroup)
@@ -214,9 +272,8 @@ export default function DashboardPage() {
                                                     }
                                                 }>
                                                     <option>Select a Filter</option>
-                                                    <option value="Had An Intership">Had An Intership</option>
-                                                    <option value="Has A job after graduation">Has A job after graduation</option>
-                                                    <option value="3">Three</option>
+                                                    <option value="Had an Intership">Had An Intership</option>
+                                                    <option value="Has a job after graduation">Has A job after graduation</option>
                                                 </Form.Select>
                                             </Col>
                                             <Col>
@@ -229,11 +286,11 @@ export default function DashboardPage() {
                                             console.log(value)
                                             console.log("hey hey hye ")
                                             let returnElement = (
-                                                <ListGroup.Item key={value} className="mt-3">
+                                                <ListGroup.Item key={value + index} className="mt-3">
                                                     <Row>
                                                         
                                                             <Col>
-                                                                {value }
+                                                                {value}
                                                             </Col>
                                                             <Col>
                                                                 <Button variant="danger" onClick={()=>handleRemoveFilter(value)}>Remove Filter</Button>
@@ -275,7 +332,7 @@ export default function DashboardPage() {
                                     <option>Select a group</option>
                                     <option value="Computer Science">Computer Science</option>
                                     <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                    <option value="3">Three</option>
+                                    <option value="Electrical Engineering">Electrical Engineering</option>
                                 </Form.Select>
                             </Col>
                             <Col sm={5}>

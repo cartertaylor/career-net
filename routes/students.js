@@ -232,12 +232,20 @@ router.post("/search", authenticate.verifyToken,function (req, res, next) {
   }
 
   // only query and send back data if we have actual information
-  if (searchLetters != "") {
+  if (1 ==1) {
       // store the letters that were searched into variable to be checked against data base
-      searchLetters = searchLetters + "%";
+      if (searchLetters != "" & searchLetters != null)
+      {
+        searchLetters = searchLetters + "%";
+      }
+      // If the user doesnt pass in a key word search, we want to grab everything we can 
+      else
+      {
+        searchLetters = "%%"
+      }
 
       // SQL query to receive optional filter parameters
-      sql = mysql.format("SELECT * FROM ?? WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
+      sql = mysql.format("SELECT * FROM ?? WHERE first_name LIKE ? AND ((?) IS NULL OR degree in (?)) AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 100", [
           studentsTable, searchLetters, joinedMajorFilters, filteredMajors, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate
       ]);
 
@@ -292,7 +300,7 @@ router.post("/search", authenticate.verifyToken,function (req, res, next) {
   // No user found
   else {
       response.json({
-          status: "success",
+          status: "failure",
           received: request.body,
           foundUsers: false,
       });

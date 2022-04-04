@@ -18,6 +18,7 @@ var usersRouter = require('./routes/users');
 var searchUserRouter = require('./routes/searchUsers');
 var csvUpload = require('./routes/csvUpload');
 var userAuth = require('./routes/auth');
+var graph = require('./routes/graph');
 // var userAuth = require('./routes/auth');
 
 
@@ -39,7 +40,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/search_user', searchUserRouter)
 app.use('/api/csvUpload', csvUpload)
 app.use('/api/auth', userAuth)
-// app.use('/auth', userAuth)
+app.use('/api/graph', graph)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
