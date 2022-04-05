@@ -70,18 +70,8 @@ const barGraphData = [
 // })
 let dog = []
 console.log(barGraphData[0])
-var vals = Object.keys(barGraphData[0]).map(function(key, index) {
-    console.log(key)
-    console.log(index)
 
-    // Generate Bar for each filter
-    if (key != "groupName")
-    {
-        return <Bar dataKey={key} fill={COLORS[index % COLORS.length]}/>;
-    }
-})
 
-console.log(vals)
 //console.log([ ...barGraphData[0].keys() ])
 
 
@@ -110,21 +100,38 @@ const data3 = [
     { groupName: "Group D", value: 200 },
 ];
 
-export default function DashboardGraph({ graphSettings }) {
+let graphFilters = []
+
+export default function DashboardGraph({ graphSettings, graphData=[] }) {
     function buildGraph() {
         let graph = null;
+
+      
+            console.log(graphData)
+            let graphFilters = Object.keys(graphData[1]).map(function(key, index) {
+                console.log(key)
+                console.log(index)
+                console.log("WEE WEE")
+                // Generate Bar for each filter
+                if (key != "groupName")
+                {
+                    return <Bar dataKey={key} fill={COLORS[index % COLORS.length]}/>;
+                }
+            })
+
+        
 
         if (graphSettings.currentGraphStyle == "BAR") {
             graph = (
                 <Container className="mt-2 d-flex justify-content-center">
-                    <BarChart width={730} height={250} data={barGraphData}>
+                    <BarChart width={730} height={250} data={graphData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
                         <YAxis />
                         <Tooltip />
                         <Legend />
                         {/* Filters  */}
-                        {vals}
+                        {graphFilters}
                         {/* <Bar dataKey="Number of Graduates" fill="#8884d8" />
                         <Bar dataKey="Received Job" fill="#82ca9d" />
                         <Bar dataKey="Had an Internship" fill="#ff4a6a" /> */}

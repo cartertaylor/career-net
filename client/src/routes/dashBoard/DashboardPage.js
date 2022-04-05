@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 
 
 import { Container, Dropdown, ListGroup, Button, Row, Col, Form } from "react-bootstrap";
@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 import DateFilterMenu from "../../components/DateFilterMenu";
 
-const routeURL = "/api/graph/internshipFilter"
+const routeURL = "/api/graph"
 
 
 const data = [
@@ -59,7 +59,8 @@ export default function DashboardPage() {
     let [selectedGroups, setSelectedGroups] = useState([])
     let [graphData, setGraphData] = useState([])
     let [newFilter, setNewFilter] = useState(null)
-    let [newGroup, setNewGroup] = useState ({groupName:null, groupYearRange:{startDate:undefined, endDate:undefined}})
+    let [newGroup, setNewGroup] = useState ({groupName:null, groupYearRange:{startDate:undefined, endDate:undefined}, graphValidObject:null})
+
 
     const [graphSettings, setGraphSettings] = useState({
         currentGraphStyle: null,
@@ -69,39 +70,168 @@ export default function DashboardPage() {
     // const[timelineHeight, setTimelineHeight] = useState("350px");
 
     // Have useEffect run after a change is made to selectedGroups  
+    useEffect(()=>
+    {
+        console.log("Add new group to graph data state")
+        console.log(selectedGroups)
+        fillGraphData()
+        
+    }, [selectedGroups])
     
+
+    // Function iterates over currently selected groups and adds groups "graphValidObject" to graphData state 
+    function fillGraphData()
+    {
+        selectedGroups.forEach(individualGroup=>
+            {
+                console.log(individualGroup.graphValidObject)
+
+                // Insert group graph object
+                setGraphData((prevState) =>
+                {
+                    return [...prevState, individualGroup.graphValidObject]
+                })
+            })
+    }
+
+    async function getInitialGroupTotal()
+    {
+        return axios
+                .post(
+                    routeURL +"/newGroup",
+                    {
+                        filter:newFilter,
+                        group:newGroup,
+                        message:"Retreiving data given the selected group and filter"
+                    },
+                    {
+                        headers: {
+                            "x-access-token": localStorage.getItem("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    console.log(response);
+                    if (response.status == "Failed") {
+                        return Promise.reject();
+                    }
+                    return response
+                })
+    }
 
     
     //  If new group is added, iterate over each filter and 
     function handleNewGroup()
     {
-        let arrayOfGraphData = []
-        // Iterate over each group 
 
-            // create new entry for given group
-            // arrayOfGraphData.push({groupName: currentGroup})
+        // Given the new group, fetch the initial total of students coresponding to the filter
+        getInitialGroupTotal().then((response) => {
+            console.log(response);
+            
+            // Greate object will will represent our group being prepated in an object to be read by our graph
+            let indiviudalGroupGraphObject =(
+                {
+                    groupName:newGroup.groupName,
+                    "Number of Graduates": response.data.studentTotal
+                })
 
-            // grap data for each filter selected for the group (iterate over each filter)
+                console.log(indiviudalGroupGraphObject)
 
-                // store the data in graphData 
+                // Set state of the new groups graph object with its title, and intial graduation count
+                setNewGroup((prevState) =>
+                {
+                    return {...prevState, graphValidObject:indiviudalGroupGraphObject}
+                })
 
-                // {
-                //     groupName: "Computer Science",
-                //     "Number of Graduates": 2000, // Add new filter key 
-                //     "Received Job": 1500,
-                //     "Had an Internship": 700,
-                // },
-                
-            // if group not in selectedGroups, add it
-            setSelectedGroups((prevState) =>
-            {
-                return [...prevState, newGroup]
-            })
-            console.log("WILLAY WAM WAZZLE")
+                console.log(newGroup)
+
+
+            // Iterate over each filter and apply it to this group 
+            currentFilters.forEach(individualFilter=>
+                {   
+                    let filterRoute = "/filter"
+                    
+                    // Send post request out for for each filter data 
+                    toast.promise(
+                        axios
+                            .post(
+                                routeURL + filterRoute,
+                                {
+                                    filter:newFilter,
+                                    group:newGroup,
+                                    filterType: individualFilter,
+                                    message:"Retreiving data given the selected group and filter"
+                                },
+                                {
+                                    headers: {
+                                        "x-access-token": localStorage.getItem("token"),
+                                    },
+                                }
+                            )
+                            .then((response) => {
+                                console.log(response);
+                                if (response.status == "Failed") {
+                                    return Promise.reject();
+                                }
+
+                                // Grab the filter value
+                                indiviudalGroupGraphObject[individualFilter] = response.data.studentTotal
+                                console.log(indiviudalGroupGraphObject)
+                                // Update group graph object with new filter data
+                                setNewGroup((prevState) =>
+                                    {
+                                        return {...prevState, graphValidObject:indiviudalGroupGraphObject}
+                                    })
+    
+                            }),
+                        {
+                            pending: "Applying Filter",
+                            error: "Failed to apply new filter, there was an issue retreiving server data",
+                            success: "New filter added to graph",
+                        }
+                    );
+                    
+                })
+            
+                // if group not in selectedGroups, add it
+                setSelectedGroups((prevState) =>
+                {
+                    return [...prevState, newGroup]
+                })
+
+            console.log(indiviudalGroupGraphObject)
             console.log(newGroup)
-            console.log(selectedGroups)
-                
+
+        });
+
+        console.log("Dog where?")
+
+        // Retreive initial count total of all students for that given filter without a filter
+        console.log("xbox one baby")
+        
+        
+        // grap data for each filter selected for the group (iterate over each filter)
+
+            // store the data in graphData 
+
+            // {
+            //     groupName: "Computer Science",
+            //     "Number of Graduates": 2000, // Add new filter key 
+            //     "Received Job": 1500,
+            //     "Had an Internship": 700,
+            // },
+            
+        
+        console.log("WILLAY WAM WAZZLE")
+        console.log(newGroup)
+        console.log(selectedGroups)
+            
     }
+    console.log(newGroup)
+    console.log(selectedGroups)
+
+    
+    console.log(graphData)
 
     // If a new filter is applied, iterate over each group and pull the data for that filter
     function handleAddFilter()
@@ -111,59 +241,55 @@ export default function DashboardPage() {
         // Check to make sure that filter isnt already applied
         if (currentFilters.includes(newFilter) == false)
             {
-
-                
             setCurrentFilters((prevState) =>
                 {
                     return [...prevState, newFilter]
                 })
 
-            // over each group and apply this new filter
-
+            // Go over each group and apply this new filter
             selectedGroups.forEach(individualGroup =>
                 {
                     console.log(individualGroup)
 
                     console.log("trying to add new filter")
-                // Grab data for each group given the filter from the database
-                toast.promise(
-                    axios
-                        .post(
-                            routeURL,
-                            {
-                                filter:newFilter,
-                                group:individualGroup,
-                                message:"Retreiving data given the selected group and filter"
-                            },
-                            {
-                                headers: {
-                                    "x-access-token": localStorage.getItem("token"),
+                    // Grab data for each group given the filter from the database
+                    toast.promise(
+                        axios
+                            .post(
+                                routeURL +"/filter",
+                                {
+                                    filter:newFilter,
+                                    group:individualGroup,
+                                    message:"Retreiving data given the selected group and filter"
                                 },
-                            }
-                        )
-                        .then((response) => {
-                            console.log(response);
-                            if (response.status == "Failed") {
-                                return Promise.reject();
-                            }
-                            // TODO: Create front end reaction based on response from server (success / failure)
-                        }),
-                    {
-                        pending: "Applying Filter",
-                        error: "Failed to apply new filter, there was an issue retreiving server data",
-                        success: "New filter added to graph",
-                    }
-                );
+                                {
+                                    headers: {
+                                        "x-access-token": localStorage.getItem("token"),
+                                    },
+                                }
+                            )
+                            .then((response) => {
+                                console.log(response);
+                                if (response.status == "Failed") {
+                                    return Promise.reject();
+                                }
+
+
+                            }),
+                        {
+                            pending: "Applying Filter",
+                            error: "Failed to apply new filter, there was an issue retreiving server data",
+                            success: "New filter added to graph",
+                        }
+                    );
 
                 })
             
             }
-        
-
             
     }
 
-    // Function 
+    // Function removes group object from the list of currently selected groups
     function handleRemoveGroup(removeGroup)
     {
         console.log(selectedGroups)
@@ -190,6 +316,7 @@ export default function DashboardPage() {
         console.log(selectedGroups)
     }
 
+    // Function removes filter from each group
     function handleRemoveFilter(filterToBeRemoved)
     {
         console.log("hey man")
@@ -248,7 +375,7 @@ export default function DashboardPage() {
             </Row>
 
             {/* <h3 className = "text-center mt-4">Comparison between graduates of different majors</h3> */}
-
+           
             {/* Contains graph and filter option */}
             <Container>
                 <Row >
@@ -308,7 +435,7 @@ export default function DashboardPage() {
                     </Col>
 
                     <Col className="me-5">
-                        <DashboardGraph graphSettings={graphSettings}></DashboardGraph>
+                        <DashboardGraph graphSettings={graphSettings} graphData={graphData}></DashboardGraph>
                     </Col>
                 </Row>
                 
@@ -358,7 +485,7 @@ export default function DashboardPage() {
                         console.log("patrick")
 
                         let returnElement = (
-                            <ListGroup.Item key={value.groupName} className="mt-3">
+                            <ListGroup.Item key={value.groupName + index} className="mt-3">
                                 <Row>
                                     
                                         <Col>
