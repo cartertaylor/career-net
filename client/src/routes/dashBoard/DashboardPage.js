@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Custom made components
 import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 import DateFilterMenu from "../../components/DateFilterMenu";
+import lodash from "lodash"
 
 const routeURL = "/api/graph"
 
@@ -79,6 +80,42 @@ export default function DashboardPage() {
     }, [selectedGroups])
     
 
+    useEffect(()=>
+    {
+        // CHECk to make sure the group object also inst already in there!
+        if (newGroup.graphValidObject != null & checkDuplicateObject(newGroup) == false)
+        {
+        // if group not in selectedGroups, add it
+            setSelectedGroups((prevState) =>
+            {
+                return [...prevState, newGroup]
+            })
+        }
+    }, [newGroup.graphValidObject])
+
+
+    function checkDuplicateObject(individualValue)
+    {
+        let duplicateFound = false
+
+        graphData.forEach(individualGraphInfo=>
+            {
+                console.log(individualGraphInfo)
+                console.log(individualValue)
+                
+                console.log("Dragon")
+                if (individualValue.groupName == individualGraphInfo.groupName)
+                {
+                    console.log("They are equal")
+                    duplicateFound =  true
+                }
+            })
+            console.log("only run if there is no duplicate found!")
+
+        console.log(duplicateFound)
+        return duplicateFound
+    }
+
     // Function iterates over currently selected groups and adds groups "graphValidObject" to graphData state 
     function fillGraphData()
     {
@@ -86,11 +123,15 @@ export default function DashboardPage() {
             {
                 console.log(individualGroup.graphValidObject)
 
-                // Insert group graph object
-                setGraphData((prevState) =>
+                if (individualGroup != null & checkDuplicateObject(individualGroup) == false)
                 {
-                    return [...prevState, individualGroup.graphValidObject]
-                })
+                    console.log("SMAUG")
+                    // Insert group graph object
+                    setGraphData((prevState) =>
+                    {
+                        return [...prevState, individualGroup.graphValidObject]
+                    })
+                }
             })
     }
 
@@ -193,11 +234,7 @@ export default function DashboardPage() {
                     
                 })
             
-                // if group not in selectedGroups, add it
-                setSelectedGroups((prevState) =>
-                {
-                    return [...prevState, newGroup]
-                })
+                
 
             console.log(indiviudalGroupGraphObject)
             console.log(newGroup)
@@ -459,7 +496,7 @@ export default function DashboardPage() {
                                     <option>Select a group</option>
                                     <option value="Computer Science">Computer Science</option>
                                     <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                    <option value="Electrical Engineering">Electrical Engineering</option>
+                                    <option value="Applied Computer Science">Applied Computer Science</option>
                                 </Form.Select>
                             </Col>
                             <Col sm={5}>

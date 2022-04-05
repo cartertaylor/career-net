@@ -105,20 +105,22 @@ let graphFilters = []
 export default function DashboardGraph({ graphSettings, graphData=[] }) {
     function buildGraph() {
         let graph = null;
-
-      
+        console.log("WEE 1")
+        console.log(graphData)
+        if ( graphData.length >0)
+        {
             console.log(graphData)
-            let graphFilters = Object.keys(graphData[1]).map(function(key, index) {
+            graphFilters = Object.keys(graphData[0]).map(function(key, index) {
                 console.log(key)
                 console.log(index)
                 console.log("WEE WEE")
                 // Generate Bar for each filter
                 if (key != "groupName")
                 {
-                    return <Bar dataKey={key} fill={COLORS[index % COLORS.length]}/>;
+                    return <Bar dataKey={key} key={key} fill={COLORS[index % COLORS.length]}/>;
                 }
             })
-
+        }
         
 
         if (graphSettings.currentGraphStyle == "BAR") {
