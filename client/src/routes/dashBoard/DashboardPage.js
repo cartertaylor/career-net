@@ -116,23 +116,34 @@ export default function DashboardPage() {
         return duplicateFound
     }
 
+
+
     // Function iterates over currently selected groups and adds groups "graphValidObject" to graphData state 
     function fillGraphData()
     {
+        // reset graph data
+        setGraphData([])
+        
+        let newGraphGroup = []
+
         selectedGroups.forEach(individualGroup=>
             {
-                console.log(individualGroup.graphValidObject)
+                console.log(individualGroup.graphValidObject )
 
-                if (individualGroup != null & checkDuplicateObject(individualGroup) == false)
+                if (individualGroup != null ) // & checkDuplicateObject(newGroup) == false
                 {
                     console.log("SMAUG")
                     // Insert group graph object
-                    setGraphData((prevState) =>
-                    {
-                        return [...prevState, individualGroup.graphValidObject]
-                    })
+                    // setGraphData((prevState) =>
+                    // {
+                    //     return [...prevState, individualGroup.graphValidObject]
+                    // })
+
+                    newGraphGroup.push(individualGroup.graphValidObject)
                 }
             })
+
+            setGraphData(newGraphGroup)
     }
 
     async function getInitialGroupTotal()
@@ -287,7 +298,7 @@ export default function DashboardPage() {
             selectedGroups.forEach(individualGroup =>
                 {
                     console.log(individualGroup)
-
+                    let indiviudalGroupGraphObject = individualGroup.graphValidObject
                     console.log("trying to add new filter")
                     // Grab data for each group given the filter from the database
                     toast.promise(
@@ -311,6 +322,20 @@ export default function DashboardPage() {
                                     return Promise.reject();
                                 }
 
+                                // Add new filter to local copy of object
+                                indiviudalGroupGraphObject[newFilter] = response.data.studentTotal
+                                
+                                // add filter to each group we iterate over
+                                console.log(response.data.studentTotal)
+                                console.log(indiviudalGroupGraphObject)
+                                console.log(selectedGroups)
+
+                                // set state to said group
+                                setNewGroup((prevState) =>
+                                    {
+                                        return {...prevState, graphValidObject:indiviudalGroupGraphObject}
+                                    })
+                                
 
                             }),
                         {
@@ -339,9 +364,14 @@ export default function DashboardPage() {
         // Filter out group we want to remove from the state
         let newGroupList = selectedGroups.filter(currentGroup=>
             {
-                return currentGroup.groupName!=removeGroup.groupName || currentGroup.groupYearRange.startDate!=startRange ||  currentGroup.groupYearRange.endDate!=endRange
+                return (currentGroup.groupName!=removeGroup.groupName || currentGroup.groupYearRange.startDate!=startRange ||  currentGroup.groupYearRange.endDate!=endRange)
             })
         
+        console.log("Compare Old group VS New Group")
+        console.log(selectedGroups)
+        console.log(newGroupList)
+
+
         // Set the state of the new group list
         setSelectedGroups(newGroupList)
 
