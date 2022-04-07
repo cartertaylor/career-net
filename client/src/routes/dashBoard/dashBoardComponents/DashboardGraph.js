@@ -68,6 +68,13 @@ const barGraphData = [
     },
 ];
 
+const data = [
+	{ name: 'Group A', value: 400 },
+	{ name: 'Group B', value: 300 },
+	{ name: 'Group C', value: 300 },
+	{ name: 'Group D', value: 200 },
+];
+
 // barGraphData[0].map((value, index)=> {
 //     console.log(value)
 // })
@@ -75,97 +82,12 @@ let dog = []
 console.log(barGraphData[0])
 
 
-//console.log([ ...barGraphData[0].keys() ])
-
-
-const data2 = [
-    {
-        groupName: "2019 Graduates",
-        "Grad Numbers": 1000,
-        "Received Job": 500,
-    },
-    {
-        groupName: "2020 Graduates",
-        "Grad Numbers": 1500,
-        "Received Job": 900,
-    },
-    {
-        groupName: "2021 Graduates",
-        "Grad Numbers": 2000,
-        "Received Job": 1500,
-    },
-];
-
-const data3 = [
-    { groupName: "Group A", value: 400 },
-    { groupName: "Group B", value: 300 },
-    { groupName: "Group C", value: 300 },
-    { groupName: "Group D", value: 200 },
-];
-
 let graphFilters = []
 
 export default function DashboardGraph({ graphSettings, graphData, selectedFilters=[] }) {
-    
-    // let [graphData, setStateGraphData] = useState([...graphData1])
 
-    let [updateGraph, setStateGraphData] = useState({
-        loading:true,
-        displayGraphData:[]
-    })
-    // setStateGraphData( Date.now())
+    // const chartData = useMemo(() => graphData.slice(), [graphData.length, graphData, selectedFilters.length, selectedFilters])
 
-
-    const chartData = useMemo(() => graphData.slice(), [graphData.length, graphData, selectedFilters.length, selectedFilters])
-
-    // const prevProps = useRef(graphData);
-
-    // console.log(prevProps)
-
-    useEffect(()=>
-        {
-            setStateGraphData((prevState)=>
-            {return {...prevState, loading:false, displayGraphData:graphData}
-        })
-        }, [])
-
-    // useEffect(() => {
-    //     const prevLateVal = prevProps.current;
-    //     const nextLateVal = graphData;
-        
-
-    
-    //     prevProps.current = graphData;
-    //   }, [selectedFilters]);
-
-
-    // function usePrevious(value) {
-    //     const ref = useRef();
-    //     useEffect(() => {
-    //         ref.prevLateVal = value;
-    //     });
-    //     return ref.prevLateVal;
-    //         }
-
-    // let currentLateValue = graphData
-    // let  prevLateVal = usePrevious(currentLateValue);
-
-    // useEffect(() => {
-    //     if(prevLateVal !== currentLateValue) {
-    //      // process here
-    //     }
-    // }, [currentLateValue]) // This will be executed only if currentLateValue changes.
-
-    // useMemo(() => {
-    //     // componentWillReceiveProps
-    // },[selectedFilters]);
-    // // ...other logic and stuff
-    // useEffect(() => {
-    //     // componentDidUpdate
-    // }, [selectedFilters]);
-
-    // // console.log(graphData)
-    // console.log(graphData1)
     console.log("WEE 1")
     console.log(selectedFilters)
     console.log(graphData)
@@ -191,15 +113,12 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
                 }
             })
         }
-        
-        console.log(graphData)
-        console.log("WOOOOO")
 
         
         if (graphSettings.currentGraphStyle == "BAR" & graphData.length >0) {
             graph = (
-                <Container className="mt-2 d-flex justify-content-center" key ={graphData.length}>
-                    <BarChart width={730} height={250} data={[...chartData]} key={graphData.length} type = "number">
+                <Container className="mt-2 d-flex justify-content-center">
+                    <BarChart width={730} height={250} data={graphData} key={Math.random()} type = "number">
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
                         <YAxis key={graphData.length} type ="number"/>
@@ -215,7 +134,7 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
                                 // Generate Bar for each filter
                                 if (key != "groupName")
                                 {
-                                    return <Bar dataKey={key} key={key+index} fill={COLORS[index % COLORS.length] }/>;
+                                    return <Bar dataKey={key} key={Math.random()} fill={COLORS[index % COLORS.length] }/>;
                                 }
                             })}
                         {/* <Bar dataKey="Number of Graduates" fill="#8884d8" />
@@ -226,12 +145,13 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
             );
         } else if (graphSettings.currentGraphStyle == "LINE" & graphData.length >0) {
             graph = (
-                <ResponsiveContainer aspect={3} className="mt-4 d-flex justify-content-center">
+                <Container aspect={3} className="mt-4 d-flex justify-content-center">
                     <LineChart
                         width={730}
                         height={250}
                         data={graphData}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        key={Math.random()}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
@@ -246,39 +166,18 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
                                 // Generate Bar for each filter
                                 if (key != "groupName")
                                 {
-                                    return <Line dataKey={key} key={key+index} type="monotone" stroke={COLORS[index % COLORS.length]}/>;
+                                    return <Line dataKey={key} key={Math.random()} type="monotone" stroke={COLORS[index % COLORS.length]}/>;
                                 }
                             })}
-                        {/* <Line
-                            type="monotone"
-                            dataKey="Grad Numbers"
-                            stroke="#8884d8"
-                        />
-                        <Line
-                            type="monotone"
-                            dataKey="Received Job"
-                            stroke="#82ca9d"
-                        /> */}
                     </LineChart>
-                </ResponsiveContainer>
+                </Container>
             );
-        } else if (graphSettings.currentGraphStyle == "PIE") {
+        } else if (graphSettings.currentGraphStyle == "PIE" & graphData.length >0) {
             graph = (
                 <Container className="d-flex justify-content-center">
                     {/* <h3 className="text-center">Percentage for each major that started a job after college</h3> */}
                     <PieChart width={400} height={400}>
-                        <Pie
-                            data={graphData}
-                            cx={200}
-                            cy={200}
-                            labelLine={false}
-                            label={renderCustomizedLabel}
-                            outerRadius={130}
-                            fill="#8884d8"
-                            dataKey="groupName"
-                        >
-
-                            {Object.keys(graphData[0]).map(function(key, index) {
+                        {Object.keys(graphData[0]).map(function(key, index) {
                                 console.log(key)
                                 console.log(index)
                                 console.log("WEE WEE")
@@ -286,16 +185,16 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
                                 // Generate Bar for each filter
                                 if (key != "groupName")
                                 {
-                                    return <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>;
+                                    return <Pie data={graphData} cx={200} cy={200} labelLine={false} label={renderCustomizedLabel} outerRadius={130} fill="#8884d8" dataKey= {key} nameKey = "groupName">   
+                                    {data.map((entry, index) => (
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={COLORS[index % COLORS.length]}
+                                        />
+                                    ))}
+                                </Pie>
                                 }
                             })}
-                            {barGraphData.map((entry, index) => (
-                                <Cell
-                                    key={`cell-${index}`}
-                                    fill={COLORS[index % COLORS.length]}
-                                />
-                            ))}
-                        </Pie>
 
                         <Tooltip />
                         <Legend />

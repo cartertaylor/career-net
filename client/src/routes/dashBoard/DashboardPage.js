@@ -120,10 +120,7 @@ export default function DashboardPage() {
                 return [...prevState, newGroup]
             })
         }
-        // Refresh the groups
-        else{
-            fillGraphData()
-        }
+       
     }, [newGroup.graphValidObject])
 
 
@@ -292,12 +289,6 @@ export default function DashboardPage() {
                     
                     
                 })
-            
-                setNewGroup((prevState) =>
-                {
-                    return {...prevState, ...prevState}
-                })
-
 
             console.log(indiviudalGroupGraphObject)
             console.log(newGroup)
