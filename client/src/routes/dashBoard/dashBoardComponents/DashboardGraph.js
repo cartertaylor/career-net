@@ -116,6 +116,8 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
     // setStateGraphData( Date.now())
 
 
+    const chartData = useMemo(() => graphData.slice(), [graphData.length, graphData, selectedFilters.length, selectedFilters])
+
     // const prevProps = useRef(graphData);
 
     // console.log(prevProps)
@@ -197,7 +199,7 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
         if (graphSettings.currentGraphStyle == "BAR" & graphData.length >0) {
             graph = (
                 <Container className="mt-2 d-flex justify-content-center" key ={graphData.length}>
-                    <BarChart width={730} height={250} data={graphData} key={graphData.length} type = "number">
+                    <BarChart width={730} height={250} data={[...chartData]} key={graphData.length} type = "number">
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
                         <YAxis key={graphData.length} type ="number"/>

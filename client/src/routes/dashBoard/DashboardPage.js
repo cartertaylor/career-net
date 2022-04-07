@@ -290,9 +290,14 @@ export default function DashboardPage() {
                         }
                     );
                     
+                    
                 })
             
-                
+                setNewGroup((prevState) =>
+                {
+                    return {...prevState, ...prevState}
+                })
+
 
             console.log(indiviudalGroupGraphObject)
             console.log(newGroup)
@@ -389,7 +394,7 @@ export default function DashboardPage() {
                     );
 
                 })
-            
+               
             }
             
     }
