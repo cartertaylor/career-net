@@ -14,7 +14,35 @@ import DateFilterMenu from "../../components/DateFilterMenu";
 import lodash from "lodash"
 
 const routeURL = "/api/graph"
+// Warn if overriding existing method
+if(Array.prototype.equals)
+    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+// attach the .equals method to Array's prototype to call it on any array
+Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
 
+    // compare lengths - can save a lot of time 
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0, l=this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;       
+        }           
+        else if (this[i] != array[i]) { 
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;   
+        }           
+    }       
+    return true;
+}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
 const data = [
     {
@@ -60,8 +88,8 @@ export default function DashboardPage() {
     let [selectedGroups, setSelectedGroups] = useState([])
     let [graphData, setGraphData] = useState([])
     let [newFilter, setNewFilter] = useState(null)
-    let [newGroup, setNewGroup] = useState ({groupName:null, groupYearRange:{startDate:undefined, endDate:undefined}, graphValidObject:null})
-
+    let [newGroup, setNewGroup] = useState ({groupName:null, groupYearRange:{startDate:undefined, endDate:undefined}, graphValidObject:null, graphShowTitle:null})
+    
 
     const [graphSettings, setGraphSettings] = useState({
         currentGraphStyle: null,
@@ -85,11 +113,16 @@ export default function DashboardPage() {
         // CHECk to make sure the group object also inst already in there!
         if (newGroup.graphValidObject != null & checkDuplicateObject(newGroup) == false)
         {
+            console.log("RUNNNING add")
         // if group not in selectedGroups, add it
             setSelectedGroups((prevState) =>
             {
                 return [...prevState, newGroup]
             })
+        }
+        // Refresh the groups
+        else{
+            fillGraphData()
         }
     }, [newGroup.graphValidObject])
 
@@ -100,15 +133,19 @@ export default function DashboardPage() {
 
         graphData.forEach(individualGraphInfo=>
             {
+                console.log("Existing group")
                 console.log(individualGraphInfo)
+                console.log("VS")
+                console.log("New Gruop")
                 console.log(individualValue)
                 
                 console.log("Dragon")
-                if (individualValue.groupName == individualGraphInfo.groupName)
+                if (individualValue.graphShowTitle == individualGraphInfo.groupName ) // & checkDuplicateFilters ==true
                 {
                     console.log("They are equal")
                     duplicateFound =  true
                 }
+                
             })
             console.log("only run if there is no duplicate found!")
 
@@ -116,7 +153,18 @@ export default function DashboardPage() {
         return duplicateFound
     }
 
+    function checkDuplicateFilters(individualValue, individualGraphdata)
+    {
 
+        let indiviudalKeys = Object.keys(individualValue.graphValidObject)
+        let graphKeys = Object.keys(individualGraphdata)
+        let duplicateFound = true
+
+
+
+        return indiviudalKeys.equals(graphKeys)
+
+    }
 
     // Function iterates over currently selected groups and adds groups "graphValidObject" to graphData state 
     function fillGraphData()
@@ -142,8 +190,8 @@ export default function DashboardPage() {
                     newGraphGroup.push(individualGroup.graphValidObject)
                 }
             })
-
-            setGraphData(newGraphGroup)
+            
+            setGraphData([...newGraphGroup])
     }
 
     async function getInitialGroupTotal()
@@ -175,7 +223,6 @@ export default function DashboardPage() {
     //  If new group is added, iterate over each filter and 
     function handleNewGroup()
     {
-
         // Given the new group, fetch the initial total of students coresponding to the filter
         getInitialGroupTotal().then((response) => {
             console.log(response);
@@ -183,7 +230,7 @@ export default function DashboardPage() {
             // Greate object will will represent our group being prepated in an object to be read by our graph
             let indiviudalGroupGraphObject =(
                 {
-                    groupName:newGroup.groupName,
+                    groupName:newGroup.graphShowTitle,
                     "Number of Graduates": response.data.studentTotal
                 })
 
@@ -255,22 +302,7 @@ export default function DashboardPage() {
         console.log("Dog where?")
 
         // Retreive initial count total of all students for that given filter without a filter
-        console.log("xbox one baby")
-        
-        
-        // grap data for each filter selected for the group (iterate over each filter)
 
-            // store the data in graphData 
-
-            // {
-            //     groupName: "Computer Science",
-            //     "Number of Graduates": 2000, // Add new filter key 
-            //     "Received Job": 1500,
-            //     "Had an Internship": 700,
-            // },
-            
-        
-        console.log("WILLAY WAM WAZZLE")
         console.log(newGroup)
         console.log(selectedGroups)
             
@@ -293,6 +325,8 @@ export default function DashboardPage() {
                 {
                     return [...prevState, newFilter]
                 })
+                // Set the state of the new group list
+                //setCurrentFilters([...newFilterList])
 
             // Go over each group and apply this new filter
             selectedGroups.forEach(individualGroup =>
@@ -324,17 +358,26 @@ export default function DashboardPage() {
 
                                 // Add new filter to local copy of object
                                 indiviudalGroupGraphObject[newFilter] = response.data.studentTotal
-                                
+                                individualGroup.graphValidObject = indiviudalGroupGraphObject
                                 // add filter to each group we iterate over
                                 console.log(response.data.studentTotal)
                                 console.log(indiviudalGroupGraphObject)
                                 console.log(selectedGroups)
 
-                                // set state to said group
+                                // setNewGroup(individualGroup)
+
+                                // // set state to said group
                                 setNewGroup((prevState) =>
                                     {
                                         return {...prevState, graphValidObject:indiviudalGroupGraphObject}
                                     })
+
+                                // // set state to said group
+                                // setSelectedGroups((prevState) =>
+                                //     {
+                                //         return [...prevState, individualGroup]
+                                //     })
+                                
                                 
 
                             }),
@@ -373,7 +416,7 @@ export default function DashboardPage() {
 
 
         // Set the state of the new group list
-        setSelectedGroups(newGroupList)
+        setSelectedGroups([...newGroupList])
 
         // setSelectedGroups((prevState)=>
         // {
@@ -393,9 +436,22 @@ export default function DashboardPage() {
         
         let newFilterList = currentFilters.filter(individualFilter=>individualFilter!=filterToBeRemoved)
         console.log(newFilterList)
-        // Set the state of the new group list
-        setCurrentFilters(newFilterList)
 
+        // Create copy of our selectedGroups
+        let selectedGroupsCopy = selectedGroups
+
+        // Iterate over current filters and remove filter
+        selectedGroupsCopy.forEach(individualGroup=>
+            {
+                // Remove filter from each groups graphValidObject
+                delete individualGroup.graphValidObject[filterToBeRemoved]
+            })
+
+        // Set the state of the new group list
+        setCurrentFilters([...newFilterList])
+
+        // Set groups with the filter removed
+        setSelectedGroups([...selectedGroupsCopy])
     }
 
     console.log(newGroup)
@@ -409,9 +465,12 @@ export default function DashboardPage() {
 
     function grabDateRanges(ranges)
     {
+        let newShowTitle = newGroup.groupName + " " + ranges.startDate + "-" + ranges.endDate
+
+
         console.log("CHanged date")
         setNewGroup((prevState) => {
-            return { ...prevState, groupYearRange: ranges };
+            return { ...prevState, groupYearRange: ranges, graphShowTitle: newShowTitle}
         });
     }
 
@@ -442,7 +501,7 @@ export default function DashboardPage() {
             </Row>
 
             {/* <h3 className = "text-center mt-4">Comparison between graduates of different majors</h3> */}
-           
+
             {/* Contains graph and filter option */}
             <Container>
                 <Row >
@@ -502,7 +561,7 @@ export default function DashboardPage() {
                     </Col>
 
                     <Col className="me-5">
-                        <DashboardGraph graphSettings={graphSettings} graphData={graphData}></DashboardGraph>
+                        <DashboardGraph graphSettings={graphSettings} graphData={graphData} selectedFilters={currentFilters}></DashboardGraph>
                     </Col>
                 </Row>
                 
@@ -518,8 +577,22 @@ export default function DashboardPage() {
                                 <h5 className="m-2 mb-3">Select Group</h5>
                                 <Form.Select aria-label="Default select example" onChange={
                                     (e)=> {
+
+                                        let startDate = newGroup.groupYearRange.startDate
+                                        let endDate = newGroup.groupYearRange.endDate
+
+                                        let newShowTitle = e.target.value + " " + newGroup.groupYearRange.startDate + "-" + newGroup.groupYearRange.endDate
+
+                                        if (startDate == undefined)
+                                        {
+                                            newShowTitle = e.target.value 
+                                        }
+                                        
+
+                                        
+
                                         setNewGroup((prevState) => {
-                                            return { ...prevState, groupName: e.target.value };
+                                            return { ...prevState, groupName: e.target.value, graphShowTitle:e.target.value, graphShowTitle:newShowTitle};
                                         })
                                     }
                                 }>
@@ -545,6 +618,13 @@ export default function DashboardPage() {
                     {
                         let startRange = value.groupYearRange.startDate;
                         let endRange = value.groupYearRange.endDate;
+
+                        let yearString = startRange + " - " + endRange 
+                        // 
+                        if (startRange == "Choose Year" || startRange == null)
+                        {
+                            yearString = "Any Grad Year"
+                        }
                         
                         
                         let groupString = startRange + " - " + endRange + " " + value.groupName + " Students"
@@ -559,7 +639,7 @@ export default function DashboardPage() {
                                             {value.groupName }
                                         </Col>
                                         <Col>
-                                            {startRange + " - " + endRange }
+                                            {yearString}
                                         </Col>
                                         <Col>
                                             <Button variant="danger" onClick={()=>handleRemoveGroup(value)}>Remove Group</Button>

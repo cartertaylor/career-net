@@ -20,8 +20,10 @@ router.post('/filter', authenticate.verifyToken, function(req, res, next) {
 
     // Grab group variables from req.body sent over from front end
     let groupName = req.body.group.groupName;
+
     let startYearRange = new Date(req.body.group.groupYearRange.startDate, 0);
     let endYearRange =  new Date(req.body.group.groupYearRange.endDate, 11);
+
 
     console.log(startYearRange)
 
@@ -30,6 +32,14 @@ router.post('/filter', authenticate.verifyToken, function(req, res, next) {
     const date = new Date();
     let fourYearsFromNow = date.getFullYear() + 4;
     let fourYearsDate = new Date(fourYearsFromNow, 4)
+
+
+    if ((req.body.group.groupYearRange.startDate == "Choose Year"))
+    {
+        startYearRange = new Date(1950, 0);
+        endYearRange =  fourYearsDate;
+    }
+
 
     // SQL query to receive optional filter parameters for graph
     sql = mysql.format("SELECT COUNT(DISTINCT ??.student_id) FROM ?? LEFT JOIN ?? ON ??.student_id = ??.student_id WHERE degree = ? AND milestone_type = 'Internship' AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
