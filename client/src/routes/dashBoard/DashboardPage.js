@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 import DateFilterMenu from "../../components/DateFilterMenu";
 import lodash from "lodash"
+import {useSelector} from "react-redux" 
 
 const routeURL = "/api/graph"
 // Warn if overriding existing method
@@ -98,6 +99,9 @@ export default function DashboardPage() {
     // set up state for the height of the of the timeline
     // const[timelineHeight, setTimelineHeight] = useState("350px");
 
+    const userMajorPermissions = useSelector((state) => state.users.majorPermissions);
+
+
     // Have useEffect run after a change is made to selectedGroups  
     useEffect(()=>
     {
@@ -120,7 +124,6 @@ export default function DashboardPage() {
                 return [...prevState, newGroup]
             })
         }
-       
     }, [newGroup.graphValidObject])
 
 
@@ -470,15 +473,18 @@ export default function DashboardPage() {
         });
     }
 
+
     // console.log(timelineHeight)
     return (
         <div className="App">
             <h1 className="mb-4"> Dashboard </h1>
+            {null == null ? <h4>Please select Chart and filter options!</h4> : null}
+            
             <Row>
                 <Col>
                     <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Graph Type
+                        <Dropdown.Toggle variant="success" id="dropdown-basic" style={{width:"7em"}}>
+                            {graphSettings.currentGraphStyle ? <p>{graphSettings.currentGraphStyle}</p> : <p>Graph Type</p>}
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
@@ -593,9 +599,13 @@ export default function DashboardPage() {
                                     }
                                 }>
                                     <option>Select a group</option>
-                                    <option value="Computer Science">Computer Science</option>
+                                    {userMajorPermissions.map(permission=> 
+                                        {
+                                            return <option value={permission}>{permission}</option>
+                                        })}
+                                    {/* <option value="Computer Science">Computer Science</option>
                                     <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                    <option value="Applied Computer Science">Applied Computer Science</option>
+                                    <option value="Applied Computer Science">Applied Computer Science</option> */}
                                 </Form.Select>
                             </Col>
                             <Col sm={5}>

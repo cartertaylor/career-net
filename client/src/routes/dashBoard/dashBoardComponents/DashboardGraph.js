@@ -79,20 +79,39 @@ const data = [
 //     console.log(value)
 // })
 let dog = []
-console.log(barGraphData[0])
 
 
 let graphFilters = []
 
 export default function DashboardGraph({ graphSettings, graphData, selectedFilters=[] }) {
 
-    // const chartData = useMemo(() => graphData.slice(), [graphData.length, graphData, selectedFilters.length, selectedFilters])
+    const chartData = useMemo(() => graphData.slice(), [graphData, selectedFilters])
+
+    const [changeMade, setChangeMade] = useState(Math.random())
+
+
+    useEffect( ()=>
+    {
+        setChangeMade(Math.random())
+    }, [chartData])
+
+    const mounted = useRef();
+    // useEffect(() => {
+    // if (!mounted.current) {
+    //     // do componentDidMount logic
+    //     mounted.current = true;
+    // } else {
+    //     // do componentDidUpdate logic
+    //     setChangeMade(true)
+
+    // }
+    // });
+
 
     console.log("WEE 1")
     console.log(selectedFilters)
     console.log(graphData)
-
-
+    console.log("NEW LENGTH: " + selectedFilters.length + graphData.length)
     function buildGraph() {
         
         let graph = null;
@@ -117,7 +136,7 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
         
         if (graphSettings.currentGraphStyle == "BAR" & graphData.length >0) {
             graph = (
-                <Container className="mt-2 d-flex justify-content-center">
+                <Container className="mt-2 d-flex justify-content-center" >
                     <BarChart width={730} height={250} data={graphData} key={Math.random()} type = "number">
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
@@ -215,7 +234,9 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
             
 
             <h3 className="text-center mt-4">
-                {graphSettings.currentGraphStyle} Chart
+
+                {/* {graphSettings.currentGraphStyle} Chart */}
+                
             </h3>
 
             {buildGraph()}
