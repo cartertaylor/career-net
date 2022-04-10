@@ -40,10 +40,21 @@ router.post('/filter', authenticate.verifyToken, function(req, res, next) {
         endYearRange =  fourYearsDate;
     }
 
-
-    // SQL query to receive optional filter parameters for graph
+    // Set SQL filter for internships
+    if (req.body.filter == "Had an Intership")
+    {
+         // SQL query to receive optional filter parameters for graph
     sql = mysql.format("SELECT COUNT(DISTINCT ??.student_id) FROM ?? LEFT JOIN ?? ON ??.student_id = ??.student_id WHERE degree = ? AND milestone_type = 'Internship' AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) LIMIT 10", [
-    studentsTable, studentsTable, milestonesTable, milestonesTable, studentsTable, groupName, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate]);
+        studentsTable, studentsTable, milestonesTable, milestonesTable, studentsTable, groupName, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate]);
+    }
+
+    // Set SQL filter for if the surdent has a job after graduation
+    else if (req.body.filter == "Has a job after graduation")
+    {
+        sql = mysql.format("SELECT COUNT(DISTINCT ??.student_id) FROM ?? LEFT JOIN ?? ON ??.student_id = ??.student_id WHERE degree = ? AND (milestone_type = 'Internship' or milestone_type ='Full Time Job') AND grad_year >= IF( ? IS NOT NULL,?, 2010 ) AND grad_year <= IF( ? IS NOT NULL,?, ? ) AND ??.date_start >= ??.grad_year LIMIT 10", [
+            studentsTable, studentsTable, milestonesTable, milestonesTable, studentsTable, groupName, startYearRange, startYearRange, endYearRange,endYearRange, fourYearsDate, milestonesTable, studentsTable]);
+        
+    }
 
     console.log(sql)
 

@@ -86,6 +86,13 @@ function Settings() {
         }
     }
 
+    function getDateWithoutTime(newDate)
+    {
+        var date = newDate.getFullYear()+'/'+(newDate.getMonth()+1)+'/'+newDate.getDate(); 
+        
+        return date;
+    }
+
     function fetchLinkedinStudentData() {
         // Set loading for data fetch
         setLoading(true);
@@ -142,8 +149,15 @@ function Settings() {
 
     // Handle change to filter for when the student profile was last changed
     function handleLastTimeUpdatedRange(ranges) {
+
+
+        let startDate = getDateWithoutTime(ranges[0].startDate)
+        let endDate = getDateWithoutTime(ranges[0].endDate)
+
+        let updateRanges = [{startDate:startDate, endDate:endDate}]
+
         setSelectedFilters((prevState) => {
-            return { ...prevState, lastTimeUpdatedRange: ranges };
+            return { ...prevState, lastTimeUpdatedRange: updateRanges };
         });
     }
 
