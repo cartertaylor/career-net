@@ -12,9 +12,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 import DateFilterMenu from "../../components/DateFilterMenu";
 import lodash from "lodash"
-import {useSelector} from "react-redux" 
+import {useSelector, useDispatch} from "react-redux" 
+import {bindActionCreators} from "redux"
+import {actionCreators} from "../../state/index"
+
 
 const routeURL = "/api/graph"
+
+
+
 // Warn if overriding existing method
 if(Array.prototype.equals)
     console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
@@ -85,6 +91,7 @@ const data2 = [
 ];
 export default function DashboardPage() {
     
+    // State variables
     let [currentFilters, setCurrentFilters] = useState([])
     let [selectedGroups, setSelectedGroups] = useState([])
     let [graphData, setGraphData] = useState([])
@@ -96,11 +103,25 @@ export default function DashboardPage() {
         currentGraphStyle: null,
         changeGraph: false,
     });
-    // set up state for the height of the of the timeline
-    // const[timelineHeight, setTimelineHeight] = useState("350px");
 
+   
+    // Redux
     const userMajorPermissions = useSelector((state) => state.users.majorPermissions);
+    const globalGraphDate = useSelector((state) => state.graphData)
 
+    // Redux
+    const dispatch = useDispatch();
+
+     /// Find functions / actions we can use to store data
+  const { setReduxGraphData } = bindActionCreators( // If a user is authenticated, we store the truth of that here
+    actionCreators,
+    dispatch
+);
+
+    
+
+
+    console.log(globalGraphDate)
 
     // Have useEffect run after a change is made to selectedGroups  
     useEffect(()=>
@@ -109,7 +130,7 @@ export default function DashboardPage() {
         console.log(selectedGroups)
         fillGraphData()
         
-    }, [selectedGroups])
+    }, [selectedGroups.length])
     
 
     useEffect(()=>
@@ -170,7 +191,7 @@ export default function DashboardPage() {
     function fillGraphData()
     {
         // reset graph data
-        setGraphData([])
+        // setGraphData([])
         
         let newGraphGroup = []
 
@@ -190,8 +211,10 @@ export default function DashboardPage() {
                     newGraphGroup.push(individualGroup.graphValidObject)
                 }
             })
-            
+            setReduxGraphData(newGraphGroup)
             setGraphData([...newGraphGroup])
+            
+            
     }
 
     async function getInitialGroupTotal()
@@ -477,10 +500,21 @@ export default function DashboardPage() {
     // console.log(timelineHeight)
     return (
         <div className="App">
-            <h1 className="mb-4"> Dashboard </h1>
-            {null == null ? <h4>Please select Chart and filter options!</h4> : null}
+            <Row>
+                <Col sm={1}>
+               
+                </Col>
+                <Col className="" sm={11} >
+                    <h1 className="mb-4" > Dashboard </h1>
+                    {null == null ? <h4 className="mb-2">Please select Chart and filter options!</h4> : null}
+                </Col>
+            </Row>
+         
             
             <Row>
+                <Col sm={1}>
+                
+                </Col>
                 <Col>
                     <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic" style={{width:"7em"}}>
@@ -507,7 +541,7 @@ export default function DashboardPage() {
             {/* Contains graph and filter option */}
             <Container>
                 <Row >
-                    <Col className="mt-5 pt-4 me-5" sm={1}  style={{overflow:"auto", height:"300px", width:"18%"}}>
+                    <Col className="mt-4" sm={1}  style={{overflow:"auto", height:"300px", width:"18%"}}>
                         <ListGroup variant="flush" style={{width:"100%"}} >
                             <Row >
                                 <Col>
@@ -515,7 +549,7 @@ export default function DashboardPage() {
                                     <ListGroup.Item >
                                         
                                             <Col>
-                                                <h5 className="m-2 mb-3">Select Filter</h5>
+                                                <h5 className="mb-3">Select Filter</h5>
                                                 <Form.Select aria-label="Default select example" style = {{width:"90%"}} onChange={
                                                     (e)=> {
                                                         // let newState = currentFilters;
@@ -562,14 +596,21 @@ export default function DashboardPage() {
                         </ListGroup>
                     </Col>
 
-                    <Col className="me-5">
+                    <Col className="me-5" >
                         <DashboardGraph graphSettings={graphSettings} graphData={graphData} selectedFilters={currentFilters}></DashboardGraph>
                     </Col>
                 </Row>
                 
             </Container>
-
-            <Container style={{width:"50%"}} className = "mt-4">
+            
+            <Row>
+                <Col sm={1}>
+               
+                </Col>
+                <Col className="mr-3" sm={11} >
+                
+            
+            <Container style={{width:"60%"}} className = "mt-4 mb-2">
                 
                 <ListGroup variant="">
                     {/* Iterate over currently selected groups */}
@@ -603,9 +644,6 @@ export default function DashboardPage() {
                                         {
                                             return <option value={permission}>{permission}</option>
                                         })}
-                                    {/* <option value="Computer Science">Computer Science</option>
-                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                    <option value="Applied Computer Science">Applied Computer Science</option> */}
                                 </Form.Select>
                             </Col>
                             <Col sm={5}>
@@ -659,6 +697,10 @@ export default function DashboardPage() {
 
                 </ListGroup>
             </Container>
+            </Col>
+
+
+            </Row>
         </div>
     );
 }

@@ -15,7 +15,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { Container, Dropdown } from "react-bootstrap";
-
+import {useSelector, useDispatch} from "react-redux" 
 import {v4 as uuid} from "uuid";
 
 const RADIAN = Math.PI / 180;
@@ -85,6 +85,8 @@ let graphFilters = []
 
 export default function DashboardGraph({ graphSettings, graphData, selectedFilters=[] }) {
 
+    const globalGraphData = useSelector((state) => state.graphData)
+
     const chartData = useMemo(() => graphData.slice(), [graphData, selectedFilters])
 
     const [changeMade, setChangeMade] = useState(Math.random())
@@ -95,17 +97,7 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
         setChangeMade(Math.random())
     }, [chartData])
 
-    const mounted = useRef();
-    // useEffect(() => {
-    // if (!mounted.current) {
-    //     // do componentDidMount logic
-    //     mounted.current = true;
-    // } else {
-    //     // do componentDidUpdate logic
-    //     setChangeMade(true)
 
-    // }
-    // });
 
 
     console.log("WEE 1")
@@ -137,15 +129,15 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
         if (graphSettings.currentGraphStyle == "BAR" & graphData.length >0) {
             graph = (
                 <Container className="mt-2 d-flex justify-content-center" >
-                    <BarChart width={730} height={250} data={graphData} key={Math.random()} type = "number">
+                    <BarChart width={730} height={250} data={graphData} key={JSON.stringify(globalGraphData)} type = "number">
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
-                        <YAxis key={graphData.length} type ="number"/>
+                        <YAxis key={JSON.stringify(graphData)} type ="number"/>
                         <Tooltip />
-                        <Legend />
+                        <Legend wrapperStyle={{ position: 'relative' }} />
                         {/* Filters  */}
                         {/* {graphFilters} */}
-                        {Object.keys(graphData[0]).map(function(key, index) {
+                        {Object.keys(globalGraphData[0]).map(function(key, index) {
                                 console.log(key)
                                 console.log(index)
                                 console.log("WEE WEE")
@@ -153,7 +145,7 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
                                 // Generate Bar for each filter
                                 if (key != "groupName")
                                 {
-                                    return <Bar dataKey={key} key={Math.random()} fill={COLORS[index % COLORS.length] }/>;
+                                    return <Bar dataKey={key} key={key + index} fill={COLORS[index % COLORS.length] }/>;
                                 }
                             })}
                         {/* <Bar dataKey="Number of Graduates" fill="#8884d8" />

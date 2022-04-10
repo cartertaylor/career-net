@@ -131,3 +131,17 @@ export const setUserPermissions = (adminStatus) => {
 }
 
 
+export const setReduxGraphData = (graphData) => {
+    return (dispatch) => {
+        dispatch({
+            type: "updateGraph",
+            payload: graphData
+        });
+    }
+    
+}
+
+
+
+
+
