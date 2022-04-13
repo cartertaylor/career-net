@@ -53,9 +53,11 @@ router.post('/get_linkedin_data', authenticate.verifyToken, authenticate.retreiv
     endDateCreatedRange = req.body.selectedFilters.lastTimeUpdatedRange[0].endDate
   }
 
+
   // Grab graduation date ranges filter
   let startGradYearRange = new Date(req.body.selectedFilters.gradDateRanges.startDate, 0);
   let endYearGradRange =  new Date(req.body.selectedFilters.gradDateRanges.endDate, 11);
+
 
    // Grab the end range year dynamically 
   const date = new Date();
@@ -143,54 +145,6 @@ router.post('/get_student_milestones', async function(req, res, next) {
 }); 
 
 
-// POST TO ADD USER INFORMATßION TO DATABASE
-router.post('/add_student', function (req, res) 
-{   
-    valuesBeingAdded = [];
-
-    // store all the values in an array
-    valuesBeingAdded.push(req.body.firstName);
-    valuesBeingAdded.push(req.body.lastName);
-    valuesBeingAdded.push(req.body.newInfo.degree);
-    valuesBeingAdded.push(req.body.newInfo.experience);
-    valuesBeingAdded.push(req.body.newInfo.schoolYear);
-
-    // create query to store into the columns with the values provided 
-    let sql = mysql.format("INSERT INTO students (??) VALUES (?)", [studentCols, valuesBeingAdded]);
-    
-
-
-    console.log("We are tryinfg to add student information now");
-    console.log(valuesBeingAdded);
-    console.log(req.body)
-    console.log(sql)
-
-    let response = {userAdded:false, message: "User could not be added"}
-
-    connection.query(sql, function (err, result) {
-        // if error received, report failure to add user
-        if (err) 
-        {
-            throw err;
-
-
-        }
-        // otherwise report success
-        else 
-        {
-            console.log("Inserted Student");
-            console.log(result);
-            response = {userAdded:true, message: "User " + req.body.firstName + " " +req.body.lastName + " was successfully added"}
-        }         
-    
-        // send back response
-        res.json(response)
-        
-      });
-    
-
-})
-
 /* POST Student Data*/
 router.post("/search", authenticate.verifyToken,function (req, res, next) {
 
@@ -256,34 +210,35 @@ router.post("/search", authenticate.verifyToken,function (req, res, next) {
 
           console.log(result);
 
-          let convertedData = convertStudentFormat(result); /// FIX TO BE ASYN FUNCTION
-
           let index = 0;
 
           rawData = result;
 
-          let studentGradYear=2022
+          let studentGradYear = 2022
           stateValidObject = [];
           if (result.length >0)  
           {
-            let studentGradYear = (rawData[index].grad_year + "")
-            studentGradYear = studentGradYear.split(" ")[3]
-          }
+            console.log("the result had length")
+            
+            console.log("------SPACES------");
+            // iterate over list of results
+            for (index = 0; index < rawData.length; index++) {
 
-          
-          console.log("------SPACES------");
-          // iterate over list of results
-          for (index = 0; index < rawData.length; index++) {
-              stateValidObject.push({
-                  id: rawData[index].student_id,
-                  firstName: rawData[index].first_name,
-                  lastName: rawData[index].last_name,
-                  newInfo: {
-                      degree: rawData[index].degree,
-                      workExperience: rawData[index].work_experience,
-                      schoolYear: studentGradYear,
-                  },
-              });
+              let studentGradYear = (rawData[index].grad_year + "")
+              studentGradYear = studentGradYear.split(" ")[3]
+
+              
+                stateValidObject.push({
+                    id: rawData[index].student_id,
+                    firstName: rawData[index].first_name,
+                    lastName: rawData[index].last_name,
+                    newInfo: {
+                        degree: rawData[index].degree,
+                        workExperience: rawData[index].work_experience,
+                        schoolYear: studentGradYear,
+                    },
+                });
+            }
           }
           console.log("CHECK THIS OUT !!! ! ! ! ");
           console.log(stateValidObject);

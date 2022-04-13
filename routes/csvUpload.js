@@ -67,18 +67,31 @@ router.post('/newStudents', authenticate.verifyToken, authenticate.retreivePermi
         // Only input student if valid row and if the student to uploaded matches the users permission
         if (validRow & currentUserPermissions.includes(row.degree) == 1)
         {
+            let gradeDate = new Date(row.graduation_year) 
             console.log("THIS STUDENT MADE IT THROUGH")
+            console.log(row.graduation_year)
             if (row.nau_id.includes("@"))
             {
                 row.nau_id = row.nau_id.split("@")[0]
             }
+            // If they do give a wacky format
+            if (!(row.graduation_year.includes("/")) && !(row.graduation_year.includes("-")))
+            {
+                console.log("running once man")
+                gradeDate = getGradeDate(row.graduation_year)
+            }
 
-            let gradeDate = getGradeDate(row.graduation_year)
+            
             console.log(gradeDate)
             console.log(todaysDate)
 
+            // Make sure the leading student data is in proper case senesitive format
+            let studentId = row.nau_id.toLowerCase()
+            let firstName = capitalizeFirstLetter(row.first_name)
+            let lastName = capitalizeFirstLetter(row.last_name)
+
             sql = mysql.format("INSERT IGNORE INTO ?? (student_id, first_name, last_name, degree, grad_year, date_created, created_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [studentsTable,row.nau_id, row.first_name, row.last_name, row.degree, gradeDate, todaysDate, createdByUserId]);
+                [studentsTable, studentId, firstName, lastName, row.degree, gradeDate, todaysDate, createdByUserId]);
 
             console.log(sql)
 
@@ -115,7 +128,6 @@ router.post ('/newMilestones',authenticate.verifyToken, authenticate.retreivePer
     let createdByUserId = req.userId;
 
     // Get permissions validated for user by middleware
-    console.log("riggity wrecked");
     console.log(req.userPermissions);
     let currentUserPermissions = req.userPermissions;
 
@@ -197,7 +209,7 @@ router.post ('/newMilestones',authenticate.verifyToken, authenticate.retreivePer
                 arrayOfInvalidRows.push(row.nau_id)
             }
 
-            // We have reached the end of tis given user, collect the value of the current row index,
+            // We have reached the end of tHis given user, collect the value of the current row index,
             if (nextRow == undefined || currentlySelectedStudent.nau_id != nextRow.nau_id )
             {   
 
@@ -309,25 +321,29 @@ function retreiveMilestone(studentRow, typeOfMilestone, studentMilestoneArray)
 }
 
 function getGradeDate(gradString)
-{
+{   
     let seasons = ["Summer", "Fall", "Winter" , "Spring"]
     let splitString = gradString.split(" ")
     let splitYear = splitString[0]
     let splitSeason = splitString[1]
 
     let monthIndex = 4;
-    let year = 2022;
+    let year = parseInt(splitYear);
     
-    if (gradString == "Fall" || gradString == "Winter")
+    if (splitSeason == "Fall" || splitSeason == "Winter")
     {
         monthIndex = 11
     }
     
 
     let gradDate = new Date(year, monthIndex, 7)
-
+    
     return gradDate;
     
 }
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
 module.exports = router;

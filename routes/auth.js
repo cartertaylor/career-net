@@ -133,3 +133,35 @@ router.post("/login", function (req, res)
     }
 })
 
+
+router.post('/newPassword', authenticate.verifyToken,(req, res) =>
+{   
+    console.log(req)
+    console.log("But do we have the user name in our request? Yes")
+    console.log(req.userId)
+
+    // Query to check admin status
+    let adminStatus = false;
+    
+    const verifyRoleSql = mysql.format("SELECT role, first_name, last_name from users2 WHERE user_id = ?", [req.userId])
+
+    console.log(verifyRoleSql)
+
+    connection.query(verifyRoleSql, function (err, results)
+    {
+        if (err) throw err;
+        console.log(results[0])
+        console.log(results[0].role)
+
+        res.json(
+            {
+                auth: true, 
+                status:"You are authenticatedd",
+                userRole: results[0].role,
+                userName: results[0].first_name + " " + results[0].last_name
+                
+            }
+        )
+    })
+
+}) 

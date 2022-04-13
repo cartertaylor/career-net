@@ -25,7 +25,9 @@ import {bindActionCreators} from "redux"
 import {actionCreators} from "./state/index"
 
 // Import Router
-import { HashRouter as Router, Route, Routes, Navigate,Outlet } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate,Outlet, useSearchParams, generatePath } from "react-router-dom";
+
+
 
 // Import different Routes
 import Login from "./routes/home/Login";
@@ -34,6 +36,7 @@ import StudentProfile from "./routes/studentProfile/StudentProfile";
 import DashboardPage from "./routes/dashBoard/DashboardPage";
 import UploadPage from "./routes/uploadPage/UploadPage";
 import Settings from "./routes/settings/Settings"
+import UpdatePassword from "./routes/updatePassword/UpdatePassword";
 
 
 // ENV variables for user roles
@@ -63,7 +66,6 @@ function App() {
   // Accessing permission to upload new data (true or false)
   let userCanUploadNewData = useSelector((state) => state.users.userCanUploadNewData);
 
-
   console.log(userIsAuthorized)
   console.log(adminIsAuthorized)
   console.log(loggedInUserName)
@@ -85,11 +87,14 @@ function App() {
 
     },[]
   )
+    
+  // const path = generatePath("/?:queryString");
+  
+  console.log("PATH!")
   // Check if current user should have access to admin pages (checks also for normal login authorization)
   async function checkAdmin()
   {
         await axios.post("api/auth/isAdmin", "word",
-          
             {
               headers: 
                 {
@@ -132,7 +137,6 @@ function App() {
   
         });
 
-  
   }
 
   // Protects Routes to make sure only logged in users can access them
@@ -302,21 +306,24 @@ function App() {
 
           {/* Routes  */}
           <Routes>
+            
               {/* Default route */}
               {userIsAuthorized != true ? (
+                <Route element = {<Outlet/>}>
+                  <Route path='/updatePassword' element={<UpdatePassword />} />
                   <Route path="/" element={<Login />} />
+                </Route>
+                  
               ) : null}
+              
 
               {/* Protected Routes  */}
               <Route element={<RequireAuth />}>
-
 
                 <Route element={<UploadAuth />}>
                   <Route path="/uploadPage" element={<UploadPage />} />
                 </Route>
 
-                  
-                  
                   <Route path="/school_dashboard" element={<DashboardPage />} />
                   <Route
                       path="/search_students"
