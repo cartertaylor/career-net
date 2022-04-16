@@ -41,7 +41,7 @@ router.post('/isAdmin', authenticate.verifyToken,(req, res) =>
     // Query to check admin status
     let adminStatus = false;
     
-    const verifyRoleSql = mysql.format("SELECT role, first_name, last_name from users2 WHERE user_id = ?", [req.userId])
+    const verifyRoleSql = mysql.format("SELECT role, first_name, last_name from ?? WHERE user_id = ?", [userTable,req.userId])
 
     console.log(verifyRoleSql)
 
