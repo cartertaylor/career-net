@@ -3,7 +3,8 @@ var router = express.Router();
 const mysql = require('mysql');
 const bcrypt = require ('bcryptjs');
 
-
+// import email function 
+const email = require("../email/email")
 
 // Middleware
 const authenticate = require("../middleware/authenticate") 
@@ -13,9 +14,6 @@ const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
 const userTable = process.env.USER_TABLE;
 const defaultPassword = process.env.DEFAULT_PASSWORD;
-
-
-
 
 // Instanstiate database
 const connection = require("../database/db")
@@ -501,7 +499,6 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
 
     // Create encrypted bcrypt key
     let newPasswordKey = stringGen(15)
-    newPasswordKey = "dog"
     // let hashedLogInKey = bcrypt.hashSync(logInKey, 15);
 
     console.log("reeee")
@@ -540,6 +537,9 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
                 
             }
             
+            // Send email with to users email with the key.
+            email.sendResetPasswordEmailWithKey(newUserCredentials.email,newPasswordKey)
+
             // Id for newly added user
             let newUserId = result.insertId;
 
@@ -607,7 +607,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
             res.json({
                 status: "Success",
                 received: req.body,
-                message: newUserCredentials.firstName + " "+ newUserCredentials.lastName +" was added to the system with a role of: " + newUserCredentials.role
+                message: newUserCredentials.firstName + " "+ newUserCredentials.lastName +" was added to the system with a role of: " + newUserCredentials.role + ". Please have them check their email and spam folder for a link to set their password."
                 
             });
 

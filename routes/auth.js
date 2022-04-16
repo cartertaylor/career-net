@@ -9,6 +9,10 @@ const authenticate = require("../middleware/authenticate")
 // Instanstiate database
 const connection = require("../database/db")
 
+// import email function 
+const email = require("../email/email")
+
+
 
 // ENV variables
 const userTable = process.env.USER_TABLE;
@@ -219,6 +223,91 @@ router.post('/newPassword', (req, res) =>
 }) 
 
 
+router.post('/sendResetEmail', (req, res) =>
+{
+    console.log("Checking key")
+    console.log(req.body)
+
+
+    const resetEmailKey = stringGen(15)
+
+    const resetEmail = req.body.userEmail.resetEmail
+    
+    // Select user where authId matches the ones in the tables
+    const checkEmailExist = mysql.format("SELECT user_id, first_name, last_name, password_auth_key from ?? WHERE email = ?", [userTable, resetEmail])
+    console.log(checkEmailExist)
+    connection.query(checkEmailExist, function (err, result )
+    {
+        if (err)
+        {
+            res.json(
+                {
+                    error:true
+                }
+            )
+        }
+        console.log("REEE")
+        console.log(result)
+
+        if (result.length > 0)
+        {
+
+            // Update the users table to include 
+            const insertAuthKeySql = mysql.format("UPDATE ?? SET password_auth_key = ? WHERE user_id = ?", [userTable, resetEmailKey, result[0].user_id])
+            try{
+                console.log("Wo")
+                connection.query(insertAuthKeySql, function (err, result )
+                    {
+                        if (err)
+                        {
+                            res.json(
+                                {
+                                    error:true
+                                }
+                            )
+                        }
+                        console.log(result)
+                        console.log(result.affectedRows)
+                        if (result.affectedRows > 0)
+                        {
+                            // Send email with to users email with the key.
+                            email.sendResetPasswordEmailWithKey(resetEmail,resetEmailKey)
+
+                        }
+                        res.json(
+                            {
+                                emailSent:true,
+                                error:false
+                            }
+                        )
+                    })
+            }
+            catch{
+                res.json(
+                    {
+                        emailSent:false,
+                        error:false
+                    }
+                )
+            }
+            
+        }
+        else
+        {
+            res.json(
+                {
+                    emailSent:false,
+                    error:false
+                }
+            )
+        }
+    })
+
+    // console.log(verifyKeySql)
+})
+
+
+
 router.post('/checkAuthenticationKey', (req, res) =>
 {
 
@@ -237,6 +326,7 @@ router.post('/checkAuthenticationKey', (req, res) =>
 
         if (result.length > 0)
         {
+            
             res.json(
                 {
                     auth:true
@@ -255,4 +345,18 @@ router.post('/checkAuthenticationKey', (req, res) =>
 
     // console.log(verifyKeySql)
 })
+
+
+
+
+function stringGen(len) {
+    var text = "";
+    
+    var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+    
+    for (var i = 0; i < len; i++)
+      text += charset.charAt(Math.floor(Math.random() * charset.length));
+    
+    return text;
+  }
 

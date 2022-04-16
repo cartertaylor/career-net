@@ -70,11 +70,16 @@ function Login () {
         
         {   
             // Reach out to backend, and attempt to send an email (only if the email exists)
-            console.log("Send email")
-
-            // Put Toast notification for email sent
-            toast.info("Reset email sent to:  " + resetEmail.resetEmail + ". Please access the URL included in that e-mail to reset your password.")
-
+            axios.post("/api/auth/sendResetEmail", {message:"Attempt to reset password", userEmail:resetEmail},
+                ).then(
+                    (response) =>
+                    {
+                        console.log(response)
+                         // Put Toast notification for email sent
+                        toast.info("Reset email sent to:  " + resetEmail.resetEmail + ". Please access the URL included in that e-mail to reset your password.")
+                    }
+                )
+                
             // Reset the email state to an empty string
             setResetEmail((prevState) => {
                 return {
