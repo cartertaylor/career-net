@@ -6,7 +6,9 @@ const initialState = {
     userAdmin:null,
     userName:null,
     majorPermissions:[],
-    userCanUploadNewData:null
+    userCanUploadNewData:null,
+    providedKeyValid:false,
+    newPasswordSet:false
 }; // TODO: Make this an object, and set a key for user logged in and admin status
 
 const reducer = (
@@ -46,6 +48,12 @@ const reducer = (
         // Set on user login
         case "setUserAdmin":
             return {...state, userAdmin:action.payload}
+
+        case "setNewPasswordAuthenticationKeyValid":
+            return {...state, providedKeyValid:action.payload}
+        
+        case "newPasswordSet":
+            return {...state, newPasswordSet:true}
 
         default:
             return state

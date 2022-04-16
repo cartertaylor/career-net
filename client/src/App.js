@@ -66,6 +66,7 @@ function App() {
   // Accessing permission to upload new data (true or false)
   let userCanUploadNewData = useSelector((state) => state.users.userCanUploadNewData);
 
+
   console.log(userIsAuthorized)
   console.log(adminIsAuthorized)
   console.log(loggedInUserName)
@@ -88,9 +89,6 @@ function App() {
     },[]
   )
     
-  // const path = generatePath("/?:queryString");
-  
-  console.log("PATH!")
   // Check if current user should have access to admin pages (checks also for normal login authorization)
   async function checkAdmin()
   {
@@ -301,8 +299,6 @@ function App() {
   
               </Container>
           </Navbar>
-
-        
 
           {/* Routes  */}
           <Routes>

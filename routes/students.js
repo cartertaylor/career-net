@@ -223,9 +223,10 @@ router.post("/search", authenticate.verifyToken,function (req, res, next) {
             console.log("------SPACES------");
             // iterate over list of results
             for (index = 0; index < rawData.length; index++) {
-
+              
               let studentGradYear = (rawData[index].grad_year + "")
-              studentGradYear = studentGradYear.split(" ")[3]
+              console.log(studentGradYear)
+              studentGradYear = studentGradYear.split(" ")[1] + " " + studentGradYear.split(" ")[3]
 
               
                 stateValidObject.push({

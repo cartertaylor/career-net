@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
-const defaultPassword = process.env.DEFAULT_PASSWORD;
+const bcrypt = require ('bcryptjs');
+
+
 
 // Middleware
 const authenticate = require("../middleware/authenticate") 
@@ -9,6 +11,9 @@ const authenticate = require("../middleware/authenticate")
 // Import user type values 
 const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
+const userTable = process.env.USER_TABLE;
+const defaultPassword = process.env.DEFAULT_PASSWORD;
+
 
 
 
@@ -40,8 +45,8 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
     if (searchLetters != "")
     {
         // SELECT *(all) FROM (table) where
-        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role, users2.user_id FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = (SELECT user_id from users2 WHERE first_name = ? and last_name = ? and email = ?)", [
-            searchLetters, lastSearchLetters, email
+        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, ??.role, ??.user_id FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN ?? ON ??.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = (SELECT user_id from ?? WHERE first_name = ? and last_name = ? and email = ?)", [
+            userTable, userTable, userTable, userTable,userTable ,searchLetters, lastSearchLetters, email
         ]);
 
         console.log(sql);
@@ -104,8 +109,8 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
 
             else{
                 console.log("FAILED LOOKING FOR SOME NON ASDMIN")
-                sql = mysql.format("SELECT role, user_id FROM users2 WHERE first_name = ? and last_name = ? and email = ?", [
-                    searchLetters, lastSearchLetters, email
+                sql = mysql.format("SELECT role, user_id FROM ?? WHERE first_name = ? and last_name = ? and email = ?", [
+                    userTable,searchLetters, lastSearchLetters, email
                 ]);
 
                 console.log(sql)
@@ -209,7 +214,7 @@ router.post("/edit/permissions", authenticate.verifyToken, authenticate.authAdmi
     }) 
 
     
-    let updateUserSql = mysql.format("UPDATE users2 SET role = ? WHERE user_id = ?", [roleId, newUserCredentials.userId])
+    let updateUserSql = mysql.format("UPDATE ?? SET role = ? WHERE user_id = ?", [userTable,roleId, newUserCredentials.userId])
     console.log(updateUserSql)
 
     connection.query(updateUserSql, function (err, result) {
@@ -294,8 +299,8 @@ router.post("/search", function (req, res)
         // store the letters that were searched into variable to be checked against data base
         searchLetters = searchLetters + "%";
 
-        sql = mysql.format("SELECT * FROM users2 WHERE first_name LIKE ? or last_name LIKE ?", [
-            searchLetters, searchLetters
+        sql = mysql.format("SELECT * FROM ?? WHERE first_name LIKE ? or last_name LIKE ?", [
+            userTable, searchLetters, searchLetters
         ]);
         console.log(sql);
 
@@ -346,10 +351,11 @@ router.post("/current/permissions", authenticate.verifyToken, function (req, res
 {
     let currentUserId = req.userId;
     let permissionsArray = []
-    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;", [currentUserId])
+    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, ??.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN ?? ON ??.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;",
+        [userTable,userTable,userTable, currentUserId])
     let userCanUploadNewData = false
 
-    let initialSqlCheck = mysql.format("SELECT role FROM users2 WHERE user_id = ?", [currentUserId])
+    let initialSqlCheck = mysql.format("SELECT role FROM ?? WHERE user_id = ?", [userTable,currentUserId])
 
     console.log("Current permissions")
     console.log(sql)
@@ -480,29 +486,45 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     let newUserCredentials = req.body.newUserData
     
     // Default row is normal faculty
-    let roleId = userFacultyValue; 
+    let roleId = userFacultyValue
     let password = defaultPassword
-
+    
     // Get ID of user created this new user from authentication (req.userId) 
     let createdByUserId = req.userId;
-
+    
     // Get role ID based on provided roles (if Admin : 1, if Normal Faculty : 2)
     if (newUserCredentials.role == "Admin")
     {
         roleId = userAdminValue;
     }
+    
+
+    // Create encrypted bcrypt key
+    let newPasswordKey = stringGen(15)
+    newPasswordKey = "dog"
+    // let hashedLogInKey = bcrypt.hashSync(logInKey, 15);
+
+    console.log("reeee")
 
     // get current Date
     let currentDate = new Date();  
 
     // insert user into users table
-    let newUserSql = mysql.format("INSERT INTO users2 (email, password, first_name, last_name, date_created, role, created_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [newUserCredentials.email, password, newUserCredentials.firstName, newUserCredentials.lastName, currentDate, roleId, createdByUserId])
+    let newUserSql = mysql.format("INSERT INTO ?? (email, password, first_name, last_name, date_created, role, password_auth_key, created_by_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [userTable, newUserCredentials.email, null, newUserCredentials.firstName, newUserCredentials.lastName, currentDate, roleId, newPasswordKey ,createdByUserId])
 
     console.log(newUserSql)
 
+    // res.json({
+    //     status: "Failure",
+    //     received: req.body,
+    //     message: "Unable to add user " + newUserCredentials.firstName + " "+ newUserCredentials.lastName + " . If this problem persists, please contact an administrator."
+        
+    // });
+
     // Attempt to create new user
     try {
+        
         connection.query(newUserSql, function (err, result, fields) {
             console.log(result)
             if (err) 
@@ -590,7 +612,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
             });
 
         });
-}
+    }
     // Catch error for adding user
     catch (err)
     {
@@ -611,7 +633,18 @@ router.post("/delete", authenticate.verifyToken, authenticate.authAdmin, functio
 {
     let currentUserId = req.userId;
     let permissionsArray = []
-    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;", [currentUserId])
+    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, ??.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN ?? ON ??.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;", [userTable,userTable,userTable,currentUserId])
 })
 
 
+function stringGen(len) {
+    var text = "";
+    
+    var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+    
+    for (var i = 0; i < len; i++)
+      text += charset.charAt(Math.floor(Math.random() * charset.length));
+    
+    return text;
+  }
+  

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
 const jwt = require("jsonwebtoken")
+const bcrypt = require ('bcryptjs');
 
 // Middleware
 const authenticate = require("../middleware/authenticate") 
@@ -134,34 +135,124 @@ router.post("/login", function (req, res)
 })
 
 
-router.post('/newPassword', authenticate.verifyToken,(req, res) =>
+
+router.post('/newPassword', (req, res) =>
 {   
-    console.log(req)
-    console.log("But do we have the user name in our request? Yes")
-    console.log(req.userId)
+    console.log(req.body)
 
-    // Query to check admin status
-    let adminStatus = false;
-    
-    const verifyRoleSql = mysql.format("SELECT role, first_name, last_name from users2 WHERE user_id = ?", [req.userId])
 
-    console.log(verifyRoleSql)
+    // Grab req variables
+    let providedKey = req.body.providedKey
+    const newPassword = req.body.passwords.confirmPassword
 
-    connection.query(verifyRoleSql, function (err, results)
+    if (providedKey == null)
     {
-        if (err) throw err;
-        console.log(results[0])
-        console.log(results[0].role)
+        providedKey = "nullisa"
+    }
 
+    // Select user where authId matches the ones in the tables
+    const verifyKeySql = mysql.format("SELECT user_id, first_name, last_name, password_auth_key from ?? WHERE password_auth_key = ?", [userTable, providedKey])
+
+    console.log(verifyKeySql)
+    try
+    {
+        connection.query(verifyKeySql, function (err, results)
+        {
+            if (err) throw err;
+
+            if (results.length > 0)
+            {
+                console.log(results[0])
+                let foundUser = (results[0].user_id)
+                
+                // Update password with new one provided
+                let updatePasswordSql = mysql.format("UPDATE ?? SET password = ?, password_auth_key= ? WHERE user_id = ?", [userTable, newPassword, null, foundUser])
+                console.log(updatePasswordSql)
+                
+                // Update password
+                try {
+                    console.log("reee")
+
+                    connection.query(updatePasswordSql, function (err, results)
+                    {
+                        res.json(
+                            {
+                                updated: true, 
+                                status:"You are authenticatedd",
+                            }
+                        )
+                    })
+                }
+                catch 
+                {
+                    res.json(
+                        {
+                            updated: false, 
+                            status:"Failed to Authenticate key",
+                            
+                        }
+                    )
+                }
+            }
+            else
+            {
+                res.json(
+                    {
+                        updated: false, 
+                        status:"Failed to Authenticate key",
+                        
+                    }
+                )
+            }
+
+        })
+    }
+    catch
+    {
         res.json(
             {
-                auth: true, 
-                status:"You are authenticatedd",
-                userRole: results[0].role,
-                userName: results[0].first_name + " " + results[0].last_name
-                
+                updated: false
             }
         )
-    })
+    }
 
 }) 
+
+
+router.post('/checkAuthenticationKey', (req, res) =>
+{
+
+    const providedKey = req.body.providedKey
+
+    console.log("Checking key")
+    console.log(req.body)
+
+    // Select user where authId matches the ones in the tables
+    const verifyKeySql = mysql.format("SELECT user_id, first_name, last_name, password_auth_key from ?? WHERE password_auth_key = ?", [userTable, providedKey])
+    
+    connection.query(verifyKeySql, function (err, result )
+    {
+        console.log("REEE")
+        console.log(result)
+
+        if (result.length > 0)
+        {
+            res.json(
+                {
+                    auth:true
+                }
+            )
+        }
+        else
+        {
+            res.json(
+                {
+                    auth:false
+                }
+            )
+        }
+    })
+
+    // console.log(verifyKeySql)
+})
+

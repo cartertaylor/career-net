@@ -6,6 +6,8 @@ import React, { useEffect, useState  } from 'react';
 import Container from 'react-bootstrap/Container';
 import {Form, Button, Card} from 'react-bootstrap/';
 
+import axios from "axios";
+
 // Redux
 import {useSelector, useDispatch} from "react-redux" // Allows access to store
 import {bindActionCreators} from "redux"
@@ -18,6 +20,9 @@ import {AiFillLock} from "react-icons/ai"
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// ENV variables for current URL
+const homePageUrl = parseInt(process.env.REACT_URL);
+
 function UpdatePassword() {
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -25,12 +30,25 @@ function UpdatePassword() {
     searchParams.get("dog")
     console.log(searchParams)
 
-        
-    
     console.log(searchParams.get('authKey'));
     console.log(searchParams.get('sort'));
     console.log("reee")
+
     //?sort=name&order=ascending
+    // Redux
+    const dispatch = useDispatch();
+
+    // Access store functions
+    const { setNewPasswordAuthenticationKeyValid } = bindActionCreators( // If a user is authenticated, we store the truth of that here
+        actionCreators,
+        dispatch
+    );
+    
+    // Store variables
+    let keyIsValid = useSelector((state) => state.users.providedKeyValid);
+    
+
+    console.log(keyIsValid)
 
     // State 
     const [passwords, setPassword] = useState({firstPassword:null, confirmPassword:null})
@@ -47,8 +65,7 @@ function UpdatePassword() {
     // Check to see if the key exists in our database
     useEffect(()=>
     {   
-        
-        
+        setNewPasswordAuthenticationKeyValid(passwordKey)
     }, [passwordKey])
 
     function handlePasswordSet(e)
@@ -78,7 +95,28 @@ function UpdatePassword() {
         // Send request to reset password 
         else
         {
+            axios.post("/api/auth/newPassword", {message:"Checking for ", providedKey: passwordKey, passwords:passwords},
+            {
+                headers:{
+                    "x-access-token":localStorage.getItem("token")
+                },
 
+            }).then(
+                (response) =>
+                {
+                    console.log(response)
+
+                    if (response.data.updated)
+                    {
+                        toast.success("Password updated, please go back to the login page")
+                        // Redirect to home page
+                        window.location.href = homePageUrl
+                    }
+                    else{
+                        toast.warning("Invalid key provided")
+                    }
+                }
+                )
         }
 
         // Check to make sure the auth token exists 
@@ -91,72 +129,79 @@ function UpdatePassword() {
     }
 
     return ( 
-        <Container className ="d-flex justify-content-center" style={{
-            position: 'absolute', left: '50%', top: '50%',
-            transform: 'translate(-50%, -50%)'
-        }}>
-
-
+        <div>
             {/* <ToastContainer /> */}
             <ToastContainer
-                position="top-center"
-                autoClose={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                transition={Slide}
-            />
-            
+                    position="top-center"
+                    autoClose={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    transition={Slide}
+                />
 
-            <Card style={{ width: '25rem' }}>
-            <Card.Header className ="text-center"><h3><AiFillLock/>Update Password</h3></Card.Header>
-            
-                <Card.Body>
-                    
-                    <Form>
-                            <Form.Group className="mb-3" controlId="formBasicPassword" 
-                                onChange={
-                                    (e) =>
-                                    {
-                                        setPassword((prevState) => {
-                                            return { ...prevState, firstPassword: e.target.value }
-                                        })
-                                    }
-                                }
-                            >
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
-                            </Form.Group>
-                            
-                            <Form.Group className="mb-3" controlId="formBasicPassword" 
-                                onChange={
-                                    (e) =>
-                                    {
-                                        setPassword((prevState) => {
-                                            return { ...prevState, confirmPassword: e.target.value }
-                                        })
-                                    }
-                                }
-                            >
-                                <Form.Label>Confirm Password</Form.Label>
-                                <Form.Control type="password" placeholder="Confirm Password" />
-                            </Form.Group>
-                            
-
-                            <Button variant="primary" type="submit" onClick={(e) =>handlePasswordSet(e)}>
-                                Set Password
-                            </Button>
-                    </Form>
-                </Card.Body>
-            </Card>
+            {keyIsValid ? <Container className ="d-flex justify-content-center" style={{
+                position: 'absolute', left: '50%', top: '50%',
+                transform: 'translate(-50%, -50%)'
+            }}>
 
 
-                    
+                
                 
 
-        </Container>
+                <Card style={{ width: '25rem' }}>
+                <Card.Header className ="text-center"><h3><AiFillLock/>Update Password</h3></Card.Header>
+                
+                    <Card.Body>
+                        
+                        <Form>
+                                <Form.Group className="mb-3" controlId="formBasicPassword" 
+                                    onChange={
+                                        (e) =>
+                                        {
+                                            setPassword((prevState) => {
+                                                return { ...prevState, firstPassword: e.target.value }
+                                            })
+                                        }
+                                    }
+                                >
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" />
+                                </Form.Group>
+                                
+                                <Form.Group className="mb-3" controlId="formBasicPassword" 
+                                    onChange={
+                                        (e) =>
+                                        {
+                                            setPassword((prevState) => {
+                                                return { ...prevState, confirmPassword: e.target.value }
+                                            })
+                                        }
+                                    }
+                                >
+                                    <Form.Label>Confirm Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Confirm Password" />
+                                </Form.Group>
+                                
+
+                                <Button variant="primary" type="submit" onClick={(e) =>handlePasswordSet(e)}>
+                                    Set Password
+                                </Button>
+                        </Form>
+                    </Card.Body>
+                </Card>
+
+
+
+            </Container> :
+                <Container>
+                    <h1 className="text-center mb-2">ERROR, NO KEY FOUND</h1>
+                    <h4 className="text-center">Talk to the administrator to create an account</h4>
+                </Container>}
+            
+        </div>
 
     );
 }

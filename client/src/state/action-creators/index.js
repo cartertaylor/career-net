@@ -141,6 +141,46 @@ export const setReduxGraphData = (graphData) => {
     
 }
 
+export const userSetNewPassword = () => {
+    return (dispatch) => {
+        dispatch({
+            type: "newPasswordSet",
+            payload: true
+        });
+    }
+    
+}
+
+// Locally sets the autentication code from the browser when trying to set a new password 
+export const setNewPasswordAuthenticationKeyValid = (authKey) => {
+
+    let finalKey = null
+
+    console.log(authKey)
+
+    return dispatch => { //return function
+        return axios
+                .post("api/auth/checkAuthenticationKey", 
+                    {
+                        message:"Checking authentication keys", providedKey:authKey
+                    }, 
+                )
+                .then((response) => {
+                    // setPost(response.data);
+                    console.log(
+                        response.data
+                    );
+
+                        dispatch({
+                            type: "setNewPasswordAuthenticationKeyValid",
+                            payload: response.data.auth
+                        });
+                    
+                });
+        }
+
+}
+
 
 
 

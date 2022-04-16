@@ -18,10 +18,15 @@ import {AiFillLock} from "react-icons/ai"
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import ModalPopup from '../../components/ModalPopup';
+
 
 import axios from 'axios';
 
 function Login () {
+
+       // State for Modal
+    const [modalShow, setModalShow] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -35,6 +40,9 @@ function Login () {
 
     // State Variables
     let [credentials, setLoginCredentials] = useState({userName:null, password:null})
+    let [resetEmail, setResetEmail] = useState({resetEmail:""})
+
+        console.log(resetEmail)
 
     function checkAuthenticated ()
     {
@@ -53,6 +61,48 @@ function Login () {
                 userLoggedInStatus(response.data.auth)
             }
         )
+    }
+
+    // Attempts to send a change-password link to the email provided if it exists
+    function handleChangePasswordSubmit()
+    {
+
+        
+        {   
+            // Reach out to backend, and attempt to send an email (only if the email exists)
+            console.log("Send email")
+
+            // Put Toast notification for email sent
+            toast.info("Reset email sent to:  " + resetEmail.resetEmail + ". Please access the URL included in that e-mail to reset your password.")
+
+            // Reset the email state to an empty string
+            setResetEmail((prevState) => {
+                return {
+                    ...prevState,
+                    resetEmail: "",
+                };
+            });
+        }
+        
+    }
+
+    function checkEmailBox()
+    {
+
+        if (resetEmail.resetEmail.length <1)
+        {
+            toast.warning("Please enter an email into the email box")
+            return false
+        }
+        else if (!resetEmail.resetEmail.includes("@"))
+        {
+            toast.warning("Please enter an email into the email box")   
+            return false
+        }
+
+        return true
+
+
     }
 
     // Attempts to log in user with given credentials
@@ -103,80 +153,141 @@ function Login () {
     }
 
     return (
-        
-        <Container className ="d-flex justify-content-center" style={{
-            position: 'absolute', left: '50%', top: '50%',
-            transform: 'translate(-50%, -50%)'
-        }}>
-
+        <div>
 
             {/* <ToastContainer /> */}
             <ToastContainer
-                position="top-center"
-                autoClose={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                transition={Slide}
-            />
+                    position="top-center"
+                    autoClose={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    transition={Slide}
+                />
+            <Container
+                className="d-flex justify-content-center"
+                style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                }}
+            >
+                
 
-            <Card style={{ width: '25rem' , height:'23rem' }}>
-            <Card.Header className ="text-center"><h3><AiFillLock className="mb-1 me-1"/>Login</h3></Card.Header>
-            
-                <Card.Body>
-                    
+                <ModalPopup
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                    modalText={{
+                        title: "Enter in email to change password",
+                        subTitle: null,
+                        body: null,
+                    }}
+                    modalComponent= {
                     <Form>
-                            <Form.Group className="mb-3" controlId="formBasicEmail"  onChange={
-                                    (e) =>
-                                    {
-                                        setLoginCredentials((prevState) => {
-                                            return { ...prevState, userName: e.target.value }
-                                        })
-                                    }
-                                }>
+                        <Form.Group
+                            className="mb-3"
+                            controlId="formBasicEmail"
+                            onChange={(e) => {
+                                setResetEmail((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        resetEmail: e.target.value,
+                                    };
+                                });
+                            }}
+                        >
+                            <Form.Label className = "form-text">Please enter the e-mail address registered to your account, and then select Submit.
+                                An e-mail will be sent to that address containing a link to reset your password.</Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="Enter email"
+                            />
+                        
+                        </Form.Group>
+                    </Form>
+                    }
+                    buttonLabel = {"Submit"}
+                    successSubmit={handleChangePasswordSubmit}
+                    checkValid={checkEmailBox}
+                />
 
-                                <Form.Label>NAU ID</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" />
+                <Card style={{ width: "25rem", height: "23rem" }}>
+                    <Card.Header className="text-center">
+                        <h3>
+                            <AiFillLock className="mb-1 me-1" />
+                            Login
+                        </h3>
+                    </Card.Header>
+
+                    <Card.Body>
+                        <Form>
+                            <Form.Group
+                                className="mb-3"
+                                controlId="formBasicEmail"
+                                onChange={(e) => {
+                                    setLoginCredentials((prevState) => {
+                                        return {
+                                            ...prevState,
+                                            userName: e.target.value,
+                                        };
+                                    });
+                                }}
+                            >
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    placeholder="Enter email"
+                                />
                                 <Form.Text className="text-muted">
-                                    Please provide your NAU email
+                                    Please provide your NAU email associated with your account
                                 </Form.Text>
                             </Form.Group>
-                        
-                            <Form.Group className="mb-3" controlId="formBasicPassword" 
-                                onChange={
-                                    (e) =>
-                                    {
-                                        setLoginCredentials((prevState) => {
-                                            return { ...prevState, password: e.target.value }
-                                        })
-                                    }
-                                }
+
+                            <Form.Group
+                                className="mb-3"
+                                controlId="formBasicPassword"
+                                onChange={(e) => {
+                                    setLoginCredentials((prevState) => {
+                                        return {
+                                            ...prevState,
+                                            password: e.target.value,
+                                        };
+                                    });
+                                }}
                             >
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Password"
+                                />
+                                <Form.Text className="" onClick={(e) => {setModalShow(true)
+                                    e.preventDefault();}}>
+                                    <a href="">Forgot Password?</a>
+                                </Form.Text>
                             </Form.Group>
-                            
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+
+                            <Form.Group
+                                className="mb-3"
+                                controlId="formBasicCheckbox"
+                            >
                                 <Form.Check type="checkbox" label="Remember me" />
                             </Form.Group>
 
-                            <Button variant="primary" type="submit" onClick={(e) =>handleLoginSubmit(e)}>
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                onClick={(e) => handleLoginSubmit(e)}
+                            >
                                 Log in
                             </Button>
-                    </Form>
-                </Card.Body>
-            </Card>
-
-
-                    
-                
-
-        </Container>
-
-        
-        
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </div>
     );
 
 }

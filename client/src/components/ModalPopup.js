@@ -1,7 +1,7 @@
 import {Modal, Button} from "react-bootstrap"
 import React  from 'react';
 
-function ModalPopup({show, onHide, props, modalText, successSubmit,submitButton= "Submit", buttonVariant="primary"}) {
+function ModalPopup({show, onHide, props, modalText, successSubmit, submitButton= "Submit", buttonVariant="primary", modalComponent=null, buttonLabel="Confirm Submission",  checkValid=null}) {
 
     console.log(props)
 
@@ -14,11 +14,17 @@ function ModalPopup({show, onHide, props, modalText, successSubmit,submitButton=
 
     function handleSuccess()
     {
-        // Run the success function
-        successSubmit()
 
-        // Run the close function
-        onHide()
+        const validSubmit = checkValid()
+
+        if (validSubmit == null || validSubmit == true )
+        {
+            // Run the success function
+            successSubmit()
+
+            // Run the close function
+            onHide()
+        }
         
     }
 
@@ -46,11 +52,13 @@ function ModalPopup({show, onHide, props, modalText, successSubmit,submitButton=
                 <p>
                     {modalText.body}
                 </p>
+
+                {modalComponent}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
                 <Button variant={buttonVariant} onClick={handleSuccess}>
-                    Confirm Submission
+                    {buttonLabel}
                 </Button>
             </Modal.Footer>
         </Modal>
