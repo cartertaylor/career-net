@@ -22,7 +22,7 @@ let transporter = nodemailer.createTransport({
 function sendResetPasswordEmailWithKey(sentToEmail, key) {
     console.log("Attempting to send")
     let clickLink = 'http://' + serverName +'/?#/updatePassword?authKey=' + key 
-    let htmlBody = '<p>Hello from CareerNet, <br> <br> We received a request to reset the password for the CareerNet account associated with this e-mail address. Click the link below to reset your password.<br><br></p>'
+    let htmlBody = '<p>Hello from CareerNet, <br> <br> We received a request to set the password for the CareerNet account associated with this e-mail address. Click the link below to reset your password.<br><br></p>'
     
     let htmlLink ='<a href="'+ clickLink + '">' +clickLink+'</a>'
 

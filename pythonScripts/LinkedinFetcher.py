@@ -20,7 +20,7 @@ sqlQuery = sqlFilters["sqlQuery"]
 
 
 # Authenticate using any Linkedin account credentials
-api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!')
+api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!',refresh_cookies=True)
 
 
 

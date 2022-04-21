@@ -79,7 +79,7 @@ function Login () {
                         toast.info("Reset email sent to:  " + resetEmail.resetEmail + ". Please access the URL included in that e-mail to reset your password.")
                     }
                 )
-                
+
             // Reset the email state to an empty string
             setResetEmail((prevState) => {
                 return {
@@ -210,6 +210,7 @@ function Login () {
                                 type="email"
                                 placeholder="Enter email"
                             />
+                            <Form.Label className = "form-text">IMPORTANT: Make sure to check your spam folder for the email if you can't find it in your inbox</Form.Label>
                         
                         </Form.Group>
                     </Form>
@@ -274,14 +275,15 @@ function Login () {
                                 </Form.Text>
                             </Form.Group>
 
-                            <Form.Group
-                                className="mb-3"
+                            {/* <Form.Group
+                                className=""
                                 controlId="formBasicCheckbox"
                             >
                                 <Form.Check type="checkbox" label="Remember me" />
-                            </Form.Group>
+                            </Form.Group> */}
 
                             <Button
+                                className = "mb-4"
                                 variant="primary"
                                 type="submit"
                                 onClick={(e) => handleLoginSubmit(e)}
