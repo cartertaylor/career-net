@@ -211,7 +211,7 @@ function Login () {
                                 placeholder="Enter email"
                             />
                             <Form.Label className = "form-text">IMPORTANT: Make sure to check your spam folder for the email if you can't find it in your inbox</Form.Label>
-                        
+                            {/* Warn to make sure they check their spam*/}
                         </Form.Group>
                     </Form>
                     }

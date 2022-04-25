@@ -18,6 +18,7 @@ const email = require("../email/email")
 const userTable = process.env.USER_TABLE;
 const userAdminValue = process.env.USER_ADMIN_VALUE;
 const userFacultyValue = process.env.USER_FACULTY_VALUE;
+const jwtSecret = process.env.JWT_SECRET;
 
 
 module.exports = router;
@@ -25,7 +26,7 @@ module.exports = router;
 // refresh token
 function generateAccesstoken(userId)
 {
-    return (jwt.sign({userId}, "changeSecret", 
+    return (jwt.sign({userId}, jwtSecret, 
         {
             expiresIn: '3h', // expires in 3h
         })
@@ -100,7 +101,7 @@ router.post("/login", function (req, res)
                 const token = generateAccesstoken(id) 
 
                 // TODO: Implement refresh token at some point 
-                const refreshToken = jwt.sign({id}, "changeSecret")
+                // const refreshToken = jwt.sign({id}, jwtSecret)
 
                 console.log(result[0].first_name + " " + result[0].last_name)
 

@@ -11,6 +11,7 @@ const connection = require("../database/db")
 // Import user type values 
 const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
+const jwtSecret = process.env.JWT_SECRET;
 
 
 // Middleware function to determine if user token is authenticated or not
@@ -30,7 +31,7 @@ const verifyToken = (req, res, next) =>
         console.log("Is this the user ID?")
         
 
-        jwt.verify(token, "changeSecret", (err, decoded) =>
+        jwt.verify(token, jwtSecret, (err, decoded) =>
         {
             if (err)
             {   console.log(err)

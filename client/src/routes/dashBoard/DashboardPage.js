@@ -411,7 +411,7 @@ export default function DashboardPage() {
                     );
 
                 })
-               
+        
             }
             
     }
@@ -610,7 +610,7 @@ export default function DashboardPage() {
                 <Col className="mr-3" sm={11} >
                 
             
-            <Container style={{width:"60%"}} className = "mt-4 mb-2">
+            <Container style={{width:"60%"}} className = "mt-4 mb-5">
                 
                 <ListGroup variant="">
                     {/* Iterate over currently selected groups */}

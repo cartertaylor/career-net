@@ -88,7 +88,7 @@ export default function Timeline({ timelineOrientation, studentProfileInfo }) {
                 
             }
             
-        );
+        ).reverse();
 
         // iterate over current grabbed milestones and put them in proper format for timeline 
         for (let milestoneIndex in rawStudentMilestones) {

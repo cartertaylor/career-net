@@ -46,10 +46,10 @@ def getJobMilestoneType (jobTitle):
 def getDateFromMilestone(milestoneType, givenDates, month ):
     if (milestoneType == "education"):
         # if year is even
-        foundDate = datetime.datetime(givenDates["year"], month, 1)
+        foundDate = datetime.datetime(givenDates["year"], month, 5)
 
     else:
-        foundDate = datetime.datetime(givenDates["year"], givenDates["month"], 1)
+        foundDate = datetime.datetime(givenDates["year"], givenDates["month"], 5)
 
     # convert to correct format (without time, just date)
     str_now = foundDate.date().isoformat()
