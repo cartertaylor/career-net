@@ -14,6 +14,8 @@ const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
 const userTable = process.env.USER_TABLE;
 const defaultPassword = process.env.DEFAULT_PASSWORD;
+const facultyPermissions = process.env.FACUTY_PERMISSIONS_TABLE;
+const selectedUserPermissions = process.env.PERMISSIONS_TABLE
 
 // Instanstiate database
 const connection = require("../database/db")
@@ -43,8 +45,8 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
     if (searchLetters != "")
     {
         // SELECT *(all) FROM (table) where
-        sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, ??.role, ??.user_id FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN ?? ON ??.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = (SELECT user_id from ?? WHERE first_name = ? and last_name = ? and email = ?)", [
-            userTable, userTable, userTable, userTable,userTable ,searchLetters, lastSearchLetters, email
+        sql = mysql.format("SELECT ??.user_id, ??.permission_name, ??.role, ??.user_id FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = (SELECT user_id from ?? WHERE first_name = ? and last_name = ? and email = ?)", [
+            facultyPermissions, selectedUserPermissions ,userTable, userTable,facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions, userTable, userTable, facultyPermissions,facultyPermissions, userTable ,searchLetters, lastSearchLetters, email
         ]);
 
         console.log(sql);
@@ -191,7 +193,7 @@ router.post("/edit/permissions", authenticate.verifyToken, authenticate.authAdmi
     }
 
     // Remove current permissions
-    let removePermissionsSql = mysql.format("DELETE FROM faculty_permissions2 WHERE user_id = ?", [newUserCredentials.userId])
+    let removePermissionsSql = mysql.format("DELETE FROM ?? WHERE user_id = ?", [facultyPermissions,newUserCredentials.userId])
     console.log(removePermissionsSql)
 
     connection.query(removePermissionsSql, function (err, result, fields) {
@@ -242,8 +244,8 @@ router.post("/edit/permissions", authenticate.verifyToken, authenticate.authAdmi
             }
 
             // Create permission, associated with the user_id and permission access associated with permission_id's
-            createPermissionSql = mysql.format("INSERT IGNORE INTO faculty_permissions2 (user_id, permission_id) SELECT ?, permission_id FROM permissions2 WHERE permission_name IN (?)",
-                [newUserCredentials.userId, permissionList])
+            createPermissionSql = mysql.format("INSERT IGNORE INTO ?? (user_id, permission_id) SELECT ?, permission_id FROM ?? WHERE permission_name IN (?)",
+                [facultyPermissions,newUserCredentials.userId,selectedUserPermissions, permissionList])
 
             console.log(createPermissionSql)
             console.log(permissionList)
@@ -349,8 +351,8 @@ router.post("/current/permissions", authenticate.verifyToken, function (req, res
 {
     let currentUserId = req.userId;
     let permissionsArray = []
-    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, ??.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN ?? ON ??.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;",
-        [userTable,userTable,userTable, currentUserId])
+    let sql = mysql.format("SELECT ??.user_id, ??.permission_name, ??.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = ?;",
+        [facultyPermissions, selectedUserPermissions, userTable, facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions,facultyPermissions ,userTable, userTable,facultyPermissions, currentUserId])
     let userCanUploadNewData = false
 
     let initialSqlCheck = mysql.format("SELECT role FROM ?? WHERE user_id = ?", [userTable,currentUserId])
@@ -410,7 +412,7 @@ router.post("/current/permissions", authenticate.verifyToken, function (req, res
             // We are an admin, grab list of majors
             else{
 
-                let adminMajorSql = mysql.format("SELECT permission_name FROM permissions2")
+                let adminMajorSql = mysql.format("SELECT permission_name FROM ??",[selectedUserPermissions])
 
                 try{
                     connection.query(adminMajorSql, function(err, result)
@@ -556,8 +558,8 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
                     }
 
                     // Create permission, associated with the user_id and permission access associated with permission_id's
-                    createPermissionSql = mysql.format("INSERT IGNORE INTO faculty_permissions2 (user_id, permission_id) SELECT ?, permission_id FROM permissions2 WHERE permission_name IN (?)",
-                        [newUserId, permissionList])
+                    createPermissionSql = mysql.format("INSERT IGNORE INTO ?? (user_id, permission_id) SELECT ?, permission_id FROM ?? WHERE permission_name IN (?)",
+                        [facultyPermissions,newUserId, selectedUserPermissions,permissionList])
 
                     console.log(createPermissionSql)
 
@@ -633,7 +635,8 @@ router.post("/delete", authenticate.verifyToken, authenticate.authAdmin, functio
 {
     let currentUserId = req.userId;
     let permissionsArray = []
-    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, ??.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN ?? ON ??.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;", [userTable,userTable,userTable,currentUserId])
+    let sql = mysql.format("SELECT ??.user_id, ??.permission_name, ??.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = ?;",
+        [facultyPermissions, selectedUserPermissions, userTable, facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions,facultyPermissions ,userTable, userTable,facultyPermissions, currentUserId])
 })
 
 

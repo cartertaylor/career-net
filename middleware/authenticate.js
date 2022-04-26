@@ -8,10 +8,12 @@ const mysql = require('mysql');
 const connection = require("../database/db")
 
 
-// Import user type values 
+// Import ENV variables
 const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
 const jwtSecret = process.env.JWT_SECRET;
+const facultyPermissions = process.env.FACUTY_PERMISSIONS_TABLE;
+const selectedUserPermissions = process.env.PERMISSIONS_TABLE
 
 
 // Middleware function to determine if user token is authenticated or not
@@ -54,7 +56,8 @@ function retreivePermissions(req, res, next)
     // Attempt to grab permissions
     let currentUserId = req.userId;
     let permissionsArray = []
-    let sql = mysql.format("SELECT faculty_permissions2.user_id, permissions2.permission_name, users2.role FROM faculty_permissions2 LEFT JOIN permissions2 ON permissions2.permission_id = faculty_permissions2.permission_id LEFT JOIN users2 ON users2.user_id = faculty_permissions2.user_id WHERE faculty_permissions2.user_id = ?;", [currentUserId])
+    let sql = mysql.format("SELECT ??.user_id, ??.permission_name, users2.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN users2 ON users2.user_id = ??.user_id WHERE ??.user_id = ?;",
+        [facultyPermissions, selectedUserPermissions,facultyPermissions,selectedUserPermissions,selectedUserPermissions,facultyPermissions,facultyPermissions,facultyPermissions,currentUserId])
     let userCanUploadNewData = false
 
     let initialSqlCheck = mysql.format("SELECT role FROM users2 WHERE user_id = ?", [currentUserId])
@@ -105,7 +108,7 @@ function retreivePermissions(req, res, next)
             // We are an admin, grab list of majors
             else{
 
-                let adminMajorSql = mysql.format("SELECT permission_name FROM permissions2")
+                let adminMajorSql = mysql.format("SELECT permission_name FROM ??", [selectedUserPermissions])
 
                 try{
                     connection.query(adminMajorSql, function(err, result)
@@ -153,7 +156,7 @@ function retreivePermissions(req, res, next)
     }
 }
 
-// Multiple Middleware? 
+// MIddleware that tells if user is authenticated as an admin or not
 function authAdmin (req, res, next) 
 {
     // Check if user has admin permissions 
