@@ -352,111 +352,123 @@ router.post("/current/permissions", authenticate.verifyToken, function (req, res
     let currentUserId = req.userId;
     let permissionsArray = []
     let sql = mysql.format("SELECT ??.user_id, ??.permission_name, ??.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = ?;",
-        [facultyPermissions, selectedUserPermissions, userTable, facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions,facultyPermissions ,userTable, userTable,facultyPermissions, currentUserId])
+        [facultyPermissions, selectedUserPermissions, userTable, facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions,userTable, facultyPermissions,userTable,facultyPermissions, currentUserId])
     let userCanUploadNewData = false
 
-    let initialSqlCheck = mysql.format("SELECT role FROM ?? WHERE user_id = ?", [userTable,currentUserId])
+    let initialSqlCheck = mysql.format("SELECT role FROM ?? WHERE user_id = ?", [userTable, currentUserId])
 
     console.log("Current permissions")
     console.log(sql)
+    
 
     try{
-        
+
         connection.query(initialSqlCheck, function (err, result)
         {
-            if (result[0].role == userFacultyValue)
-            {
-                try
+            if (result.length > 0)
+            {   
+                
+                console.log(result[0].role)
+                if (result[0].role == userFacultyValue)
                 {
-                    connection.query(sql, function (err, result)
-                    {   
-                        console.log(result[0])
-
-                        result.forEach(element=>
-                            {
-                                console.log(element.permission_name)
-                                
-                                if (element.permission_name == "Upload New Data")
-                                {
-                                    userCanUploadNewData = true;
-                                }
-                                else
-                                {
-                                    console.log("Adding element")
-                                    permissionsArray.push(element.permission_name)
-                                }
-                                console.log(permissionsArray)
-                            })
-
-                        console.log("print permission element")
-                        console.log(permissionsArray)
-                        res.json(
-                            {
-                                status: "success",
-                                received: req.body,
-                                majorPermissions: permissionsArray,
-                                userCanUploadNewData:userCanUploadNewData
-                            }
-                        )
-                    })
-                }
-                catch{
-                    res.json(
-                        {
-                            status: "failure",
-                            message:"Failed grabbing permissions"
-                        }
-                    )
-                }
-            }
-            // We are an admin, grab list of majors
-            else{
-
-                let adminMajorSql = mysql.format("SELECT permission_name FROM ??",[selectedUserPermissions])
-
-                try{
-                    connection.query(adminMajorSql, function(err, result)
+                    
+                    try
                     {
-                        console.log("Admin matey")
-                        console.log(result)
-
-                        result.forEach(element=>
+                        
+                        connection.query(sql, function (err, result)
+                        {   
+                            if (result.length > 0)
                             {
-                                console.log(element.permission_name)
+                                console.log(result[0])
                                 
-                                if (element.permission_name == "Upload New Data")
-                                {
-                                    userCanUploadNewData = true;
-                                }
-                                else
-                                {
-                                    console.log("Adding element")
-                                    permissionsArray.push(element.permission_name)
-                                }
-                            })
+                                result.forEach(element=>
+                                    {
+                                        console.log(element.permission_name)
+                                        
+                                        if (element.permission_name == "Upload New Data")
+                                        {
+                                            userCanUploadNewData = true;
+                                        }
+                                        else
+                                        {
+                                            console.log("Adding element")
+                                            permissionsArray.push(element.permission_name)
+                                        }
+                                        console.log(permissionsArray)
+                                    })
 
+                                console.log("print permission element")
+                                console.log(permissionsArray)
+                                res.json(
+                                    {
+                                        status: "success",
+                                        received: req.body,
+                                        majorPermissions: permissionsArray,
+                                        userCanUploadNewData:userCanUploadNewData
+                                    }
+                                )
+                            }
+                            
+                        })
+                    }
+                    catch{
                         res.json(
                             {
-                                status: "success",
-                                received: req.body,
-                                majorPermissions: permissionsArray,
-                                userCanUploadNewData:true,
-                                userAdmin:true
+                                status: "failure",
+                                message:"Failed grabbing permissions"
                             }
                         )
-                    })
+                    }
                 }
-                catch
-                {
-                    res.json(
+                // We are an admin, grab list of majors
+                else{
+
+                    let adminMajorSql = mysql.format("SELECT permission_name FROM ??",[selectedUserPermissions])
+
+                    try{
+                        connection.query(adminMajorSql, function(err, result)
                         {
-                            status: "failure",
-                            message:"Failed grabbing permissions"
-                        }
-                    )
+                            console.log("Admin matey")
+                            console.log(result)
+
+                            result.forEach(element=>
+                                {
+                                    console.log(element.permission_name)
+                                    
+                                    if (element.permission_name == "Upload New Data")
+                                    {
+                                        userCanUploadNewData = true;
+                                    }
+                                    else
+                                    {
+                                        console.log("Adding element")
+                                        permissionsArray.push(element.permission_name)
+                                    }
+                                })
+
+                            res.json(
+                                {
+                                    status: "success",
+                                    received: req.body,
+                                    majorPermissions: permissionsArray,
+                                    userCanUploadNewData:true,
+                                    userAdmin:true
+                                }
+                            )
+                        })
+                    }
+                    catch
+                    {
+                        res.json(
+                            {
+                                status: "failure",
+                                message:"Failed grabbing permissions"
+                            }
+                        )
+                    }
+
+
                 }
-
-
             }
         })
 

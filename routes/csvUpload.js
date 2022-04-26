@@ -40,7 +40,7 @@ router.post('/newStudents', authenticate.verifyToken, authenticate.retreivePermi
 
     console.log("Receiving CSV upload for new students")
     console.log(req.body.data)
-    let sql = mysql.format("SELECT * FROM users2");
+    let sql = ""
 
     let csvRows = req.body.data
 
@@ -135,7 +135,6 @@ router.post ('/newMilestones',authenticate.verifyToken, authenticate.retreivePer
 
     console.log("Receiving CSV upload for new students");
     console.log(req.body.data);
-    let sql = mysql.format("SELECT * FROM users2");
 
     let csvRows = req.body.data;
 

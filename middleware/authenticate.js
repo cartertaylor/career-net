@@ -13,7 +13,8 @@ const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
 const jwtSecret = process.env.JWT_SECRET;
 const facultyPermissions = process.env.FACUTY_PERMISSIONS_TABLE;
-const selectedUserPermissions = process.env.PERMISSIONS_TABLE
+const selectedUserPermissions = process.env.PERMISSIONS_TABLE;
+const userTable = process.env.USER_TABLE;
 
 
 // Middleware function to determine if user token is authenticated or not
@@ -56,17 +57,17 @@ function retreivePermissions(req, res, next)
     // Attempt to grab permissions
     let currentUserId = req.userId;
     let permissionsArray = []
-    let sql = mysql.format("SELECT ??.user_id, ??.permission_name, users2.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN users2 ON users2.user_id = ??.user_id WHERE ??.user_id = ?;",
-        [facultyPermissions, selectedUserPermissions,facultyPermissions,selectedUserPermissions,selectedUserPermissions,facultyPermissions,facultyPermissions,facultyPermissions,currentUserId])
+    let sql = mysql.format("SELECT ??.user_id, ??.permission_name, ??.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = ?;",
+        [facultyPermissions, selectedUserPermissions, userTable, facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions,userTable, facultyPermissions,userTable,facultyPermissions, currentUserId])
     let userCanUploadNewData = false
 
-    let initialSqlCheck = mysql.format("SELECT role FROM users2 WHERE user_id = ?", [currentUserId])
+    let initialSqlCheck = mysql.format("SELECT role FROM ?? WHERE user_id = ?", [userTable,currentUserId])
 
     console.log("Current permissions")
     console.log(sql)
 
     try{
-        
+        console.log("Trying")
         connection.query(initialSqlCheck, function (err, result)
         {
             if (result[0].role == userFacultyValue)
@@ -162,7 +163,7 @@ function authAdmin (req, res, next)
     // Check if user has admin permissions 
     console.log("AUTHORIZING TO MAKE SURE THEY ARE AN ADMIN")
 
-    const verifyRoleSql = mysql.format("SELECT role from users2 WHERE user_id = ?", [req.userId])
+    const verifyRoleSql = mysql.format("SELECT role from ?? WHERE user_id = ?", [userTable,req.userId])
     console.log(verifyRoleSql)
 
     connection.query(verifyRoleSql, function (err,results)
