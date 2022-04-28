@@ -1,4 +1,4 @@
-import { React, useState, useEffect,useMemo, useRef } from "react";
+import { React } from "react";
 import {
     LineChart,
     Line,
@@ -14,8 +14,8 @@ import {
     Legend,
     ResponsiveContainer
 } from "recharts";
-import { Container, Dropdown } from "react-bootstrap";
-import {useSelector, useDispatch} from "react-redux" 
+import { Container,Row, Col } from "react-bootstrap";
+import {useSelector} from "react-redux" 
 import {v4 as uuid} from "uuid";
 
 const RADIAN = Math.PI / 180;
@@ -47,6 +47,7 @@ const renderCustomizedLabel = ({
 
 const COLORS = ["#8884d8", "#82ca9d", "#ff4a6a", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
+// Example of how data is stored in graphs
 const barGraphData = [
     {
         groupName: "Computer Science",
@@ -68,17 +69,8 @@ const barGraphData = [
     },
 ];
 
-const data = [
-	{ name: 'Group A', value: 400 },
-	{ name: 'Group B', value: 300 },
-	{ name: 'Group C', value: 300 },
-	{ name: 'Group D', value: 200 },
-];
 
-// barGraphData[0].map((value, index)=> {
-//     console.log(value)
-// })
-let dog = []
+
 
 
 let graphFilters = []
@@ -86,18 +78,6 @@ let graphFilters = []
 export default function DashboardGraph({ graphSettings, graphData, selectedFilters=[] }) {
 
     const globalGraphData = useSelector((state) => state.graphData)
-
-    const chartData = useMemo(() => graphData.slice(), [graphData, selectedFilters])
-
-    const [changeMade, setChangeMade] = useState(Math.random())
-
-
-    useEffect( ()=>
-    {
-        setChangeMade(Math.random())
-    }, [chartData])
-
-
 
 
     console.log("WEE 1")
@@ -162,7 +142,7 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
                         height={250}
                         data={graphData}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                        key={Math.random()}
+                        key={JSON.stringify(globalGraphData)}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="groupName" />
@@ -186,51 +166,50 @@ export default function DashboardGraph({ graphSettings, graphData, selectedFilte
         } else if (graphSettings.currentGraphStyle == "PIE" & graphData.length >0) {
             graph = (
                 <Container className="d-flex justify-content-center">
-                    {/* <h3 className="text-center">Percentage for each major that started a job after college</h3> */}
-                    <PieChart width={400} height={400}>
-                        {Object.keys(graphData[0]).map(function(key, index) {
-                                console.log(key)
-                                console.log(index)
-                                console.log("WEE WEE")
-                                
-                                // Generate Bar for each filter
-                                if (key != "groupName")
-                                {
-                                    return <Pie data={graphData} cx={200} cy={200} labelLine={false} label={renderCustomizedLabel} outerRadius={130} fill="#8884d8" dataKey= {key} nameKey = "groupName">   
-                                    {data.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={COLORS[index % COLORS.length]}
-                                        />
-                                    ))}
-                                </Pie>
-                                }
-                            })}
 
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
+                        <Row>
+                            {Object.keys(graphData[0]).map(function(key, index) {
+                                    console.log(key)
+                                    console.log(index)
+                                    console.log(graphData)
+                                    
+                                    // Generate Bar for each filter
+                                    if (key != "groupName")
+                                    {
+                                        return (
+                                        <Col xs={6}>
+                                            <h3>{key}</h3>
+                                            <PieChart width={400} height={400} key={JSON.stringify(globalGraphData)} margin={{ top: -55, bottom:60}}>
+                                            
+                                                <Pie data={graphData} cx={200} cy={200} labelLine={false} label={renderCustomizedLabel} outerRadius={130} fill="#8884d8" dataKey= {key} nameKey = "groupName">   
+                                                    {graphData.map((entry, index) => (
+                                                        
+                                                        <Cell
+                                                            key={`cell-${Math.random() }`}
+                                                            fill={COLORS[index % COLORS.length]}
+                                                        />
+                                                    ))}
+                                                </Pie>
+                                                <Tooltip />
+                                                <Legend />
+                                            </PieChart>
+                                        </Col>
+                                        )
+                                    }
+                                })}
+                            </Row>
                 </Container>
             );
         }
-
-        console.log(graphSettings.currentGraphStyle);
 
         // RETURN CHOSEN GRAPH
         return graph;
     }
 
-    // console.log(timelineHeight)
     return (
         <div className="App" key={uuid}>
             
-
-            <h3 className="text-center mt-4">
-
-                {/* {graphSettings.currentGraphStyle} Chart */}
-                
-            </h3>
-
+            {/* Return the built graph */}
             {buildGraph()}
         </div>
     );
