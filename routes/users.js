@@ -18,7 +18,8 @@ const facultyPermissions = process.env.FACUTY_PERMISSIONS_TABLE;
 const selectedUserPermissions = process.env.PERMISSIONS_TABLE
 
 // Instanstiate database
-const connection = require("../database/db")
+const connection = require("../database/db");
+const e = require('express');
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
@@ -636,11 +637,51 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
 // Delete user route
 router.post("/delete", authenticate.verifyToken, authenticate.authAdmin, function (req, res) 
 {
-    let currentUserId = req.userId;
-    let permissionsArray = []
-    let sql = mysql.format("SELECT ??.user_id, ??.permission_name, ??.role FROM ?? LEFT JOIN ?? ON ??.permission_id = ??.permission_id LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = ?;",
-        [facultyPermissions, selectedUserPermissions, userTable, facultyPermissions, selectedUserPermissions, selectedUserPermissions,facultyPermissions,facultyPermissions ,userTable, userTable,facultyPermissions, currentUserId])
+    let deleteUserId = req.body.usersId;
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+
+    let sql = mysql.format("DELETE ??,?? FROM ?? LEFT JOIN ?? ON ??.user_id = ??.user_id WHERE ??.user_id = ? AND ??.user_id = ?;",
+        [userTable,facultyPermissions, userTable, facultyPermissions, facultyPermissions, userTable, userTable, deleteUserId,facultyPermissions, deleteUserId])
+
+    try{
+        connection.query(sql, function(err, result)
+
+            {
+                if (err)
+                {
+                    res.json({
+                        status: "Failure",
+                        received: req.body,
+                        message: "Unable to update user " + firstName + " "+ lastName+ " . If this problem persists, please contact an administrator."
+                        
+                    });
+                }
+                else{
+                    res.json({
+                        status: "Success",
+                        received: req.body,
+                        message: "Deleted User " + firstName + " "+ lastName+ " from system"
+                        
+                    });
+                }
+            }
+        )
+    }
+    catch
+    {
+        res.json({
+            status: "Failure",
+            received: req.body,
+            message: "Unable to delete user " + firstName + " "+ lastName+ " . If this problem persists, please contact an administrator."
+            
+        });
+    }
+
+    console.log(sql)
+
 })
+
 
 
 function stringGen(len) {

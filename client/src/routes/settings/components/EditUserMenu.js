@@ -81,7 +81,35 @@ function EditUserMenu({handleToastDisplay}) {
     function handleUserDelete()
     {
         console.log("Deleting user")
+        // Check to make sure all fields are filled out.  (make sure userType != Choose)
 
+        // Bring up modal to check and see if they really want to edit users permissions
+        console.log(permissions)
+        
+        // Update the data for the user being edited
+        axios
+        .post("/api/users/delete", 
+            {
+                usersId:permissions.userId,
+                firstName: permissions.firstName,
+                lastName: permissions.lastName
+                
+            },
+            {
+            headers: {
+                "x-access-token":localStorage.getItem("token")
+            },
+
+            
+        })
+        .then((response) => {
+            // setPost(response.data);
+            console.log(
+                response.data
+            );
+            handleToastDisplay(response.data.status, response.data.message)
+
+        });
         // Send request to delete user
     }
 
@@ -195,7 +223,7 @@ function EditUserMenu({handleToastDisplay}) {
                 show={userModalShow}
                 onHide={() => setUserModalShow(false)}
                 modalText= {{title:"Delete User Confirmation", subTitle:null, body:"Are you sure you would like to delete this user? Once they are deleted,  will no longer have access to data."}}
-                successSubmit = {handleEditPermissionSubmit}
+                successSubmit = {handleUserDelete}
                 buttonVariant="danger"
                 
         />
