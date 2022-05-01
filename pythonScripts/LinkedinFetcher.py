@@ -13,14 +13,15 @@ DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
 DATABASE_HOST = os.environ['DATABASE_HOST']
 DATABASE_NAME = os.environ['DATABASE_NAME']
 MILESTONE_TABLE = os.environ['MILESTONE_TABLE']
-
+LINKEDIN_EMAIL = os.environ['LINKEDIN_EMAIL']
+LINKEDIN_PASSWORD = os.environ['LINKEDIN_PASSWORD']
 
 ### Grab sql query from arugment ###
 sqlQuery = sqlFilters["sqlQuery"]
 
 
 # Authenticate using any Linkedin account credentials
-api = Linkedin('websitemessagecontact@gmail.com', 'Jimmy123!',refresh_cookies=True)
+api = Linkedin(LINKEDIN_EMAIL, LINKEDIN_PASSWORD,refresh_cookies=True)
 
 
 

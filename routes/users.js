@@ -108,7 +108,7 @@ router.post("/search/permissions", authenticate.verifyToken , function (req, res
             }
 
             else{
-                console.log("FAILED LOOKING FOR SOME NON ASDMIN")
+        
                 sql = mysql.format("SELECT role, user_id FROM ?? WHERE first_name = ? and last_name = ? and email = ?", [
                     userTable,searchLetters, lastSearchLetters, email
                 ]);
@@ -499,7 +499,6 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     
     // Default row is normal faculty
     let roleId = userFacultyValue
-    let password = defaultPassword
     
     // Get ID of user created this new user from authentication (req.userId) 
     let createdByUserId = req.userId;
@@ -515,8 +514,6 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
     let newPasswordKey = stringGen(15)
     // let hashedLogInKey = bcrypt.hashSync(logInKey, 15);
 
-    console.log("reeee")
-
     // get current Date
     let currentDate = new Date();  
 
@@ -526,12 +523,6 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
 
     console.log(newUserSql)
 
-    // res.json({
-    //     status: "Failure",
-    //     received: req.body,
-    //     message: "Unable to add user " + newUserCredentials.firstName + " "+ newUserCredentials.lastName + " . If this problem persists, please contact an administrator."
-        
-    // });
 
     // Attempt to create new user
     try {
