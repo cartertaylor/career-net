@@ -537,7 +537,7 @@ export default function DashboardPage() {
                                                     <option value="Has a job after graduation">Has A job after graduation</option>
                                                     <option value="Worked at specified company">Worked at specified company</option>
                                                 </Form.Select>
-                                                {newFilter.includes("Worked at specified company") ? 
+                                                {newFilter != null && newFilter.includes("Worked at specified company") ? 
                                                     <Form.Group className="mt-1" controlId="formBasicEmail" style = {{width:"95%"}} onChange={(e) => {
                                                         setSpecfiedCompanyFilter(e.target.value) 
                                                     }}>
