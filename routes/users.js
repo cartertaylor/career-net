@@ -13,7 +13,6 @@ const authenticate = require("../middleware/authenticate")
 const userAdminValue = parseInt(process.env.USER_ADMIN_VALUE);
 const userFacultyValue = parseInt(process.env.USER_FACULTY_VALUE);
 const userTable = process.env.USER_TABLE;
-const defaultPassword = process.env.DEFAULT_PASSWORD;
 const facultyPermissions = process.env.FACUTY_PERMISSIONS_TABLE;
 const selectedUserPermissions = process.env.PERMISSIONS_TABLE
 
@@ -650,10 +649,11 @@ router.post("/delete", authenticate.verifyToken, authenticate.authAdmin, functio
             {
                 if (err)
                 {
+                    console.log(err)
                     res.json({
                         status: "Failure",
                         received: req.body,
-                        message: "Unable to update user " + firstName + " "+ lastName+ " . If this problem persists, please contact an administrator."
+                        message: "Unable to delete user " + firstName + " "+ lastName+ " . If this problem persists, please contact an administrator."
                         
                     });
                 }
@@ -670,6 +670,7 @@ router.post("/delete", authenticate.verifyToken, authenticate.authAdmin, functio
     }
     catch
     {
+        console.log(err)
         res.json({
             status: "Failure",
             received: req.body,
