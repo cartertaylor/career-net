@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Custom made components
 import DashboardGraph from "./dashBoardComponents/DashboardGraph";
 import DateFilterMenu from "../../components/DateFilterMenu";
-import lodash from "lodash"
+import lodash, { toLower } from "lodash"
 import {useSelector, useDispatch} from "react-redux" 
 import {bindActionCreators} from "redux"
 import {actionCreators} from "../../state/index"
@@ -51,51 +51,14 @@ Array.prototype.equals = function (array) {
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
-const data = [
-    {
-        groupName: "Computer Science",
-        "Number of Graduates": 2000,
-        "Received Job": 1500,
-        "Had an Internship": 700,
-    },
-    {
-        groupName: "Exercise Science",
-        "Number of Graduates": 2500,
-        "Received Job": 1100,
-        "Had an Internship": 200,
-    },
-    {
-        groupName: "Mechanical Engineering",
-        "Number of Graduates": 1000,
-        "Received Job": 600,
-        "Had an Internship": 100,
-    },
-];
 
-const data2 = [
-    {
-        groupName: "2019 Graduates",
-        "Grad Numbers": 1000,
-        "Received Job": 500,
-    },
-    {
-        groupName: "2020 Graduates",
-        "Grad Numbers": 1500,
-        "Received Job": 900,
-    },
-    {
-        groupName: "2021 Graduates",
-        "Grad Numbers": 2000,
-        "Received Job": 1500,
-    },
-];
 export default function DashboardPage() {
     
     // State variables
-    let [currentFilters, setCurrentFilters] = useState([])
-    let [selectedGroups, setSelectedGroups] = useState([])
-    let [graphData, setGraphData] = useState([])
-    let [newFilter, setNewFilter] = useState(null)
+    let [currentFilters, setCurrentFilters] = useState([]) // List of filters currently selected by the user
+    let [selectedGroups, setSelectedGroups] = useState([]) // List if groups currently slected by the user
+    let [graphData, setGraphData] = useState([]) // Contains array of Graph valid objects to be passed to object using selected filters
+    let [newFilter, setNewFilter] = useState(null) // Filter staged to be added (once submitted, will be added to currentFilters)
     let [newGroup, setNewGroup] = useState ({groupName:null, groupYearRange:{startDate:undefined, endDate:undefined}, graphValidObject:null, graphShowTitle:null})
     
 
@@ -103,7 +66,6 @@ export default function DashboardPage() {
         currentGraphStyle: null,
         changeGraph: false,
     });
-
    
     // Redux
     const userMajorPermissions = useSelector((state) => state.users.majorPermissions);
@@ -496,6 +458,16 @@ export default function DashboardPage() {
         });
     }
 
+    // If the user wants to filter by companies worked, this will update the filter to also include this company
+    function setSpecfiedCompanyFilter(companyName)
+    {
+        console.log(companyName)
+        console.log(newFilter)
+        let newFilterString = "Worked at specified company" + ": " + companyName
+        console.log(newFilterString)
+        setNewFilter(newFilterString)
+    }
+
 
     // console.log(timelineHeight)
     return (
@@ -550,7 +522,7 @@ export default function DashboardPage() {
                                         
                                             <Col>
                                                 <h5 className="mb-3">Select Filter</h5>
-                                                <Form.Select aria-label="Default select example" style = {{width:"90%"}} onChange={
+                                                <Form.Select aria-label="Default select example" style = {{width:"95%"}} onChange={
                                                     (e)=> {
                                                         // let newState = currentFilters;
                                                         // newState.push(e.target.value)
@@ -563,10 +535,22 @@ export default function DashboardPage() {
                                                     <option>Select a Filter</option>
                                                     <option value="Had an Intership">Had An Intership</option>
                                                     <option value="Has a job after graduation">Has A job after graduation</option>
+                                                    <option value="Worked at specified company">Worked at specified company</option>
                                                 </Form.Select>
+                                                {newFilter.includes("Worked at specified company") ? 
+                                                    <Form.Group className="mt-1" controlId="formBasicEmail" style = {{width:"95%"}} onChange={(e) => {
+                                                        setSpecfiedCompanyFilter(e.target.value) 
+                                                    }}>
+                                                        <Form.Label>Company Name</Form.Label>
+                                                        <Form.Control type="text" placeholder="Enter company name" />
+                                                        <Form.Text className="text-muted">
+                                                            This will select all students in the major that have worked at the specified company
+                                                        </Form.Text>
+                                                    </Form.Group>
+                                                    : null}
                                             </Col>
                                             <Col>
-                                                <Button className="mt-4" onClick= {handleAddFilter}>Add Filter</Button>
+                                                <Button className="mt-3" onClick= {handleAddFilter}>Add Filter</Button>
                                             </Col>
                                         
                                     </ListGroup.Item>
@@ -604,8 +588,8 @@ export default function DashboardPage() {
             </Container>
             
             <Row>
-                <Col sm={1}>
-                </Col>
+                <Col sm={1}> </Col> 
+
                 <Col className="mr-3" sm={11} >
                 
             
