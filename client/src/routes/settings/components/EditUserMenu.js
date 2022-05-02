@@ -16,7 +16,7 @@ const userFacultyValue = parseInt(process.env.REACT_APP_USER_FACULTY_VALUE);
 
 function EditUserMenu({handleToastDisplay}) {
 
-    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
+    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics & Astrophysics", "Physics", "SecEd-Physics", "Civil Engineering", "Construction Management", "Environmental Engineering", "MultDiscp Engineering"];
 
 
     // State for selected filters
@@ -93,7 +93,6 @@ function EditUserMenu({handleToastDisplay}) {
                 usersId:permissions.userId,
                 firstName: permissions.firstName,
                 lastName: permissions.lastName
-                
             },
             {
             headers: {
@@ -108,6 +107,20 @@ function EditUserMenu({handleToastDisplay}) {
                 response.data
             );
             handleToastDisplay(response.data.status, response.data.message)
+            setPermissions( (prevState => 
+                (
+                    {...prevState, firstName:null,
+                        lastName:null,
+                        email:null,
+                        userType:null,
+                        canUploadNewData:false,
+                        majorAccess:[],
+                        initialUserType:null, // Gets the original value the user has. The ones above is for updates
+                        initialMajorAccess:[],
+                        userId:null}
+                )
+                    
+            ))
 
         });
         // Send request to delete user

@@ -95,6 +95,7 @@ const SearchFilterMenu = React.forwardRef(
                 ref={ref}
                 className={className}
                 aria-labelledby={labeledBy}
+                style={{overflowY:"auto", height:"30vh"}} 
             >
 
                 {searchTitle ?

@@ -7,8 +7,7 @@ import SearchFilterMenu from "../../../components/SearchFilterMenu";
 
 function AddUserMenu({handleToastDisplay}) {
 
-    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics"]
-
+    let filterList = ["Computer Science", "Mechanical Engineering", "Applied Computer Science", "Electrical Engineering", "Cyber Security", "Physics & Astrophysics", "Physics", "SecEd-Physics", "Civil Engineering", "Construction Management", "Environmental Engineering", "MultDiscp Engineering"];
     let [newUserData, setNewUserData] = useState({
         email:null,
         firstName:null,
