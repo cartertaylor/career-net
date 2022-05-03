@@ -28,11 +28,6 @@ function UpdatePassword() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     searchParams.get("dog")
-    console.log(searchParams)
-
-    console.log(searchParams.get('authKey'));
-    console.log(searchParams.get('sort'));
-    console.log("reee")
 
     //?sort=name&order=ascending
     // Redux
@@ -48,13 +43,11 @@ function UpdatePassword() {
     let keyIsValid = useSelector((state) => state.users.providedKeyValid);
     
 
-    console.log(keyIsValid)
 
     // State 
     const [passwords, setPassword] = useState({firstPassword:null, confirmPassword:null})
     const [passwordKey, setPasswordKey] = useState (searchParams.get('authKey'))
     const [keyAuthenticated, setKeyAuthenticated] = useState (false) 
-    console.log(passwordKey)
 
     // Make sure that the state auth key is refreshed every time the parameter changes
     useEffect(() =>
@@ -76,7 +69,6 @@ function UpdatePassword() {
             || passwords.firstPassword == "" || passwords.confirmPassword == "") 
         
         {
-            console.log(passwords)
             toast.warning("Please sure you fill in both password fields")
         }
 
@@ -104,7 +96,6 @@ function UpdatePassword() {
             }).then(
                 (response) =>
                 {
-                    console.log(response)
 
                     if (response.data.updated)
                     {

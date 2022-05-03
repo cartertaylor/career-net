@@ -89,36 +89,49 @@ router.post("/login", function (req, res)
 		console.log("inside sql query function")
             console.log(result) 
         
-        if (result.length > 0 && result[0].password == password)
+        if (result.length > 0)
             {
+                // Compare typed password to encrypted password
+                bcrypt.compare(password, result[0].password,  function(err, data) {
+                    if (err){
+                      // handle error
+                      console.log("passwords not equal")
+                    }
+                    if (data)
+                    {
+                        let isAdmin = false;
+                        console.log("valid password")
+                        
+                        const id = result[0].user_id
+
+                        const token = generateAccesstoken(id) 
+
+                        // TODO: Implement refresh token at some point 
+                        // const refreshToken = jwt.sign({id}, jwtSecret)
+
+                        console.log(result[0].first_name + " " + result[0].last_name)
+
+                        // Figure out if user is admin or not
+                        if (parseInt(userAdminValue) == result[0].role)
+                        {
+                            isAdmin = true;
+                        }
+
+                            
+                        // send response back
+                        return res.json({
+                            auth: true,
+                            token:token,
+                            userName: result[0].first_name + " " + result[0].last_name,
+                            isAdmin:isAdmin
+                            
+                        });
+                    }
                 
-                // Set default values
-                let isAdmin = false;
-                console.log("valid password")
+            });
+
+
                 
-                const id = result[0].user_id
-
-                const token = generateAccesstoken(id) 
-
-                // TODO: Implement refresh token at some point 
-                // const refreshToken = jwt.sign({id}, jwtSecret)
-
-                console.log(result[0].first_name + " " + result[0].last_name)
-
-                // Figure out if user is admin or not
-                if (parseInt(userAdminValue) == result[0].role)
-                {
-                    isAdmin = true;
-                }
-
-                // send response back
-                res.json({
-                    auth: true,
-                    token:token,
-                    userName: result[0].first_name + " " + result[0].last_name,
-                    isAdmin:isAdmin
-                    
-                });
             }
 
 
@@ -167,11 +180,15 @@ router.post('/newPassword', (req, res) =>
 
             if (results.length > 0)
             {
+
+                // encrypt password from user
+                const encryptedPassword = bcrypt.hashSync(newPassword, 15);
+
                 console.log(results[0])
                 let foundUser = (results[0].user_id)
                 
                 // Update password with new one provided
-                let updatePasswordSql = mysql.format("UPDATE ?? SET password = ?, password_auth_key= ? WHERE user_id = ?", [userTable, newPassword, null, foundUser])
+                let updatePasswordSql = mysql.format("UPDATE ?? SET password = ?, password_auth_key= ? WHERE user_id = ?", [userTable, encryptedPassword, null, foundUser])
                 console.log(updatePasswordSql)
                 
                 // Update password
