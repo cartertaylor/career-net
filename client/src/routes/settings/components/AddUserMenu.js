@@ -43,14 +43,12 @@ function AddUserMenu({handleToastDisplay}) {
             })
             .then((response) => {
                 // setPost(response.data);
-                console.log(response);
-                console.log(response.data)
+                
                 handleToastDisplay(response.data.status, response.data.message)
 
             });
     }
 
-    console.log(newUserData)
 
     // TODO: If ADMIN is selected, create popup dialoge warning on submit
 
@@ -125,7 +123,7 @@ function AddUserMenu({handleToastDisplay}) {
                             onChange={
                                 (e) =>
                                 {   
-                                    console.log("LET GO BOY")
+
                                     setNewUserData((prevState) => {
                                         return { ...prevState, role: e.target.value }
                                     })

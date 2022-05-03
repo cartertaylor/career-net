@@ -67,11 +67,6 @@ function App() {
   let userCanUploadNewData = useSelector((state) => state.users.userCanUploadNewData);
 
 
-  console.log(userIsAuthorized)
-  console.log(adminIsAuthorized)
-  console.log(loggedInUserName)
-  console.log(userCanUploadNewData)
-
   // State
   const [clickedStudentInfo, setClickedStudentInfo] = useState();
 
@@ -84,7 +79,6 @@ function App() {
   useEffect(()=>
     {
       checkAdmin()
-      console.log(userIsAuthorized)
 
     },[]
   )
@@ -103,12 +97,10 @@ function App() {
         .then((response) => 
         {
 
-          console.log(response.data)
           // Set normal user authorized 
           if (response.data.auth)
           {
             console.log("Authorized")
-            console.log(response.data)
             userLoggedInStatus(true)
             setUserName(response.data.userName)
             grabUserPermissions()
@@ -116,13 +108,13 @@ function App() {
             // Check if Admin: if so, return true 
             if (response.data.userRole == userAdminValue)
             {
-              console.log("Setting Admin")
+
               setUserAdmin(true)
             }
             
             // Otherwise assume, we are a normal faculty
             else {
-              console.log("Not Admin ")
+              
               setUserAdmin(false)
             }
           }

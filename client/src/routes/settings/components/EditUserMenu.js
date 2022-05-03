@@ -49,8 +49,7 @@ function EditUserMenu({handleToastDisplay}) {
             // Report back if they are missing a field
 
         // Bring up modal to check and see if they really want to edit users permissions
-        console.log(permissions)
-        
+       
         // Update the data for the user being edited
         axios
         .post("/api/users/edit/permissions", 
@@ -66,9 +65,7 @@ function EditUserMenu({handleToastDisplay}) {
         })
         .then((response) => {
             // setPost(response.data);
-            console.log(
-                response.data
-            );
+          
             handleToastDisplay(response.data.status, response.data.message)
 
         });
@@ -80,11 +77,11 @@ function EditUserMenu({handleToastDisplay}) {
 
     function handleUserDelete()
     {
-        console.log("Deleting user")
+      
         // Check to make sure all fields are filled out.  (make sure userType != Choose)
 
         // Bring up modal to check and see if they really want to edit users permissions
-        console.log(permissions)
+        
         
         // Update the data for the user being edited
         axios
@@ -103,9 +100,7 @@ function EditUserMenu({handleToastDisplay}) {
         })
         .then((response) => {
             // setPost(response.data);
-            console.log(
-                response.data
-            );
+           
             handleToastDisplay(response.data.status, response.data.message)
             setPermissions( (prevState => 
                 (
@@ -138,7 +133,7 @@ function EditUserMenu({handleToastDisplay}) {
     function handleMajorFilterChange(arrayOfFilteredMajor) 
         {
 
-            console.log(arrayOfFilteredMajor)
+    
             setPermissions( (prevState => 
                 (
                     {...prevState, majorAccess:arrayOfFilteredMajor}
@@ -158,7 +153,7 @@ function EditUserMenu({handleToastDisplay}) {
     
     function handleUserClick (userSelected)
     {   
-        console.log(userSelected)
+    
         
         let searchUser = {
             firstName:userSelected.title.split(" ")[0],
@@ -180,11 +175,6 @@ function EditUserMenu({handleToastDisplay}) {
         })
         .then((response) => {
             // setPost(response.data);
-            console.log(
-                response.data
-            );
-            
-
             
             setPermissions( (prevState => 
                 (
@@ -205,12 +195,12 @@ function EditUserMenu({handleToastDisplay}) {
         
     }, [permissions])
 
-    console.log(permissions)
+
 
     function getPermissionBasedOnId(permissionId)
     {
 
-        console.log(permissionId)
+
 
         if (permissionId == userAdminValue)
         {
@@ -254,7 +244,7 @@ function EditUserMenu({handleToastDisplay}) {
                 />
                 {/* <Col></Col> */}
             </Row>
-
+            
             {permissions.firstName == null ? null : 
 
             <div>
@@ -268,7 +258,7 @@ function EditUserMenu({handleToastDisplay}) {
                         onChange={
                             (e) =>
                             {   
-                                console.log("LET GO BOY")
+                            
                                 setPermissions((prevState) => {
                                     return { ...prevState, userType: e.target.value }
                                 })
@@ -292,7 +282,7 @@ function EditUserMenu({handleToastDisplay}) {
                             onChange={
                                 (e) =>
                                 {
-                                    console.log(permissions.canUploadNewData )
+                                    
                                     setPermissions((prevState) => {
                                         return { ...prevState, canUploadNewData:!permissions.canUploadNewData }
                                     })

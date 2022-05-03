@@ -42,7 +42,7 @@ function Login () {
     let [credentials, setLoginCredentials] = useState({userName:null, password:null})
     let [resetEmail, setResetEmail] = useState({resetEmail:""})
 
-        console.log(resetEmail)
+        
 
     function checkAuthenticated ()
     {
@@ -56,7 +56,7 @@ function Login () {
         }).then(
             (response) =>
             {
-                console.log(response)
+                
                 handleToastDisplay(response.data.auth)
                 userLoggedInStatus(response.data.auth)
             }
@@ -74,7 +74,7 @@ function Login () {
                 ).then(
                     (response) =>
                     {
-                        console.log(response)
+                        
                          // Put Toast notification for email sent
                         toast.info("Reset email sent to:  " + resetEmail.resetEmail + ". Please access the URL included in that e-mail to reset your password.")
                     }
@@ -121,13 +121,13 @@ function Login () {
             })
             .then((response) => {
                 // setPost(response.data);
-                console.log(response);
+                
 
                 // If user is authenticated, set login variables
                 if (response.data.auth)
                 {
-                    console.log("Response man")
-                    console.log(response.data)
+                    
+                    
                     // Store JWT token and set login status to true
                     localStorage.setItem("token", response.data.token)
                     userLoggedInStatus(true)
@@ -143,7 +143,7 @@ function Login () {
             });
     }
 
-    console.log(credentials)
+    
     
     function handleToastDisplay(serverStatus, message = "none")
     {
