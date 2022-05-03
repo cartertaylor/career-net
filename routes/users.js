@@ -607,14 +607,17 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
                 });
             }
         
-            
-            // send Success response back
-            res.json({
-                status: "Success",
-                received: req.body,
-                message: newUserCredentials.firstName + " "+ newUserCredentials.lastName +" was added to the system with a role of: " + newUserCredentials.role + ". Please have them check their email and spam folder for a link to set their password."
-                
-            });
+            if (statusDone== true)
+            {   
+                 // send Success response back
+                res.json({
+                    status: "Success",
+                    received: req.body,
+                    message: newUserCredentials.firstName + " "+ newUserCredentials.lastName +" was added to the system with a role of: " + newUserCredentials.role + ". Please have them check their email and spam folder for a link to set their password."
+                    
+                });
+            }    
+           
 
         });
     }
