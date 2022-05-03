@@ -560,9 +560,15 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
                         permissionList.push("Upload New Data")
                     }
 
+                    // We have no permissions for this user, add this to prevent error
+                    if (permissionList.length <1)
+                    {
+                        permissionList = [null]
+                    }
+
                     // Create permission, associated with the user_id and permission access associated with permission_id's
                     createPermissionSql = mysql.format("INSERT IGNORE INTO ?? (user_id, permission_id) SELECT ?, permission_id FROM ?? WHERE permission_name IN (?)",
-                        [facultyPermissions,newUserId, selectedUserPermissions,permissionList])
+                        [facultyPermissions,newUserId, selectedUserPermissions, permissionList])
 
                     console.log(createPermissionSql)
 
