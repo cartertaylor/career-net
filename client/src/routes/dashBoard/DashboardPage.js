@@ -236,7 +236,7 @@ export default function DashboardPage() {
                     let filterRoute = "/filter"
                     
                     // Send post request out for for each filter data 
-                    toast.promise(
+
                         axios
                             .post(
                                 routeURL + filterRoute,
@@ -267,14 +267,8 @@ export default function DashboardPage() {
                                         return {...prevState, graphValidObject:indiviudalGroupGraphObject}
                                     })
     
-                            }),
-                        {
-                            pending: "Applying Filter",
-                            error: "Failed to apply new filter, there was an issue retreiving server data",
-                            success: "New filter added to graph",
-                        }
-                    );
-                    
+                            })
+                   
                     
                 })
 

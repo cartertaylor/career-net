@@ -114,7 +114,7 @@ function Login () {
     function handleLoginSubmit(e)
     {
         e.preventDefault();
-
+        toast.promise(
         axios
             .post("api/" + baseURL + "/login", {
                 loginCredentials: credentials,
@@ -140,7 +140,12 @@ function Login () {
                     handleToastDisplay(false)
                 }
                 
-            });
+            }),
+            {
+                pending: "Verifying credentials",
+                success: "Success!",
+            }
+        )
     }
 
     
