@@ -590,6 +590,17 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
 
                         statusDone = true
 
+                        if (statusDone == true)
+                            {   
+                                // send Success response back
+                                res.json({
+                                    status: "Success",
+                                    received: req.body,
+                                    message: newUserCredentials.firstName + " "+ newUserCredentials.lastName +" was added to the system with a role of: " + newUserCredentials.role + ". Please have them check their email and spam folder for a link to set their password."
+                                    
+                                });
+                            }    
+
                     }) 
                     
                 }
@@ -613,7 +624,7 @@ router.post("/create", authenticate.verifyToken ,function (req, res)
                 });
             }
         
-            if (statusDone== true)
+            if (statusDone == true)
             {   
                  // send Success response back
                 res.json({
