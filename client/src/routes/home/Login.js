@@ -162,6 +162,8 @@ function Login () {
         }
     }
 
+    console.log("This is the login page!")
+
     return (
         <div>
 
